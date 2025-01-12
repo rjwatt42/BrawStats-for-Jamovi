@@ -1,0 +1,11 @@
+Package: BrawStats
+Type: Package
+Title: Some BrawStats functions
+Version: 1.2.0
+Author: Roger Watt
+Maintainer: Roger Watt <r.j.watt@stir.ac.uk>
+Description: This is designed to teachn the basic principles of statistics.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Imports: jmvcore (>= 2.3.4), R6, car, ggplot2, mnormt, pracma, lme4, grDevices, stringr, NlcOptim, abind
