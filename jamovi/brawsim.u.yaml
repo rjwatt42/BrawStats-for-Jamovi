@@ -166,8 +166,6 @@ children:
                                             type: ActionButton
                                             margin: none
                                             maxWidth: 57
-                                            events:
-                                              change: ./BrawSim.events::onChange_project1A2
                                       - type: LayoutBox
                                         style: inline
                                         children:

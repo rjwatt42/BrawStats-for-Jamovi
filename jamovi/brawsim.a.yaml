@@ -1400,11 +1400,11 @@ options:
       type: Action
 
     - name: doProject1A1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject1A2Btn
-      title: 'get'
+      title: '⏵'
       type: Action
 
     - name: doProject1A3Lst
@@ -1450,7 +1450,7 @@ options:
       default: ExamGrade
 
     - name: doProject1A3Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
 
@@ -1463,15 +1463,15 @@ options:
       type: Action
 
     - name: doProject1B1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject1B2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject1B3Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
 
@@ -1484,15 +1484,15 @@ options:
       type: Action
 
     - name: doProject1C1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject1C2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject1C3Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
 
@@ -1505,7 +1505,7 @@ options:
       type: Action
 
     - name: doProject2A1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject2A2Lst
@@ -1519,11 +1519,11 @@ options:
       default: 1D
 
     - name: doProject2A2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject2A3Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
 
@@ -1536,19 +1536,19 @@ options:
       type: Action
 
     - name: doProject2B1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject2B2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject2B3Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject2B4Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
 
@@ -1561,11 +1561,11 @@ options:
       type: Action
 
     - name: doProject2C1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
       
     - name: doProject2C2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
       
     - name: doProject2C2Lst
@@ -1584,15 +1584,15 @@ options:
         title: '100'
       default: n40
       #   
-      # title: 'do'
+      # title: '⏵'
       # type: Action
 
     - name: doProject2C3Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject2C4Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject2C4Lst
@@ -1612,7 +1612,7 @@ options:
       - name: r075
         title: '0.75'
       default: r03
-      # title: 'do'
+      # title: '⏵'
       # type: Action
 
 
@@ -1637,11 +1637,11 @@ options:
       - name: icc
         title: 'i~c*c'
       default: iii
-      # title: 'do'
+      # title: '⏵'
       # type: Action
 
     - name: doProject3A1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject3A1Lst
@@ -1664,7 +1664,7 @@ options:
 
 
     - name: doProject3A2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
       
     - name: doProject3A2Lst
@@ -1686,7 +1686,7 @@ options:
       default: r03
 
     - name: doProject3A3Btn
-      title: 'do'
+      title: '⏵'
       type: Action
       
     - name: doProject3A3Lst
@@ -1708,7 +1708,7 @@ options:
       default: r03
 
     - name: doProject3A4Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
 
@@ -1735,7 +1735,7 @@ options:
       default: iii
 
     - name: doProject3B1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject3B1Lst
@@ -1757,7 +1757,7 @@ options:
       default: r03
 
     - name: doProject3B2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject3B2Lst
@@ -1788,11 +1788,11 @@ options:
       type: Action
 
     - name: doProject3C1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject3C2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject3C2Lst
@@ -1814,7 +1814,7 @@ options:
       default: r03
 
     - name: doProject3C3Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
 # 
@@ -1827,11 +1827,11 @@ options:
 #       type: Action
 # 
 #     - name: doProject4A1Btn
-#       title: 'do'
+#       title: '⏵'
 #       type: Action
 # 
 #     - name: doProject4A2Btn
-#       title: 'do'
+#       title: '⏵'
 #       type: Action
 # 
 #     - name: doProject4A2Lst
@@ -1855,7 +1855,7 @@ options:
 #       default: r07
 # 
 #     - name: doProject4A3Btn
-#       title: 'do'
+#       title: '⏵'
 #       type: Action
 
 ...

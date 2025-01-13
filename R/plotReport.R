@@ -81,6 +81,10 @@ reportPlot<-function(outputText,nc,nr,fontSize=0.85,maxRows=14,renderAsHTML=braw
           blankStyle<-"padding-top:1px;"
           outputText[index+(1:nc)]<-sub("!T","",outputText[index+(1:nc)])
         }
+        if (any(grepl("!B",outputText[index+(1:nc)]))) {
+          rowStyle<-paste0(rowStyle,"font-weight:bold;")
+          outputText[index+(1:nc)]<-sub("!B","",outputText[index+(1:nc)])
+        }
         if (any(grepl("!U",outputText[index+(1:nc)]))) {
           rowStyle<-paste0(rowStyle,"border-bottom:solid;border-bottom-color:",lineColourPale,";border-bottom-width:1px;")
           blankStyle<-"padding-top:1px;"

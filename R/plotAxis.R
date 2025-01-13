@@ -226,7 +226,7 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
           },
           "AIC"={
             ylim<-c(1.5*design$sN,3.5*design$sN)*hypothesis$DV$sd
-            ylabel<-'AIC'
+            ylabel<-'AIC[1]'
             use_cols<-c(rep("white",7))
             if (is.null(hypothesis$IV2)) {
               if (effect$world$worldOn) {

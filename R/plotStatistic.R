@@ -1434,14 +1434,17 @@ aic_plot<-function(analysis,disp,showTheory=TRUE,g=NULL) {
     if (ig==correct) fontface<-"bold" else fontface="plain"
     xvals<-makeFiddle(analysis$sem[,ig])
     if (any(xvals!=0))    xvals<-xvals/max(abs(xvals))*0.4
-    use<-analysis$sem[,ncol(analysis$sem)]==ig
+    use<-analysis$sem1[,ncol(analysis$sem1)]==ig
     if (startBar==2) {
-      use1<-analysis$sem[,ncol(analysis$sem)]==1
-      g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use1],y=analysis$sem[use1,ig]),shape=shape,size=size,fill=cols[1]))
+      use1<-analysis$sem1[,ncol(analysis$sem1)]==1
+      # g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use1],y=analysis$sem[use1,ig]),shape=shape,size=size,fill="grey"))
+      g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use1],y=analysis$sem1[use1,ig]),shape=shape,size=size,fill=cols[1]))
     } else {
-      g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[!use],y=analysis$sem[!use,ig]),shape=shape,size=size,fill="white"))
+      # g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[!use],y=analysis$sem[!use,ig]),shape=shape,size=size,fill="grey"))
+      g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[!use],y=analysis$sem1[!use,ig]),shape=shape,size=size,fill="white"))
     }
-    g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use],y=analysis$sem[use,ig]),shape=shape,size=size,fill=cols[ig]))
+    # g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use],y=analysis$sem[use,ig]),shape=shape,size=size,fill="grey"))
+    g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use],y=analysis$sem1[use,ig]),shape=shape,size=size,fill=cols[ig]))
     if (nrow(analysis$sem)==1)
     g<-addG(g,dataText(data.frame(x=ig-startBar+1,y=min(analysis$sem[,ig])-(highY-lowY)/30),label=colnames(analysis$sem)[ig],
                        fontface=fontface,hjust=1,vjust=0.5,angle=90,size=0.85))   

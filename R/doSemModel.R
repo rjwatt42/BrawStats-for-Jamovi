@@ -562,30 +562,25 @@ sem_results<-function(pathmodel,sem) {
   
   # chi2 exact fit
   model_chisqr=(n_obs-1)*sem$Fmin;
-  # rows are: Fixed labeled unlabeled
-  numweights=rbind(P, 0, sum(!is.na(sem$Lresult)+sum(!is.na(sem$Bresult))))
-  numcovs=rbind(0, 0, Q*(Q-1)/2)
-  numvariances=rbind(0, 0, (P+Q))
-  nummeans=rbind(P, 0, Q)
-  numintercepts=rbind(0, 0, P)
-  # %     num_est_pars=numweights + numcovs + numvariancess;
-  # %     num_obs_pars=(P+Q)*(P+Q+1)/2;
-  # %     model_chi_df=num_obs_pars - num_est_pars;
-  df=cbind(numweights, numcovs, numvariances, nummeans, numintercepts)
-  model_chi_df=sum(sum(df)-df[nrow(df),]);
-  model_chi_df=1
+  model_chi_df=(P+Q)*(P+Q+1)/2-(2*Q+sum(!is.na(sem$Lresult))+sum(!is.na(sem$Bresult)))
   model_chi_p=1-pchisq(abs(model_chisqr), model_chi_df);
   # non-central chi2
   model_chi_noncentrality=max(model_chisqr-model_chi_df,0)/(n_obs-1);
   rmsea=sqrt(model_chi_noncentrality/model_chi_df);
   model_rmsea_p=1-pchisq(model_chisqr, model_chi_df, model_chi_noncentrality);
   # 
-  ds=sem$cov_model-sem$covariance;
-  # [a,b]=meshgrid(diag(sem$covariance));
-  a<-matrix(diag(sem$covariance),nrow=nrow(sem$covariance),ncol=ncol(sem$covariance),byrow=TRUE)
+  # ds=sem$cov_model-sem$covariance;
+  scd<-sem$covariance
+  a<-matrix(diag(scd),nrow=nrow(scd),ncol=ncol(scd),byrow=TRUE)
   b<-t(a)
-  dc=ds/sqrt(a*b);
-  model_srmr=sqrt(sum(abs(dc^2)));
+  scd<-scd/sqrt(a*b)
+  scm<-sem$cov_model
+  a<-matrix(diag(scm),nrow=nrow(scm),ncol=ncol(scm),byrow=TRUE)
+  b<-t(a)
+  scm<-scm/sqrt(a*b)
+  dc<-scm-scd
+  # dc=ds/(a*b);
+  model_srmr=sqrt(mean(dc^2));
   #
   # 
   B=sem$Bresult; B[is.na(B)]=0;
@@ -601,11 +596,20 @@ sem_results<-function(pathmodel,sem) {
   error=t(Yactual-Ypredicted)
   Rsquared=1-sum(diag(var(error)))/sum(diag(var(t(Y))))
   #
-  k=sum(!is.na(CF_table))+2*length(sem$endogenous); 
+  k1=sum(!is.na(CF_table))+2*length(sem$endogenous); 
   # if (!is.null(sem$fixedCoeffs)) k<-k+nrow(sem$fixedCoeffs)
   n_data=n_obs
-  Resid2=sum(error^2);
-  AIC=2*k+n_obs*(log(2*pi*Resid2/n_data)+1);
+  Resid21=colSums(error^2);
+  AIC1=2*k1+n_obs*sum(log(2*pi*Resid21/n_data)+1);
+  use1<-rowSums(cbind(sem$Ldesign,sem$Bdesign))>0
+  if (all(!use1)) {
+    k<-2
+    Resid2<-sum(error^2)
+  } else {
+    k=sum(!is.na(CF_table))+2*sum(use1); 
+    Resid2=colSums(error^2)[use1]
+  }
+  AIC=2*k+n_obs*sum(log(2*pi*Resid2/n_data)+1);
   llr<-k-AIC/2
   AICc=AIC+2*k*(k+1)/(n_data-k-1);
   BIC=AIC-2*k+k*log(n_data);
@@ -630,6 +634,8 @@ sem_results<-function(pathmodel,sem) {
                  llr=llr,
                  resid2=Resid2,
                  AIC=AIC,
+                 k1=k1,
+                 AIC1=AIC1,
                  AICc=AICc,
                  BIC=BIC,
                  CAIC=CAIC,

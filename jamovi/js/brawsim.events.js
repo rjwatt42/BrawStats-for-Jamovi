@@ -176,14 +176,7 @@ const events =  {
         ui.makeSampleBtn.setValue(true)
       }
     },
-    
-    onChange_project1A2: function(ui) {
-      let BtnOn = ui.doProject1A2Btn.value();
-      if (BtnOn==true) {
-      ui.jamoviHelp.setValue(true)
-      }
-    },
-    
+
     onChange_project1A3: function(ui) {
       let BtnOn = ui.doProject1A3Btn.value();
       if (BtnOn==true) {

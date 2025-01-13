@@ -279,7 +279,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         demoHelp<-brawDemosHelp(statusStore$demoHelpWhich,indent,titleWidth,doDemos)
 
         if (nestedHelp) {
-          open0<-max(0,statusStore$basicHelpWhich,any(statusStore$demoHelpWhich>0)*2,(statusStore$simHelpWhich>0)*3,statusStore$openJamovi*4)
+          open0<-max(0,statusStore$basicHelpWhich,any(statusStore$demoHelpWhich>0)*2,(statusStore$simHelpWhich>0)*3,(statusStore$openJamovi>0)*4)
           help<-generate_tab(
             title="Help:",
             plainTabs=TRUE,
