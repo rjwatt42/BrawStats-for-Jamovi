@@ -47,7 +47,14 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         return()
       }
       
-      doDemos<-4 # set to 5 to include path demos
+      # if (self$options$doProject1AsBtn) return()
+      # if (self$options$doProject2AsBtn) return()
+      
+      # self$results$debug$setContent(braw.res)
+      # self$results$debug$setVisible(TRUE)
+      # return()
+      
+      doDemos<-2 # set to 6 to include path demos
       systemAsHTML<-TRUE
       nestedHelp<-TRUE
       joinSystem<-TRUE
@@ -78,21 +85,22 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (self$options$demosHelp) statusStore$demoHelpWhich<-c(1,0)
       if (self$options$demo1Help) statusStore$demoHelpWhich<-c(2,1)
       if (self$options$demo2Help) statusStore$demoHelpWhich<-c(3,1)
-      if (self$options$demo3Help) statusStore$demoHelpWhich<-c(4,1)
+      if (doDemos>2 && self$options$demo3Help) statusStore$demoHelpWhich<-c(4,1)
+      if (doDemos>3 && self$options$demo4Help) statusStore$demoHelpWhich<-c(5,1)
       if (self$options$doProject1AhBtn) statusStore$demoHelpWhich<-c(2,2)
       if (self$options$doProject1BhBtn) statusStore$demoHelpWhich<-c(2,3)
       if (self$options$doProject1ChBtn) statusStore$demoHelpWhich<-c(2,4)
       if (self$options$doProject2AhBtn) statusStore$demoHelpWhich<-c(3,2)
       if (self$options$doProject2BhBtn) statusStore$demoHelpWhich<-c(3,3)
       if (self$options$doProject2ChBtn) statusStore$demoHelpWhich<-c(3,4)
-      if (self$options$doProject3AhBtn) statusStore$demoHelpWhich<-c(4,2)
-      if (self$options$doProject3BhBtn) statusStore$demoHelpWhich<-c(4,3)
-      if (self$options$doProject3ChBtn) statusStore$demoHelpWhich<-c(4,4)
-      if (doDemos>4 && self$options$doProject4AhBtn) statusStore$demoHelpWhich<-c(5,2)
+      if (doDemos>3 && self$options$doProject4AhBtn) statusStore$demoHelpWhich<-c(5,2)
+      if (doDemos>3 && self$options$doProject4BhBtn) statusStore$demoHelpWhich<-c(5,3)
+      if (doDemos>3 && self$options$doProject4ChBtn) statusStore$demoHelpWhich<-c(5,4)
+      if (doDemos>4 && self$options$doProject5AhBtn) statusStore$demoHelpWhich<-c(6,2)
       if (all(statusStore$demoHelpWhich==old_demoHelpWhich))statusStore$demoHelpWhich<-c(0,0)
       
       statusStore$openJamovi<-0
-      if (self$options$doProject1A2Btn || self$options$doProject1A3Btn) statusStore$openJamovi<-1
+      if (self$options$doProject1A2Btn) statusStore$openJamovi<-1
       
       # get some display parameters for later
       # single sample
@@ -293,27 +301,36 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       } else help<-''
       
       if (systemAsHTML) {
-        if (changedD) openSystem<-2
+        if (changedD && design$sNRand) openSystem<-2
+        if (changedD && !design$sNRand) openSystem<-1
         if (changedH) openSystem<-1
         if (changedE) openSystem<-1
         assign("graphHTML",TRUE,braw.env)
-        svgBox(200)
+        svgBox(400*self$options$systemMag)
         h<-showHypothesis()
-        e<-showPrediction()
+        svgBox(360*self$options$systemMag)
+        sd<-showDesign()
         svgBox(180)
-        d<-joinHTML(showDesign(),reportDesign())
+        rd<-reportDesign()
+        svgBox(400*self$options$systemMag)
+        e<-showPrediction()
+        # l<-showPossible(NA,showType="Samples")
         systemHTML<-generate_tab(
           titleWidth=50,
           title="Plan:",
           plain=(nchar(help)>0),
-          # topMargin=15,
-          # titleWidth=30,
-          tabs=c("Hypothesis","Design","Expected"),
+          tabs=c("Hypothesis","Design"),
           tabContents = c(
-            h,
-            d,
-            e
+            joinHTML(h,e),
+            joinHTML(sd,rd)
           ),
+          # tabs=c("Hypothesis","Design","Expected","Likelihood"),
+          # tabContents = c(
+          #   h,
+          #   joinHTML(sd,rd),
+          #   e,
+          #   l
+          # ),
           open=openSystem
         )
         assign("graphHTML",self$options$showHTML,braw.env)

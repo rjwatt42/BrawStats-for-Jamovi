@@ -17,9 +17,9 @@ newBrawDev<-function(fontScale=1,height=1000,aspect=1) {
   print(startPlot(box="none",backC=braw.env$plotColours$graphC))
 }
 
-BrawOpts<-function(BW=FALSE,graphC="normal",fontScale=1.5,graphicsSize=c(16,10),
+BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16,10),
                    reportHTML=FALSE, graphHTML=FALSE,
-                   newDev=FALSE,height=NULL,aspect=1.3,autoShow=FALSE,timeLimit=Inf,fullGraphSize=1,
+                   newDev=FALSE,height=400,aspect=1.3,autoShow=FALSE,timeLimit=Inf,fullGraphSize=1,
                    reducedOutput=FALSE) {
   if (graphC=="white") graphC<-"#FFFFFF"
   if (graphC=="normal") graphC<-"#BFECFF"
@@ -27,7 +27,7 @@ BrawOpts<-function(BW=FALSE,graphC="normal",fontScale=1.5,graphicsSize=c(16,10),
   braw.def <- new.env(parent = emptyenv())
   braw.res <- new.env(parent = emptyenv())
   
-  if (is.null(height)) height<-convertHeight(unit(1, "npc"),"pt",valueOnly = TRUE)
+  # if (is.null(height)) height<-convertHeight(unit(1, "npc"),"pt",valueOnly = TRUE)
   
   if (newDev) {
     while (dev.cur()!=1) dev.off()
@@ -299,7 +299,6 @@ BrawOpts<-function(BW=FALSE,graphC="normal",fontScale=1.5,graphicsSize=c(16,10),
 
           braw.env$timeLimit<-timeLimit # seconds
           
-braw.env<<-braw.env          
 
 braw.res$result<-NULL 
 braw.res$multiple<-NULL 
@@ -308,7 +307,6 @@ braw.res$metaResult<-NULL
 braw.res$metaMultiple<-NULL
 braw.res$possibleResult<-NULL
 
-braw.res<<-braw.res
 
 braw.def$IV<-makeVariable("IV")
 braw.def$IV2<-NULL
@@ -320,10 +318,13 @@ braw.def$design<-makeDesign()
 braw.def$evidence<-makeEvidence()
 braw.def$metaAnalysis<-makeMetaAnalysis()
 braw.def$explore<-makeExplore()
-braw.def$possible<-makePossible(targetSample=0.3,sims=NULL,
-                                hypothesis=braw.def$hypothesis,design=braw.def$design)
+# braw.def$possible<-makePossible(targetSample=0.3,sims=NULL,
+#                                 hypothesis=braw.def$hypothesis,design=braw.def$design)
+braw.def$possible<-NULL
 
 braw.def<<-braw.def
+braw.env<<-braw.env          
+braw.res<<-braw.res
 
 }
 

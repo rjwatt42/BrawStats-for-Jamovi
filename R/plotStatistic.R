@@ -1404,17 +1404,19 @@ aic_plot<-function(analysis,disp,showTheory=TRUE,g=NULL) {
     if (analysis$hypothesis$effect$rIV!=0 && analysis$hypothesis$effect$rIV2==0 && analysis$hypothesis$effect$rIVIV2==0) correct<-2
     if (analysis$hypothesis$effect$rIV==0 && analysis$hypothesis$effect$rIV2==0 && analysis$hypothesis$effect$rIVIV2==0) correct<-1
   }
-  if (nrow(analysis$sem)==1) {
-    range<-(max(analysis$sem[,1:nbar])-min(analysis$sem[,1:nbar]))
-    lowY<-min(min(analysis$sem[,1:nbar])-range*0.5,1.5*n*DVsd)
-    highY<-max(max(analysis$sem[,1:nbar])+range*0.25,3.5*n*DVsd)
-    lowY<-lowY-(highY-lowY)/2
+  
+  sem<-analysis$sem1
+  if (nrow(sem)==1) {
+    range<-(max(sem[,1:nbar])-min(sem[,1:nbar]))
+    lowY<-min(min(sem[,1:nbar])-range*0.5 , 1.5*n*DVsd)
+    highY<-max(max(sem[,1:nbar])+range*0.25 , 3.5*n*DVsd)
+    lowY<-lowY-(highY-lowY)/4
     g<-startPlot(xlim=c(0,nbar+1),ylim=c(lowY,highY),
                  yticks=makeTicks(),ylabel=makeLabel("AIC"),
                  top=FALSE,orientation="horz",g=g)
     startBar<-1
   } else {
-    analysis$sem<-cbind(analysis$sem[,1:7]-analysis$sem[,1],analysis$sem[,8])
+    sem<-cbind(sem[,1:7]-sem[,1],sem[,8])
     lowY<- -1.0*analysis$design$sN*hypothesis$DV$sd
     highY<- 0.1*analysis$design$sN*hypothesis$DV$sd
     g<-startPlot(xlim=c(0,nbar),ylim=c(lowY,highY),
@@ -1423,31 +1425,31 @@ aic_plot<-function(analysis,disp,showTheory=TRUE,g=NULL) {
     if (nbar==2) cols<-c(braw.env$plotColours$infer_nsigNull,braw.env$plotColours$infer_sigNonNull)
     startBar<-2
   }
-  if (nrow(analysis$sem)>1) {
-    size<-2
+  if (nrow(sem)>1) {
+    markSize<-2
     shape<-22
   } else {
-    size<-6
+    markSize<-6
     shape<-21
   }
   for (ig in startBar:nbar) {
     if (ig==correct) fontface<-"bold" else fontface="plain"
-    xvals<-makeFiddle(analysis$sem[,ig])
+    xvals<-makeFiddle(sem[,ig])
     if (any(xvals!=0))    xvals<-xvals/max(abs(xvals))*0.4
-    use<-analysis$sem1[,ncol(analysis$sem1)]==ig
+    use<-sem[,ncol(sem)]==ig
     if (startBar==2) {
-      use1<-analysis$sem1[,ncol(analysis$sem1)]==1
-      # g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use1],y=analysis$sem[use1,ig]),shape=shape,size=size,fill="grey"))
-      g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use1],y=analysis$sem1[use1,ig]),shape=shape,size=size,fill=cols[1]))
+      use1<-sem[,ncol(sem)]==1
+      # g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use1],y=sem[use1,ig]),shape=shape,size=size,fill="grey"))
+      g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use1],y=sem[use1,ig]),shape=shape,size=markSize,fill=cols[1]))
     } else {
-      # g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[!use],y=analysis$sem[!use,ig]),shape=shape,size=size,fill="grey"))
-      g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[!use],y=analysis$sem1[!use,ig]),shape=shape,size=size,fill="white"))
+      # g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[!use],y=sem[!use,ig]),shape=shape,size=size,fill="grey"))
+      g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[!use],y=sem[!use,ig]),shape=shape,size=markSize,fill="white"))
     }
-    # g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use],y=analysis$sem[use,ig]),shape=shape,size=size,fill="grey"))
-    g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use],y=analysis$sem1[use,ig]),shape=shape,size=size,fill=cols[ig]))
-    if (nrow(analysis$sem)==1)
-    g<-addG(g,dataText(data.frame(x=ig-startBar+1,y=min(analysis$sem[,ig])-(highY-lowY)/30),label=colnames(analysis$sem)[ig],
-                       fontface=fontface,hjust=1,vjust=0.5,angle=90,size=0.85))   
+    # g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use],y=sem[use,ig]),shape=shape,size=size,fill="grey"))
+    g<-addG(g,dataPoint(data.frame(x=ig-startBar+1+xvals[use],y=sem[use,ig]),shape=shape,size=markSize,fill=cols[ig]))
+    if (nrow(sem)==1)
+    g<-addG(g,dataText(data.frame(x=ig-startBar+1,y=min(sem[,ig])-(highY-lowY)/30),label=colnames(sem)[ig],
+                       fontface=fontface,hjust=1,vjust=0.5,angle=90,size=0.6))   
   }
   return(g)
 }

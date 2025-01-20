@@ -562,7 +562,9 @@ sem_results<-function(pathmodel,sem) {
   
   # chi2 exact fit
   model_chisqr=(n_obs-1)*sem$Fmin;
-  model_chi_df=(P+Q)*(P+Q+1)/2-(2*Q+sum(!is.na(sem$Lresult))+sum(!is.na(sem$Bresult)))
+  model_chi_df=(P+Q)*(P+Q+1)/2-(2*Q+sum(sem$Lresult[!is.na(sem$Lresult)]!=0)
+                                +sum(sem$Bresult[!is.na(sem$Bresult)]!=0)
+  )
   model_chi_p=1-pchisq(abs(model_chisqr), model_chi_df);
   # non-central chi2
   model_chi_noncentrality=max(model_chisqr-model_chi_df,0)/(n_obs-1);

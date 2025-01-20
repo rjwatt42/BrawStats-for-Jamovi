@@ -11,7 +11,8 @@ demoInstructions <- function(HelpType="1") {
              '<ul style=margin:0px;>',
              '<li> Data: some basic characteristics of data',
              '<li> Uncertainty: why samples are never the same as the population',
-             '<li> Linear models: puting several variables to work simultaneously',
+             '<li> Design: choose a plan that gives satisfactory rate of success <i>(to follow)</i>',
+             '<li> Linear models: putting several variables to work simultaneously',
              '<li> Path models: doing more complex, imaginative analysis <i>(to follow)</i>',
              '<li> Replication: repeating a result to check it <i>(to follow)</i>',
              '<li> Meta-analysis: combining many different results <i>(to follow)</i>',
@@ -19,7 +20,7 @@ demoInstructions <- function(HelpType="1") {
            )
          },
          "1"={output<-c(
-           '<b>Data: working with samples</b>',
+           '<b>Data</b>',
            '<br>',
            'We begin with just dealing with data. Data is the link between the reality and the inference. ',
            'Data usually comes as a sample taken a population. That sample is usually a very small proportion of the whole population.',
@@ -70,15 +71,16 @@ demoInstructions <- function(HelpType="1") {
          },
          
          "2"={output<-c(
-           '<b>Uncertainty and Design</b>',
+           '<b>Uncertainty</b>',
            '<br>',
            'A sample is always different from the population. ',
            'But we can never know how it is different. That means that the sample is an uncertain guide to the population.',
            'We can, however, set a limit on how much the uncertainty is.',
            '<ul style=margin:0px;>',
            '<li> We start by just looking at the range of sample effect sizes.',
-           '<li> We then go on to see how these convert into inferential errors.',
-           '<li> Finally we consider how careful design can minimize these errors.',
+           '<li> Then we see how the sample variability makes inference difficult.',
+           '<li> Finally, we see how these convert into inferential errors.',
+           # '<li> Finally we consider how careful design can minimize these errors.',
            '</ul>'
          )},
          "2a"={output<-c(
@@ -96,7 +98,7 @@ demoInstructions <- function(HelpType="1") {
          "2b"={output<-c(
            '<b>Demo 2b</b>',
            '<br>',
-           'A demo about the uncertainty in NHST - is the inference correct or an error?',
+           'A demo about how uncertainty makes inference difficult',
            '<ul style=margin:0px;>',
            '<li> Make a world where 50% of samples come from null effects.',
            '<li> Try and guess whether any sample has a real effect or not.',
@@ -108,6 +110,53 @@ demoInstructions <- function(HelpType="1") {
          "2c"={output<-c(
            '<b>Demo 2c</b>',
            '<br>',
+           'A demo about uncertainty and inferential errors',
+           '<ul style=margin:0px;>',
+           '<li> Use the "Multiple" function to make a large number of samples.',
+           '<li> View this as the 4 possible NHST outcomes.',
+           '<li> See how the proportion of inferential errors changes with population effect size.',
+           '<li> Sampling type.',
+           '</ul>'
+         )
+         },
+         
+         "3"={output<-c(
+           '<b>Design to improve inferences</b>',
+           '<br>',
+           ' ',
+           ' ',
+           ' ',
+           '<ul style=margin:0px;>',
+           '<li> The effects of sample size.',
+           '<li> Taking into account population effect size.',
+           '<li> Using Within/between designs.',
+           '</ul>'
+         )},
+         "3a"={output<-c(
+           '<b>Demo 3a</b>',
+           '<br>',
+           'A demo about the importance of design - larger samples have lower uncertainty.',
+           '<ul style=margin:0px;>',
+           '<li> Use the "Multiple" function to make a large number of samples.',
+           '<li> Repeat this with different sample sizes. Larger samples give more chance of a significant result.',
+           '<li> Use the "Explore" function to see how p(sig) varies with sample size.',
+           '</ul>'
+         )
+         },
+         "3b"={output<-c(
+           '<b>Demo 3b</b>',
+           '<br>',
+           'A demo about the importance of design - larger samples have lower uncertainty.',
+           '<ul style=margin:0px;>',
+           '<li> Use the "Multiple" function to make a large number of samples.',
+           '<li> Repeat this with different sample sizes. Larger samples give more chance of a significant result.',
+           '<li> Use the "Explore" function to see how p(sig) varies with sample size.',
+           '</ul>'
+         )
+         },
+         "3c"={output<-c(
+           '<b>Demo 3c</b>',
+           '<br>',
            'A demo about the importance of design - larger samples have lower uncertainty.',
            '<ul style=margin:0px;>',
            '<li> Use the "Multiple" function to make a large number of samples.',
@@ -117,7 +166,7 @@ demoInstructions <- function(HelpType="1") {
          )
          },
          
-         "3"={output<-c(
+         "4"={output<-c(
            '<b>Linear models with more than 1 IV</b>',
            '<br>',
            'Statistical analysis is simple provided there is just one effect (one IV and 1 DV). ',
@@ -129,8 +178,8 @@ demoInstructions <- function(HelpType="1") {
            '<li> Covariation occurs when the IVs are themselves inter-related.',
            '</ul>'
          )},
-         "3a"={output<-c(
-           '<b>Demo 3a</b>',
+         "4a"={output<-c(
+           '<b>Demo 4a</b>',
            '<br>',
            'A demo about using multiple IVs. ',
            'In linear models, these are treated as separate, additive effects.',
@@ -143,8 +192,8 @@ demoInstructions <- function(HelpType="1") {
          )
          },
          
-         "3b"={output<-c(
-           '<b>Demo 3b</b>',
+         "4b"={output<-c(
+           '<b>Demo 4b</b>',
            '<br>',
            'A demo about interactions as moderators. ',
            'Technically an interaction is the product (multiplication) or two variables. ',
@@ -157,8 +206,8 @@ demoInstructions <- function(HelpType="1") {
          )
          },
          
-         "3c"={output<-c(
-           '<b>Demo 3c</b>',
+         "4c"={output<-c(
+           '<b>Demo 4c</b>',
            '<br>',
            'A demo about covariation between IV and IV2. ',
            'Covariation is when the two IVs are themselves related/correlated. ',
@@ -171,15 +220,15 @@ demoInstructions <- function(HelpType="1") {
            '</ul>'
          )
          },
-         "4"={output<-c(
+         "5"={output<-c(
            '<b>Path models</b>',
            '<br>',
            'Path models can have a sequence of effects linked into a chain - or path. ',
            ''
          )
          },
-         "4a"={output<-c(
-           '<b>Demo 4a</b>',
+         "5a"={output<-c(
+           '<b>Demo 5a</b>',
            '<br>',
            'A demo about mediation effects. ',
            'We say that the effect of IV on DV is fully mediated by IV2, when there is no direct link from IV to DV, but instead links from IV to IV2 and IV2 to DV.',
@@ -192,8 +241,8 @@ demoInstructions <- function(HelpType="1") {
          )
          },
          
-         "4b"={output<-c(
-           '<b>Demo 4b</b>',
+         "5b"={output<-c(
+           '<b>Demo 5b</b>',
            '<br>',
            'A demo comparing models. ',
            'We say that the effect of IV on DV is fully mediated by IV2, when there is no direct link from IV to DV, but instead links from IV to IV2 and IV2 to DV.',
@@ -206,8 +255,8 @@ demoInstructions <- function(HelpType="1") {
          )
          },
          
-         "4c"={output<-c(
-           '<b>Demo 4c</b>',
+         "5c"={output<-c(
+           '<b>Demo 5c</b>',
            '<br>',
            'A demo about causation. ',
            'We say that the effect of IV on DV is fully mediated by IV2, when there is no direct link from IV to DV, but instead links from IV to IV2 and IV2 to DV.',

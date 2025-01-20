@@ -13,9 +13,10 @@ svgY<-function(y) {return((1-y)*(svgBoxY()-20)+10)}
 # svgY<-function(y) {return((1-y)*(svgBoxY()))}
 
 joinHTML<-function(p1,p2) {
-  paste0('<div style="display: inline-block; float left;"> ',
+  paste0('<div style="display: inline-block; float center;">',
          p1,
-         '</div><div style="display: inline-block;">',
+         '</div>',
+         '<div style="display: inline-block; float center;">',
          p2,
          '</div>')
 }

@@ -110,7 +110,7 @@ doPossible <- function(possible=NULL,possibleResult=NULL){
   }
   
   pRho<-possible$targetPopulation
-  if (braw.env$RZ=="z") pRho<-tanh(pRho)
+  if (braw.env$RZ=="z" && !is.null(pRho)) pRho<-tanh(pRho)
   # get the prior population distribution
   switch(possible$UsePrior,
          "none"={ prior<-list(worldOn=TRUE,
@@ -168,9 +168,10 @@ doPossible <- function(possible=NULL,possibleResult=NULL){
   }
   
   # likelihood function for each sample (there's usually only 1)
+  if (length(n)<length(sRho)) n<-rep(n,length(sRho))
   sampleSampDens_r<-1
   sampleLikelihood_r<-c()
-  if (!is.null(sRho) && !is.na(sRho)) {
+  if (!any(is.null(sRho)) && !any(is.na(sRho))) {
     for (ei in 1:length(sRho)){
       rDens<-0
       for (ci in 1:length(correction)) {
@@ -196,9 +197,6 @@ doPossible <- function(possible=NULL,possibleResult=NULL){
     sampleSampDens_r<-sampleSampDens_r*priorPopDens_r_full
     for (ei in 1:length(sRho)){
       sampleLikelihood_r[ei,]<-sampleLikelihood_r[ei,]*priorPopDens_r_full
-    }
-    
-    for (ei in 1:length(sRho)){
       sampleLikelihood_r_show[ei,]<-sampleLikelihood_r_show[ei,]*priorPopDens_r
     }
     

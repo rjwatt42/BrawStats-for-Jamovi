@@ -326,7 +326,7 @@ showPrediction <- function(hypothesis=braw.def$hypothesis,design=braw.def$design
           { braw.env$plotArea<-plotArea 
             g<-getAxisPrediction(hypothesis=list(IV=IV,DV=DV),g=g) 
             g<-plotPopulation(IV,DV,effect,g=g)
-            g<-plotPrediction(IV,IV2,DV,effect,design,g=g)
+            g<-plotPrediction(IV,IV2,DV,effect,design,correction=TRUE,g=g)
             # g<-addG(g,plotTitle(paste0("r[p]=",brawFormat(effect$rIV)),position="centre",size=1,fontface="plain"))
           },
           {

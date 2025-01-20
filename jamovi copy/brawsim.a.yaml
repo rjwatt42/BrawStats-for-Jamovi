@@ -1407,25 +1407,20 @@ options:
     - name: doProject1AhBtn
       title: '?'
       type: Action
+      
+    - name: doProject1AsBtn
+      title: 'set'
+      type: Action
 
     - name: doProject1A1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject1A2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
-      
-    - name: doProject1AsBtn
-      title: 'make data'
-      type: Action
-      
-    - name: doProject1sBtn
-      title: 'show'
-      type: Action
-      
-    - name: doProject1sLst
+    - name: doProject1A3Lst
       title: 'IV:'
       type: List
       options:
@@ -1457,7 +1452,7 @@ options:
         title: BirthOrder
       default: Perfectionism
 
-    - name: doProject1sLstA
+    - name: doProject1A3LstA
       title: 'DV:'
       type: List
       options:
@@ -1467,589 +1462,392 @@ options:
         title: ExamPass?
       default: ExamGrade
 
-    - name: doProject1sLstB
-      title: 'effect size IV&rarr;DV:'
-      type: Number
-      default: 0.3
-      min: -0.95
-      max: 0.95
+    - name: doProject1A3Btn
+      title: '⏵'
+      type: Action
 
-    - name: doProject1sLstC
-      title: 'data view:'
-      type: List
-      options:
-      - name: Compact
-        title: 'Compact'
-      - name: Variables
-        title: Variables
-      - name: Sample
-        title: Sample
-      - name: Describe
-        title: Describe
-      default: Compact
-
-    - name: doProject1sLstD
-      title: 'sample method:'
-      type: List
-      options:
-      - name: Random
-        title: Random
-      - name: Convenience
-        title: Convenience
-      - name: Snowball
-        title: Snowball
-      - name: Cluster
-        title: Cluster
-      default: Random
-
-    - name: doProject1sLstE
-      title: 'size:'
-      type: Number
-      default: 42
-      min: 10
-      max: 5000
 
     - name: doProject1BhBtn
       title: '?'
       type: Action
 
+    - name: doProject1BsBtn
+      title: 'set'
+      type: Action
+
     - name: doProject1B1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject1B2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
-    # - name: doProject1B3Btn
-    #   title: 'set'
-    #   type: Action
+    - name: doProject1B3Btn
+      title: '⏵'
+      type: Action
 
 
     - name: doProject1ChBtn
       title: '?'
       type: Action
 
-    - name: doProject1C1Btn
-      title: 'do'
+    - name: doProject1CsBtn
+      title: 'set'
       type: Action
 
-    # - name: doProject1C2Btn
-    #   title: 'set'
-    #   type: Action
-    # 
-    # - name: doProject1C3Btn
-    #   title: 'set'
-    #   type: Action
+    - name: doProject1C1Btn
+      title: '⏵'
+      type: Action
+
+    - name: doProject1C2Btn
+      title: '⏵'
+      type: Action
+
+    - name: doProject1C3Btn
+      title: '⏵'
+      type: Action
 
 
     - name: doProject2AhBtn
       title: '?'
       type: Action
 
-    - name: doProject2A1Btn
-      title: 'do'
+    - name: doProject2AsBtn
+      title: 'make sample'
       type: Action
+
+    - name: doProject2A1Btn
+      title: '⏵'
+      type: Action
+
+    - name: doProject2A2Lst
+      title: ''
+      type: List
+      options:
+      - name: 1D
+        title: '1D'
+      - name: 2D
+        title: '2D'
+      default: 1D
 
     - name: doProject2A2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
-    # - name: doProject2A3Btn
-    #   title: 'set'
-    #   type: Action
+    - name: doProject2A3Btn
+      title: '⏵'
+      type: Action
 
 
     - name: doProject2BhBtn
       title: '?'
       type: Action
 
+    - name: doProject2BsBtn
+      title: 'set'
+      type: Action
+
     - name: doProject2B1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
     - name: doProject2B2Btn
-      title: 'do'
+      title: '⏵'
       type: Action
 
-    # - name: doProject2B3Btn
-    #   title: 'set'
-    #   type: Action
+    - name: doProject2B3Btn
+      title: '⏵'
+      type: Action
+
+    - name: doProject2B4Btn
+      title: '⏵'
+      type: Action
 
 
     - name: doProject2ChBtn
       title: '?'
       type: Action
 
+    - name: doProject2CsBtn
+      title: 'set'
+      type: Action
+
     - name: doProject2C1Btn
-      title: 'do'
+      title: '⏵'
       type: Action
       
-    # - name: doProject2C2Btn
-    #   title: 'set'
-    #   type: Action
-      
-    # - name: doProject2C3Btn
-    #   title: 'set'
-    #   type: Action
-
-      
-    - name: doProject2sBtn
-      title: 'show'
-      type: Action
-
-    - name: doProject2AsBtn
-      title: 'make data'
-      type: Action
-
-    - name: doProject2BsBtn
-      title: 'make multiple'
+    - name: doProject2C2Btn
+      title: '⏵'
       type: Action
       
-    - name: doProject2sLst
-      title: 'IV:'
+    - name: doProject2C2Lst
+      title: "n:"
       type: List
       options:
-      - name: IQ
-        title: IQ
-      - name: Diligence
-        title: Diligence
-      - name: Perfectionism
-        title: Perfectionism
-      - name: Anxiety
-        title: Anxiety
-      - name: Happiness
-        title: Happiness
-      - name: SelfConfidence
-        title: SelfConfidence
-      - name: RiskTaking
-        title: RiskTaking
-      - name: Interesting
-        title: Interesting
-      - name: Musician
-        title: Musician?
-      - name: Smoker
-        title: Smoker?
-      - name: RiskTaker
-        title: RiskTaker?
-      - name: StudySubject
-        title: StudySubject
-      - name: BirthOrder
-        title: BirthOrder
-      default: Perfectionism
+      - name: n20
+        title: '20'
+      - name: n40
+        title: '40'
+      - name: n60
+        title: '60'
+      - name: n80
+        title: '80'
+      - name: n100
+        title: '100'
+      default: n40
+      #   
+      # title: '⏵'
+      # type: Action
 
-    - name: doProject2sLstA
-      title: 'DV:'
+    - name: doProject2C3Btn
+      title: '⏵'
+      type: Action
+
+    - name: doProject2C4Btn
+      title: '⏵'
+      type: Action
+
+    - name: doProject2C4Lst
+      title: "rp:"
       type: List
       options:
-      - name: ExamGrade
-        title: ExamGrade
-      - name: ExamPass
-        title: ExamPass?
-      default: ExamGrade
+      - name: r00
+        title: '0.0'
+      - name: r01
+        title: '0.1'
+      - name: r02
+        title: '0.2'
+      - name: r03
+        title: '0.3'
+      - name: r05
+        title: '0.5'
+      - name: r075
+        title: '0.75'
+      default: r03
+      # title: '⏵'
+      # type: Action
 
-    - name: doProject2sLstB
-      title: 'effect size IV&rarr;DV:'
-      type: Number
-      default: 0.3
-      min: -0.95
-      max: 0.95
 
-    - name: doProject2sLstC
-      title: 'data view:'
-      type: List
-      options:
-      - name: Compact
-        title: 'Compact'
-      - name: Variables
-        title: Variables
-      - name: Sample
-        title: Sample
-      - name: Describe
-        title: Describe
-      - name: Infer
-        title: Infer
-      default: Infer
+    - name: doProject3AhBtn
+      title: '?'
+      type: Action
 
-    - name: doProject2sLstD
-      title: 'sample method:'
-      type: List
-      options:
-      - name: Random
-        title: Random
-      - name: Convenience
-        title: Convenience
-      - name: Snowball
-        title: Snowball
-      - name: Cluster
-        title: Cluster
-      default: Random
-
-    - name: doProject2sLstE
-      title: 'size:'
-      type: Number
-      default: 42
-      min: 10
-      max: 5000
-
-    - name: doProject2sLstF
-      title: 'multiple view:'
-      type: List
-      options:
-      - name: Basic
-        title: Basic
-      - name: NHST
-        title: NHST
-      - name: p(sig)
-        title: 'p(sig)'
-      default: Basic
-
-    - name: doProject2sLstG
-      title: 'world:'
-      type: List
-      options:
-      - name: off
-        title: off
-      - name: eq
-        title: '0 & 0.3'
-      default: off
-
-      
-    - name: doProject3sBtn
-      title: 'show'
+    - name: doProject3AsBtn
+      title: 'set'
       type: Action
       
+    - name: doProject3AsLst
+      title: "hyp:"
+      type: List
+      options:
+      - name: iii
+        title: 'i~i*i'
+      - name: ici
+        title: 'i~c*i'
+      - name: iic
+        title: 'i~i*c'
+      - name: icc
+        title: 'i~c*c'
+      default: iii
+      # title: '⏵'
+      # type: Action
+
+    - name: doProject3A1Btn
+      title: '⏵'
+      type: Action
+
+    - name: doProject3A1Lst
+      title: "rp:"
+      type: List
+      options:
+      - name: r00
+        title: '0.0'
+      - name: r01
+        title: '0.1'
+      - name: r02
+        title: '0.2'
+      - name: r03
+        title: '0.3'
+      - name: r05
+        title: '0.5'
+      - name: r075
+        title: '0.75'
+      default: r03
+
+
+    - name: doProject3A2Btn
+      title: '⏵'
+      type: Action
+      
+    - name: doProject3A2Lst
+      title: "rp:"
+      type: List
+      options:
+      - name: r00
+        title: '0.0'
+      - name: r01
+        title: '0.1'
+      - name: r02
+        title: '0.2'
+      - name: r03
+        title: '0.3'
+      - name: r05
+        title: '0.5'
+      - name: r075
+        title: '0.75'
+      default: r03
+
+    - name: doProject3A3Btn
+      title: '⏵'
+      type: Action
+      
+    - name: doProject3A3Lst
+      title: "rp:"
+      type: List
+      options:
+      - name: r00
+        title: '0.0'
+      - name: r01
+        title: '0.1'
+      - name: r02
+        title: '0.2'
+      - name: r03
+        title: '0.3'
+      - name: r05
+        title: '0.5'
+      - name: r075
+        title: '0.75'
+      default: r03
+
+    - name: doProject3A4Btn
+      title: '⏵'
+      type: Action
+
+
+    - name: doProject3BhBtn
+      title: '?'
+      type: Action
+
     - name: doProject3BsBtn
-      title: 'make multiple'
+      title: 'set'
       type: Action
-      
-    - name: doProject3sLst
-      title: 'IV:'
+
+    - name: doProject3BsLst
+      title: "hyp:"
       type: List
       options:
-      - name: IQ
-        title: IQ
-      - name: Diligence
-        title: Diligence
-      - name: Perfectionism
-        title: Perfectionism
-      - name: Anxiety
-        title: Anxiety
-      - name: Happiness
-        title: Happiness
-      - name: SelfConfidence
-        title: SelfConfidence
-      - name: RiskTaking
-        title: RiskTaking
-      - name: Interesting
-        title: Interesting
-      - name: Musician
-        title: Musician?
-      - name: Smoker
-        title: Smoker?
-      - name: RiskTaker
-        title: RiskTaker?
-      - name: StudySubject
-        title: StudySubject
-      - name: BirthOrder
-        title: BirthOrder
-      default: Perfectionism
+      - name: iii
+        title: 'i~i*i'
+      - name: ici
+        title: 'i~c*i'
+      - name: iic
+        title: 'i~i*c'
+      - name: icc
+        title: 'i~c*c'
+      default: iii
 
-    - name: doProject3sLstA
-      title: 'DV:'
+    - name: doProject3B1Btn
+      title: '⏵'
+      type: Action
+
+    - name: doProject3B1Lst
+      title: "rp:"
       type: List
       options:
-      - name: ExamGrade
-        title: ExamGrade
-      - name: ExamPass
-        title: ExamPass?
-      default: ExamGrade
+      - name: r00
+        title: '0.0'
+      - name: r01
+        title: '0.1'
+      - name: r02
+        title: '0.2'
+      - name: r03
+        title: '0.3'
+      - name: r05
+        title: '0.5'
+      - name: r075
+        title: '0.75'
+      default: r03
 
-    - name: doProject3sLstB
-      title: 'effect size IV&rarr;DV:'
-      type: Number
-      default: 0.3
-      min: -0.95
-      max: 0.95
+    - name: doProject3B2Btn
+      title: '⏵'
+      type: Action
 
-    - name: doProject3sLstC
-      title: 'data view:'
+    - name: doProject3B2Lst
+      title: "rp:"
       type: List
       options:
-      - name: Compact
-        title: 'Compact'
-      - name: Variables
-        title: Variables
-      - name: Sample
-        title: Sample
-      - name: Describe
-        title: Describe
-      - name: Infer
-        title: Infer
-      default: Infer
+      - name: r00
+        title: '0.0'
+      - name: r01
+        title: '0.1'
+      - name: r02
+        title: '0.2'
+      - name: r03
+        title: '0.3'
+      - name: r05
+        title: '0.5'
+      - name: r075
+        title: '0.75'
+      default: r03
 
-    - name: doProject3sLstD
-      title: 'sample method:'
+
+    - name: doProject3ChBtn
+      title: '?'
+      type: Action
+
+    - name: doProject3CsBtn
+      title: 'set'
+      type: Action
+
+    - name: doProject3C1Btn
+      title: '⏵'
+      type: Action
+
+    - name: doProject3C2Btn
+      title: '⏵'
+      type: Action
+
+    - name: doProject3C2Lst
+      title: "rp:"
       type: List
       options:
-      - name: Random
-        title: Random
-      - name: Convenience
-        title: Convenience
-      - name: Snowball
-        title: Snowball
-      - name: Cluster
-        title: Cluster
-      default: Random
+      - name: r00
+        title: '0.0'
+      - name: r01
+        title: '0.1'
+      - name: r02
+        title: '0.2'
+      - name: r03
+        title: '0.3'
+      - name: r05
+        title: '0.5'
+      - name: r075
+        title: '0.75'
+      default: r03
 
-    - name: doProject3sLstE
-      title: 'size:'
-      type: Number
-      default: 42
-      min: 10
-      max: 5000
+    - name: doProject3C3Btn
+      title: '⏵'
+      type: Action
 
-    - name: doProject3sLstF
-      title: 'multiple view:'
-      type: List
-      options:
-      - name: Basic
-        title: Basic
-      - name: NHST
-        title: NHST
-      - name: p(sig)
-        title: 'p(sig)'
-      default: Basic
-
-    - name: doProject3sLstG
-      title: 'world:'
-      type: List
-      options:
-      - name: off
-        title: off
-      - name: eq
-        title: '0 & 0.3'
-      default: off
-
-
-    # - name: doProject4AhBtn
-    #   title: '?'
-    #   type: Action
-    # 
-    # - name: doProject4AsBtn
-    #   title: 'set'
-    #   type: Action
-    # 
-    # - name: doProject4AsLst
-    #   title: "hyp:"
-    #   type: List
-    #   options:
-    #   - name: iii
-    #     title: 'i~i*i'
-    #   - name: ici
-    #     title: 'i~c*i'
-    #   - name: iic
-    #     title: 'i~i*c'
-    #   - name: icc
-    #     title: 'i~c*c'
-    #   default: iii
-    #   # title: '⏵'
-    #   # type: Action
-    # 
-    # - name: doProject4A1Btn
-    #   title: '⏵'
-    #   type: Action
-    # 
-    # - name: doProject4A1Lst
-    #   title: "rp:"
-    #   type: List
-    #   options:
-    #   - name: r00
-    #     title: '0.0'
-    #   - name: r01
-    #     title: '0.1'
-    #   - name: r02
-    #     title: '0.2'
-    #   - name: r03
-    #     title: '0.3'
-    #   - name: r05
-    #     title: '0.5'
-    #   - name: r075
-    #     title: '0.75'
-    #   default: r03
-    # 
-    # 
-    # - name: doProject4A2Btn
-    #   title: '⏵'
-    #   type: Action
-    # 
-    # - name: doProject4A2Lst
-    #   title: "rp:"
-    #   type: List
-    #   options:
-    #   - name: r00
-    #     title: '0.0'
-    #   - name: r01
-    #     title: '0.1'
-    #   - name: r02
-    #     title: '0.2'
-    #   - name: r03
-    #     title: '0.3'
-    #   - name: r05
-    #     title: '0.5'
-    #   - name: r075
-    #     title: '0.75'
-    #   default: r03
-    # 
-    # - name: doProject4A3Btn
-    #   title: '⏵'
-    #   type: Action
-    # 
-    # - name: doProject4A3Lst
-    #   title: "rp:"
-    #   type: List
-    #   options:
-    #   - name: r00
-    #     title: '0.0'
-    #   - name: r01
-    #     title: '0.1'
-    #   - name: r02
-    #     title: '0.2'
-    #   - name: r03
-    #     title: '0.3'
-    #   - name: r05
-    #     title: '0.5'
-    #   - name: r075
-    #     title: '0.75'
-    #   default: r03
-    # 
-    # - name: doProject4A4Btn
-    #   title: '⏵'
-    #   type: Action
-    # 
 # 
-#     - name: doProject4BhBtn
+#     - name: doProject4AhBtn
 #       title: '?'
 #       type: Action
 # 
-#     - name: doProject4BsBtn
+#     - name: doProject4AsBtn
 #       title: 'set'
 #       type: Action
 # 
-#     - name: doProject4BsLst
-#       title: "hyp:"
-#       type: List
-#       options:
-#       - name: iii
-#         title: 'i~i*i'
-#       - name: ici
-#         title: 'i~c*i'
-#       - name: iic
-#         title: 'i~i*c'
-#       - name: icc
-#         title: 'i~c*c'
-#       default: iii
-# 
-#     - name: doProject4B1Btn
+#     - name: doProject4A1Btn
 #       title: '⏵'
 #       type: Action
 # 
-#     - name: doProject4B1Lst
-#       title: "rp:"
-#       type: List
-#       options:
-#       - name: r00
-#         title: '0.0'
-#       - name: r01
-#         title: '0.1'
-#       - name: r02
-#         title: '0.2'
-#       - name: r03
-#         title: '0.3'
-#       - name: r05
-#         title: '0.5'
-#       - name: r075
-#         title: '0.75'
-#       default: r03
-# 
-#     - name: doProject4B2Btn
+#     - name: doProject4A2Btn
 #       title: '⏵'
 #       type: Action
 # 
-#     - name: doProject4B2Lst
-#       title: "rp:"
-#       type: List
-#       options:
-#       - name: r00
-#         title: '0.0'
-#       - name: r01
-#         title: '0.1'
-#       - name: r02
-#         title: '0.2'
-#       - name: r03
-#         title: '0.3'
-#       - name: r05
-#         title: '0.5'
-#       - name: r075
-#         title: '0.75'
-#       default: r03
-# 
-#     - name: doProject4ChBtn
-#       title: '?'
-#       type: Action
-# 
-#     - name: doProject4CsBtn
-#       title: 'set'
-#       type: Action
-# 
-#     - name: doProject4C1Btn
-#       title: '⏵'
-#       type: Action
-# 
-#     - name: doProject4C2Btn
-#       title: '⏵'
-#       type: Action
-# 
-#     - name: doProject4C2Lst
-#       title: "rp:"
-#       type: List
-#       options:
-#       - name: r00
-#         title: '0.0'
-#       - name: r01
-#         title: '0.1'
-#       - name: r02
-#         title: '0.2'
-#       - name: r03
-#         title: '0.3'
-#       - name: r05
-#         title: '0.5'
-#       - name: r075
-#         title: '0.75'
-#       default: r03
-# 
-#     - name: doProject4C3Btn
-#       title: '⏵'
-#       type: Action
-
-# 
-#     - name: doProject5AhBtn
-#       title: '?'
-#       type: Action
-# 
-#     - name: doProject5AsBtn
-#       title: 'set'
-#       type: Action
-# 
-#     - name: doProject5A1Btn
-#       title: '⏵'
-#       type: Action
-# 
-#     - name: doProject5A2Btn
-#       title: '⏵'
-#       type: Action
-# 
-#     - name: doProject5A2Lst
+#     - name: doProject4A2Lst
 #       title: "rp:"
 #       type: List
 #       options:
@@ -2069,7 +1867,7 @@ options:
 #         title: '0.7'
 #       default: r07
 # 
-#     - name: doProject5A3Btn
+#     - name: doProject4A3Btn
 #       title: '⏵'
 #       type: Action
 

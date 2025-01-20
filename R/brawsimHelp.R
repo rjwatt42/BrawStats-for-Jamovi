@@ -52,7 +52,7 @@ brawJamoviHelp<-function(open=0,indent,titleWidth,hypothesis,design) {
 }
 
 brawDemosHelp<-function(open,indent,titleWidth,demos) {
-  demoTabNames<-c("Start","Data","Uncertainty","Linear Models","Path Models")
+  demoTabNames<-c("Start","Data","Uncertainty","Design","Linear Models","Path Models")
   demoTabs<-c(
     demoInstructions("start"),
     generate_tab(
@@ -70,7 +70,7 @@ brawDemosHelp<-function(open,indent,titleWidth,demos) {
       open=open[2]
     ),
     generate_tab(
-      title="Uncertainty & Design:",
+      title="Uncertainty:",
       tabs=c("Overview","2a","2b","2c"),
       indent=0,
       titleWidth=0,
@@ -83,7 +83,7 @@ brawDemosHelp<-function(open,indent,titleWidth,demos) {
       open=open[2]
     ),
     generate_tab(
-      title="Linear Models:",
+      title="Design:",
       tabs=c("Overview","3a","3b","3c"),
       indent=0,
       titleWidth=0,
@@ -96,7 +96,7 @@ brawDemosHelp<-function(open,indent,titleWidth,demos) {
       open=open[2]
     ),
     generate_tab(
-      title="Path Models:",
+      title="Linear Models:",
       tabs=c("Overview","4a","4b","4c"),
       indent=0,
       titleWidth=0,
@@ -107,10 +107,23 @@ brawDemosHelp<-function(open,indent,titleWidth,demos) {
         demoInstructions("4c")
       ),
       open=open[2]
+    ),
+    generate_tab(
+      title="Path Models:",
+      tabs=c("Overview","5a","5b","5c"),
+      indent=0,
+      titleWidth=0,
+      tabContents=c(
+        demoInstructions("5"),
+        demoInstructions("5a"),
+        demoInstructions("5b"),
+        demoInstructions("5c")
+      ),
+      open=open[2]
     )
   )
-    demoTabNames<-demoTabNames[1:demos]
-    demoTabs<-demoTabs[1:demos]
+    demoTabNames<-demoTabNames[1:(demos+1)]
+    demoTabs<-demoTabs[1:(demos+1)]
 
     return( generate_tab(
       title="Demos:",

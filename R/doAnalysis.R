@@ -685,6 +685,8 @@ doAnalysis<-function(sample=doSample(autoShow=FALSE),evidence=braw.def$evidence,
                    sem5$eval[[paste0(evidence$useAIC,"1")]],
                    sem6$eval[[paste0(evidence$useAIC,"1")]]
       )
+      analysis$semP<-c(sem0$P,sem1$P,sem2$P,sem3$P,sem4$P,sem5$P,sem6$P)
+      analysis$semQ<-c(sem0$Q,sem1$Q,sem2$Q,sem3$Q,sem4$Q,sem5$Q,sem6$Q)
       analysis$semK1<-c(sem0$eval$k1,sem1$eval$k1,sem2$eval$k1,sem3$eval$k1,sem4$eval$k1,sem5$eval$k1,sem6$eval$k1)
       analysis$semK<-c(sem0$eval$k,sem1$eval$k,sem2$eval$k,sem3$eval$k,sem4$eval$k,sem5$eval$k,sem6$eval$k)
       analysis$semLLR<-c(sem0$eval$llr,sem1$eval$llr,sem2$eval$llr,sem3$eval$llr,sem4$eval$llr,sem5$eval$llr,sem6$eval$llr)
@@ -708,6 +710,8 @@ doAnalysis<-function(sample=doSample(autoShow=FALSE),evidence=braw.def$evidence,
                    sem1$eval[[evidence$useAIC]],
                    NA,NA,NA,NA,NA
                    )
+      analysis$semP<-c(sem0$eval$P,sem1$eval$P,rep(NA,5))
+      analysis$semQ<-c(sem0$eval$Q,sem1$eval$Q,rep(NA,5))
       analysis$semRs<-t(rbind(c(NA,NA,NA),c(sem1$ES_table[1,2],NA,NA)))
       analysis$semK<-c(sem0$eval$k,sem1$eval$k,rep(NA,5))
       analysis$semLLR<-c(sem0$eval$llr,sem1$eval$llr,rep(NA,5))
@@ -720,7 +724,6 @@ doAnalysis<-function(sample=doSample(autoShow=FALSE),evidence=braw.def$evidence,
     rarrow<-'\u2192'
     barrow<-'\u2190\u2192'
     analysis$sem<-matrix(c(modelSEMs,which.min(modelSEMs)),nrow=1)
-    analysis$sem1<-matrix(c(modelSEM1s,which.min(modelSEM1s)),nrow=1)
     colnames(analysis$sem)<-c("DV",
                               paste0("IV",rarrow,"DV"),
                               paste0("IV2",rarrow,"DV"),
@@ -730,7 +733,20 @@ doAnalysis<-function(sample=doSample(autoShow=FALSE),evidence=braw.def$evidence,
                               paste0("(IV" ,barrow, "IV2)",rarrow,"DV"),
                               "Best"
     )
-  } else analysis$sem<-NULL
+    analysis$sem1<-matrix(c(modelSEM1s,which.min(modelSEM1s)),nrow=1)
+    colnames(analysis$sem1)<-c("DV",
+                              paste0("IV",rarrow,"DV"),
+                              paste0("IV2",rarrow,"DV"),
+                              paste0("IV2",rarrow,"IV",rarrow,"DV"),
+                              paste0("IV",rarrow,"IV2",rarrow,"DV"),
+                              paste0("(IV + IV2)",rarrow,"DV"),
+                              paste0("(IV" ,barrow, "IV2)",rarrow,"DV"),
+                              "Best"
+    )
+  } else {
+    analysis$sem<-NULL
+    analysis$sem1<-NULL
+  }
   
   analysis$aic<-anResult$aic
   analysis$aicNull<-anResult$aicNull
