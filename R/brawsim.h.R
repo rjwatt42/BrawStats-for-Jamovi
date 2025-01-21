@@ -1075,6 +1075,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "sendSample")
             private$..sendMultiple <- jmvcore::OptionOutput$new(
                 "sendMultiple")
+            private$..sendExplore <- jmvcore::OptionOutput$new(
+                "sendExplore")
             private$..brawHelp <- jmvcore::OptionBool$new(
                 "brawHelp",
                 brawHelp,
@@ -1497,6 +1499,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..whichShowMultiple)
             self$.addOption(private$..sendSample)
             self$.addOption(private$..sendMultiple)
+            self$.addOption(private$..sendExplore)
             self$.addOption(private$..brawHelp)
             self$.addOption(private$..showHTML)
             self$.addOption(private$..systemMag)
@@ -1690,6 +1693,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         whichShowMultiple = function() private$..whichShowMultiple$value,
         sendSample = function() private$..sendSample$value,
         sendMultiple = function() private$..sendMultiple$value,
+        sendExplore = function() private$..sendExplore$value,
         brawHelp = function() private$..brawHelp$value,
         showHTML = function() private$..showHTML$value,
         systemMag = function() private$..systemMag$value,
@@ -1882,6 +1886,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..whichShowMultiple = NA,
         ..sendSample = NA,
         ..sendMultiple = NA,
+        ..sendExplore = NA,
         ..brawHelp = NA,
         ..showHTML = NA,
         ..systemMag = NA,
@@ -1943,7 +1948,8 @@ BrawSimResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         simReport = function() private$.items[["simReport"]],
         debug = function() private$.items[["debug"]],
         sendSample = function() private$.items[["sendSample"]],
-        sendMultiple = function() private$.items[["sendMultiple"]]),
+        sendMultiple = function() private$.items[["sendMultiple"]],
+        sendExplore = function() private$.items[["sendExplore"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -2031,7 +2037,15 @@ BrawSimResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 varTitle="Mult",
                 items=4,
                 clearWith=list(
-                    "makeMultipleBtn")))}))
+                    "makeMultipleBtn")))
+            self$add(jmvcore::Output$new(
+                options=options,
+                name="sendExplore",
+                measureType="continuous",
+                varTitle="Explore",
+                items=5,
+                clearWith=list(
+                    "makeExploreBtn")))}))
 
 BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "BrawSimBase",
@@ -2256,6 +2270,7 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$debug} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$sendSample} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$sendMultiple} \tab \tab \tab \tab \tab an output \cr
+#'   \code{results$sendExplore} \tab \tab \tab \tab \tab an output \cr
 #' }
 #'
 #' @export

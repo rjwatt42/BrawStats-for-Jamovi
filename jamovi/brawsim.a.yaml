@@ -1388,6 +1388,11 @@ options:
       title: multiple
       type: Output
       default: FALSE
+      
+    - name: sendExplore
+      title: explore
+      type: Output
+      default: FALSE
 
     - name: brawHelp
       title: Main help?

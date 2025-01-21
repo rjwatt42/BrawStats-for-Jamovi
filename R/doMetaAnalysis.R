@@ -59,7 +59,7 @@ getMaxLikelihood<-function(zs,ns,df1,dist,metaAnalysis) {
   }
   if (dist=="random") {
     param1<-seq(-1,1,length.out=np1points)*0.95
-    param2<-seq(0,1,length.out=np2points)*0.95
+    param2<-seq(0,0.25,length.out=np2points)*0.95
   }
   
   remove_nonsig<-metaAnalysis$includeBias
@@ -68,10 +68,10 @@ getMaxLikelihood<-function(zs,ns,df1,dist,metaAnalysis) {
     Smax<-max(S,na.rm=TRUE)
     
     use<-which(S==Smax, arr.ind = TRUE)
-    Nullmax<-param2[use[1,2]]
+    param2Max<-param2[use[1,2]]
     lb2<-param2[max(1,use[1,2]-reInc)]
     ub2<-param2[min(length(param2),use[1,2]+reInc)]
-    Kmax<-param1[use[1,1]]
+    param1Max<-param1[use[1,1]]
     lb1<-param1[max(1,use[1,1]-reInc)]
     ub1<-param1[min(length(param1),use[1,1]+reInc)]
     
@@ -83,12 +83,12 @@ getMaxLikelihood<-function(zs,ns,df1,dist,metaAnalysis) {
   
   if (niterations==1) {      
     fun<-function(x) { -getLogLikelihood(zs,ns,df1,dist,x[1],x[2],remove_nonsig)}
-    result<-fmincon(c(Kmax,Nullmax),fun,ub=c(ub1,ub2),lb=c(lb1,lb2))
-    Kmax<-result$par[1]
-    Nullmax<-result$par[2]
+    result<-fmincon(c(param1Max,param2Max),fun,ub=c(ub1,ub2),lb=c(lb1,lb2))
+    param1Max<-result$par[1]
+    param2Max<-result$par[2]
     Smax<- -result$value
   }
-  return(list(Kmax=Kmax,Nullmax=Nullmax,Smax=Smax))
+  return(list(param1Max=param1Max,param2Max=param2Max,Smax=Smax))
 }
 
 
@@ -98,50 +98,57 @@ runMetaAnalysis<-function(metaAnalysis,studies,metaResult){
   ns<-studies$nval
   df1<-studies$df1
   
+  fixed<-list(param1Max=NA,param2Max=NA,Smax=NA)
+  random<-list(param1Max=NA,param2Max=NA,Smax=NA)
+  single<-list(param1Max=NA,param2Max=NA,Smax=NA)
+  gauss<-list(param1Max=NA,param2Max=NA,Smax=NA)
+  exp<-list(param1Max=NA,param2Max=NA,Smax=NA)
   switch(metaAnalysis$analysisType,
          "fixed"={
            # a fixed analysis finds a single effect size
            metaAnalysis$includeNulls<-FALSE
-           single<-getMaxLikelihood(zs,ns,df1,"fixed",metaAnalysis)
-           gauss<-list(Kmax=NA,Nullmax=NA,Smax=NA)
-           exp<-list(Kmax=NA,Nullmax=NA,Smax=NA)
+           fixed<-getMaxLikelihood(zs,ns,df1,"fixed",metaAnalysis)
          },
          "random"={
            metaAnalysis$includeNulls<-FALSE
-           single<-getMaxLikelihood(zs,ns,df1,"random",metaAnalysis)
-           gauss<-list(Kmax=NA,Nullmax=NA,Smax=NA)
-           exp<-list(Kmax=NA,Nullmax=NA,Smax=NA)
+           random<-getMaxLikelihood(zs,ns,df1,"random",metaAnalysis)
          },
          "world"={
            # doing world effects analysis
            
            # find best Single 
-           if (metaAnalysis$modelPDF=="Single" || (metaAnalysis$modelPDF=="All")) {
+           if (metaAnalysis$modelPDF=="Single" || (metaAnalysis$modelPDF=="All")) 
              single<-getMaxLikelihood(zs,ns,df1,"Single",metaAnalysis)
-           } else {
-             single<-list(Kmax=NA,Nullmax=NA,Smax=NA)
-           }
-           
+
            # find best Gauss
-           if (metaAnalysis$modelPDF=="Gauss" || metaAnalysis$modelPDF=="All") {
+           if (metaAnalysis$modelPDF=="Gauss" || metaAnalysis$modelPDF=="All") 
              gauss<-getMaxLikelihood(zs,ns,df1,"Gauss",metaAnalysis)
-           } else {
-             gauss<-list(Kmax=NA,Nullmax=NA,Smax=NA)
-           }
-           
+
            # find best Exp
-           if (metaAnalysis$modelPDF=="Exp" || metaAnalysis$modelPDF=="All") {
+           if (metaAnalysis$modelPDF=="Exp" || metaAnalysis$modelPDF=="All") 
              exp<-getMaxLikelihood(zs,ns,df1,"Exp",metaAnalysis)
-           } else {
-             exp<-list(Kmax=NA,Nullmax=NA,Smax=NA)
-           }
 
          })
-
+if (is.element(metaAnalysis$analysisType,c("fixed","random"))) {
+  if (metaAnalysis$analysisType=="fixed") {
+    fixed$param1Max<-c(metaResult$fixed$param1Max,fixed$param1Max)
+    fixed$Smax<-c(metaResult$fixed$Smax,fixed$Smax)
+    fixed$param2Max<-c(metaResult$fixed$param2Max,fixed$param2Max)
+  } else {
+    random$param1Max<-c(metaResult$random$param1Max,random$param1Max)
+    random$Smax<-c(metaResult$random$Smax,random$Smax)
+    random$param2Max<-c(metaResult$random$param2Max,random$param2Max)
+  }  
+  bestDist<-NA
+  bestK<-NA
+  bestNull<-NA
+  bestS<-NA
+  
+} else {
   use<-which.max(c(single$Smax,gauss$Smax,exp$Smax))
   bestDist<-c("Single","Gauss","Exp")[use]
-  bestK<-c(single$Kmax,gauss$Kmax,exp$Kmax)[use]
-  bestNull<-c(single$Nullmax,gauss$Nullmax,exp$Nullmax)[use]
+  bestK<-c(single$param1Max,gauss$param1Max,exp$param1Max)[use]
+  bestNull<-c(single$param2Max,gauss$param2Max,exp$param2Max)[use]
   bestS<-c(single$Smax,gauss$Smax,exp$Smax)[use]
   
   if (!is.null(metaResult)) {
@@ -149,18 +156,22 @@ runMetaAnalysis<-function(metaAnalysis,studies,metaResult){
     bestK<-c(metaResult$bestK,bestK)
     bestNull<-c(metaResult$bestNull,bestNull)
     bestS<-c(metaResult$bestS,bestS)
-    single$Kmax<-c(metaResult$single$Kmax,single$Kmax)
+    single$param1Max<-c(metaResult$single$param1Max,single$param1Max)
     single$Smax<-c(metaResult$single$Smax,single$Smax)
-    single$Nullmax<-c(metaResult$single$Nullmax,single$Nullmax)
-    gauss$Kmax<-c(metaResult$gauss$Kmax,gauss$Kmax)
+    single$param2Max<-c(metaResult$single$param2Max,single$param2Max)
+    gauss$param1Max<-c(metaResult$gauss$param1Max,gauss$param1Max)
     gauss$Smax<-c(metaResult$gauss$Smax,gauss$Smax)
-    gauss$Nullmax<-c(metaResult$gauss$Nullmax,gauss$Nullmax)
-    exp$Kmax<-c(metaResult$exp$Kmax,exp$Kmax)
+    gauss$param2Max<-c(metaResult$gauss$param2Max,gauss$param2Max)
+    exp$param1Max<-c(metaResult$exp$param1Max,exp$param1Max)
     exp$Smax<-c(metaResult$exp$Smax,exp$Smax)
-    exp$Nullmax<-c(metaResult$exp$Nullmax,exp$Nullmax)
+    exp$param2Max<-c(metaResult$exp$param2Max,exp$param2Max)
   }
   
-  metaResult<-list(single=single,
+}
+  
+  metaResult<-list(fixed=fixed,
+                   random=random,
+                   single=single,
                    gauss=gauss,
                    exp=exp,
                    bestDist=bestDist,

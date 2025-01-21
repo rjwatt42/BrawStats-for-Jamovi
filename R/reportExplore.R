@@ -9,7 +9,9 @@
 #'                        whichEffect="All",effectType="all")
 #' @export
 reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
-                        whichEffect="All",effectType="all",quantileShow=0.5,reportStats="Medians"
+                        whichEffect="All",effectType="all",
+                        quantileShow=0.5,reportStats="Medians",
+                        returnDataFrame=FALSE
 ){
   if (is.null(exploreResult)) exploreResult<-doExplore(autoShow=FALSE)
   
@@ -50,15 +52,6 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
   }
   nc<-length(useVals)+2
   
-  exploreTypeShow<-explore$exploreType
-  if (is.element(explore$exploreType,c("rIV","rIV2","rIVIV2","rIVIV2DV"))) {
-    if (is.null(hypothesis$IV2)) {
-      exploreTypeShow<-"r[p]"
-    } else {
-      exploreTypeShow<-paste0("r[p]",gsub("^r","",explore$exploreType))
-    }
-  } else exploreTypeShow<-explore$exploreType
-  
   outputText<-rep("",nc)
   if (is.element(showType[1],c("NHST","Hits","Misses")) && sum(!is.na(exploreResult$nullresult$rval[,1]))>0) {
     outputText[1:2]<-c("!TExplore  ",paste("nsims = ",format(sum(!is.na(exploreResult$result$rval[,1]))),"+",format(sum(!is.na(exploreResult$nullresult$rval[,1]))),sep=""))
@@ -86,6 +79,15 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
     whichEffects<-"Main 1"
     effectTypes<-"direct"
   }
+  
+  exploreTypeShow<-explore$exploreType
+  if (is.element(explore$exploreType,c("rIV","rIV2","rIVIV2","rIVIV2DV"))) {
+    if (is.null(hypothesis$IV2)) {
+      exploreTypeShow<-"r[p]"
+    } else {
+      exploreTypeShow<-paste0("r[p]",gsub("^r","",explore$exploreType))
+    }
+  } else exploreTypeShow<-explore$exploreType
   
   tableHeader<-FALSE
   for (whichEffect in whichEffects)  {
@@ -436,6 +438,12 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
             ysd[i]<-sd(showVals[,i],na.rm=TRUE)
           }
           
+          if (returnDataFrame) {
+            d<-data.frame(vals=vals,means=ymn,sds=ysd,medians=y50,iqr=yiqr)
+            names(d)[1]<-explore$exploreType
+            return(d)
+          }
+          
           if (reportMeans){
             outputText<-c(outputText,rep(" ",nc))
             outputText<-c(outputText,paste0("\b", y_label),"mean")
@@ -479,6 +487,12 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
         
         
         if (is.element(showType,c("p(sig)","Hits","Misses")) ){
+          if (returnDataFrame) {
+            d<-data.frame(vals=vals,psig=y50)
+            names(d)[1]<-explore$exploreType
+            return(d)
+          }
+          
           outputText<-c(outputText,"","-se ")
           for (i in 1:length(useVals)) {
             outputText<-c(outputText,paste0("!j",brawFormat(y25[useVals[i]],digits=precision)))
@@ -542,11 +556,32 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
         }
         if (is.element(showType[1],c("NHST","SEM"))) {
           if (is.null(semPropsNull)) {
+            if (returnDataFrame) {
+              d<-data.frame(vals=vals)
+              for (ig in 1:nrow(semProps)) {
+                d<-cbind(d,semProps[ig,])
+                }
+              names(d)<-c(explore$exploreType,showLabels)
+              return(d)
+            }
+            
             for (ig in 1:nrow(semProps)) {
               outputText<-c(outputText,paste0("!j",showLabels[ig])," ")
               for (i in useVals)  outputText<-c(outputText,paste0(brawFormat(100*semProps[ig,i],digits=1),"%"))
             }
           } else {
+            if (returnDataFrame) {
+              d<-data.frame(vals=vals)
+              for (ig in 1:nrow(semProps)) {
+                d<-cbind(d,semProps[ig,])
+              }
+              for (ig in 1:nrow(semProps)) {
+                d<-cbind(d,semPropsNull[ig,])
+              }
+              names(d)<-c(explore$exploreType,paste0("NonNulls",showLabels),paste0("Nulls",showLabels))
+              return(d)
+            }
+            
             outputText<-c(outputText,"Non-Nulls",rep("",nc-1))
             for (ig in 1:nrow(semProps)) {
               outputText<-c(outputText,paste0("!j",showLabels[ig])," ")
@@ -557,7 +592,6 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
               outputText<-c(outputText,paste0("!j",showLabels[ig])," ")
               for (i in useVals)  outputText<-c(outputText,paste0(brawFormat(100*semPropsNull[ig,i],digits=1),"%"))
             }
-            
           }
         }
       }

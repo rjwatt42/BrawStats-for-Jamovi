@@ -381,12 +381,14 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         braw.res$multiple<<-NULL
         braw.res$explore<<-NULL
         braw.res$metaAnalysis<<-NULL
+        braw.res$metaMultiple<<-NULL
         outputNow<-"System"
       }
       if (changedE) {
         braw.res$multiple<<-NULL
         braw.res$explore<<-NULL
         braw.res$metaAnalysis<<-NULL
+        braw.res$metaMultiple<<-NULL
         if (!is.null(braw.res$result) && is.element(statusStore$lastOutput,c("Compact","Sample","Describe","Infer","Variables","Likelihood"))) {
           braw.res$result<<-doAnalysis(sample=braw.res$result)
           outputNow<-showSampleType
@@ -397,6 +399,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       }
       if (changedM) {
         braw.res$metaAnalysis<<-NULL
+        braw.res$metaMultiple<<-NULL
       }
 
       if (systemAsHTML && !is.null(outputNow) && outputNow=="System") outputNow<-NULL
@@ -423,7 +426,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         numberSamples<-self$options$numberSamples
         if (self$options$MetaAnalysisOn) {
           if (statusStore$lastOutput=="MetaMultiple") 
-            metaMultipleResult<-doMetaAnalysis(numberSamples,braw.res$metaAnalysis)
+            metaMultipleResult<-doMetaAnalysis(numberSamples,braw.res$metaMultiple)
           outputNow<-"MetaMultiple"
         } else {
           # do we need to do this, or are we just returning to the existing one?
@@ -597,7 +600,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       
       # now we save any results to the Jamovi spreadsheet
       # single result first
-      if (!is.null(braw.res$result)) {
+      if (self$options$sendSample && !is.null(braw.res$result)) {
         if (is.null(IV2)) {
           newVariables<-data.frame(braw.res$result$participant,braw.res$result$dv,braw.res$result$iv,braw.res$result$dv+NA)
           names(newVariables)<-c("ID",DV$name,IV$name,"-")
@@ -617,6 +620,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       }
       # then multiple result
       q<-NULL
+      if (self$options$sendMultiple) {
       if (!is.null(outputNow) && outputNow=="MetaSingle") {
           q<-braw.res$metaSingle$result
       } 
@@ -635,6 +639,18 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                       measureTypes=rep("Continuous",nvars)
         )
         self$results$sendMultiple$setValues(newMultiple)
+      }
+      }
+      if (self$options$sendExplore && !is.null(outputNow) && outputNow=="Explore") {
+        newExplore<-reportExplore(returnDataFrame=TRUE)
+        nvars<-ncol(newExplore)
+        
+        keys<-1:nvars
+        self$results$sendExplore$set(keys=keys,titles=names(newExplore),
+                                      descriptions=rep("simulated",nvars),
+                                      measureTypes=rep("Continuous",nvars)
+        )
+        self$results$sendExplore$setValues(newExplore)
       }
       # end of .run()
     },

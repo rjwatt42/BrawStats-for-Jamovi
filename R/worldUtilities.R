@@ -14,11 +14,17 @@ zSamplingDistr<-function(zvals,Z,n){
   1/s/sqrt(2*pi)*exp(-0.5*((zvals-Z)/s)^2)
 }
 
-rSamplingDistr<-function(rvals,R,n){
+rSamplingDistr<-function(rvals,R,n,sigOnly=FALSE){
   # map to Fisher-z
   zvals<-atanh(rvals)
   Z<-atanh(R)
   zdens<-zSamplingDistr(zvals,Z,n)
+  if (sigOnly) {
+    zcrit<-atanh(p2r(braw.env$alphaSig,n,1))
+    g<-sum(zdens)
+    zdens[abs(zvals)<zcrit]<-0.1
+    zdens<-zdens/sum(zdens)*g
+  }
   zdens2rdens(zdens,rvals)
 }
 
@@ -243,7 +249,7 @@ fullPSig<-function(world,design,HQ=FALSE,alpha=braw.env$alphaSig) {
   return(pSig)
 }
 
-fullRSamplingDist<-function(vals,world,design,doStat="rs",logScale=FALSE,sigOnly=FALSE,HQ=FALSE,separate=FALSE,quantiles=NULL) {
+fullRSamplingDist<-function(vals,world,design,doStat="rs",logScale=FALSE,sigOnly=FALSE,sigOnlyCompensate=FALSE,HQ=FALSE,separate=FALSE,quantiles=NULL) {
   # sampling distribution from specified populations (pRho)
   if (is.null(vals)) 
     vals<-seq(-1,1,length=braw.env$worldNPoints)*braw.env$r_range
@@ -345,6 +351,7 @@ fullRSamplingDist<-function(vals,world,design,doStat="rs",logScale=FALSE,sigOnly
         if (sigOnly) {
           critR<-tanh(qnorm(1-braw.env$alphaSig/2,0,1/sqrt(nvals[ni]-3)))
           addition[abs(rp)<critR]<-0
+          if (sigOnlyCompensate) addition<-addition/sum(addition)
         }
         d<-d+addition
       }

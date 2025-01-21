@@ -87,6 +87,14 @@ items:
       clearWith:
        - makeMultipleBtn
 
+    - name: sendExplore
+      type: Output
+      measureType: continuous
+      varTitle: "Explore"
+      items: 5
+      clearWith:
+       - makeExploreBtn
+
 refs: brawstats
       book
 ...
