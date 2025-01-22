@@ -420,11 +420,17 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ylabel<-"False Miss"
             use_cols<-braw.env$plotColours$fmr
           },
-          "Lambda"={
-            ylim<-c(-0.01,1.01)
-            ytick<-seq(0,1,0.2)
-            ymins<-seq(0,1,0.1)
-            ylabel<-braw.env$Llabel
+          "LambdaF"={
+            ylim<-c(-1.01,1.01)
+            ytick<-seq(-1,1,0.2)
+            ymins<-seq(-1,1,0.1)
+            ylabel<-"r[est]"
+          },
+          "LambdaR"={
+            ylim<-c(-0.01,0.5)
+            ytick<-seq(0,0.5,0.1)
+            ymins<-seq(0,0.5,0.05)
+            ylabel<-"sd(r[est])"
           },
           "k"={
             ylim<-c(-0.01,1.01)

@@ -12,17 +12,16 @@ worldLabel<-function(metaResult,whichMeta=NULL) {
     p1<-metaResult[[Dist]]$param1Max
     p2<-metaResult[[Dist]]$param2Max
 
-    if (is.element(Dist,c("random","fixed"))) label1<-"r[p]" else label1<-Dist
+    if (is.element(Dist,c("random","fixed"))) label1<-"rp" else label1<-Dist
   lb<-paste0(label1,"(",brawFormat(mean(p1,na.rm=TRUE),digits=2))
   if (length(p1)>1)
-    lb<-paste0(lb,',',brawFormat(std(p1),digits=2))
-  # lb<-paste0(lb,'\u00B1',brawFormat(std(p1),digits=2))
+    lb<-paste0(lb,"\u00B1",brawFormat(std(p1),digits=2))
   lb<-paste0(lb,")")
   if (!is.null(p2)) {
-    if (is.element(Dist,c("random","fixed"))) label2<-"sd(r[p])" else label2<-"p(null)"
+    if (is.element(Dist,c("random","fixed"))) label2<-"sd(rp)" else label2<-"p(null)"
     lb<-paste0(lb,"\n",label2,"=",brawFormat(mean(p2,na.rm=TRUE),digits=2))
     if (length(p2)>1)
-      lb<-paste0(lb,',',brawFormat(std(p2),digits=2))
+      lb<-paste0(lb,"\u00B1",brawFormat(std(p2),digits=2))
   }
   return(lb)
 }
@@ -205,7 +204,7 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
               sAll<-metaResult$fixed$Smax
               ylim<-c(min(sAll,na.rm=TRUE),max(sAll,na.rm=TRUE))+c(-1,1)*(max(sAll,na.rm=TRUE)-min(sAll,na.rm=TRUE))/4
               ylabel<-"log(lk)"
-              xlabel<-"r[p]"
+              xlabel<-"r[est]"
               useBest<-1:length(x)
             },
             "n-k"={
@@ -219,8 +218,8 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
               y<-metaResult$random$param2Max
               y1<-0
               ylim<-c(-0.02,0.2)
-              ylabel<-"sd(r[p])"
-              xlabel<-"r[p]"
+              ylabel<-"sd(r[est])"
+              xlabel<-"r[est]"
               useBest<-1:length(x)
             },
             "S-S"={
@@ -299,9 +298,9 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
         colM="yellow"
         lb<-worldLabel(metaResult,whichMeta)
         names<-strsplit(lb,"\n")[[1]]
-        names[1]<-gsub("single","r[p]",names[1])
+        names[1]<-gsub("single","rp",names[1])
         
-        if (showType=="sd-k") names[2]<-gsub("p(null)","sd(r[p])",names[2])
+        if (showType=="sd-k") names[2]<-gsub("p(null)","sd(rp)",names[2])
         else names[2]<-gsub("p(null)","S",names[2])
         g<-addG(g,dataLegend(data.frame(names=names,colours=c(colM,NA)),title="",
                              shape=braw.env$plotShapes$meta))

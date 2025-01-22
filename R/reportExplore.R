@@ -16,9 +16,15 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
   if (is.null(exploreResult)) exploreResult<-doExplore(autoShow=FALSE)
   
   precision<-braw.env$report_precision-1
-  
   reportMeans<-(reportStats=="Means")
   reportQuants<-FALSE
+  
+  if (is.element(exploreResult$explore$exploreType,c("NoStudies","MetaType"))) 
+    switch(exploreResult$metaAnalysis$analysisType,
+           "fixed"={showType<-"LambdaF"},
+           "random"={showType<-"LambdaF;LambdaR"},
+           {showType<-"Lambda;pNull"})
+  
   showType<-strsplit(showType,";")[[1]]
   if (length(showType)==1) {
     switch(showType,
@@ -35,6 +41,7 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
   explore<-exploreResult$explore
   hypothesis<-exploreResult$hypothesis
   effect<-hypothesis$effect
+  design<-exploreResult$design
   evidence<-exploreResult$evidence
   
   oldAlpha<-braw.env$alphaSig
@@ -53,10 +60,10 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
   nc<-length(useVals)+2
   
   outputText<-rep("",nc)
-  if (is.element(showType[1],c("NHST","Hits","Misses")) && sum(!is.na(exploreResult$nullresult$rval[,1]))>0) {
-    outputText[1:2]<-c("!TExplore  ",paste("nsims = ",format(sum(!is.na(exploreResult$result$rval[,1]))),"+",format(sum(!is.na(exploreResult$nullresult$rval[,1]))),sep=""))
+  if (is.element(showTypes[1],c("NHST","Hits","Misses")) && sum(!is.na(exploreResult$nullresult$rval[,1]))>0) {
+    outputText[1:2]<-c("!TExplore  ",paste("nsims = ",brawFormat(exploreResult$count),"+",brawFormat(exploreResult$nullcount),sep=""))
   } else {
-    outputText[1:2]<-c("!TExplore  ",paste("nsims = ",format(sum(!is.na(exploreResult$result$rval[,1]))),sep=""))
+    outputText[1:2]<-c("!TExplore  ",paste("nsims = ",brawFormat(exploreResult$count,digits=0),sep=""))
   }
   outputText<-c(outputText,rep("",nc))
   
@@ -75,7 +82,7 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
     if (whichEffect=="rIV2") {whichEffects<-"Main 2"}
     if (whichEffect=="rIVIV2DV") {whichEffects<-"Interaction"}
   }
-  if (showType[1]=="SEM") {
+  if (showTypes[1]=="SEM") {
     whichEffects<-"Main 1"
     effectTypes<-"direct"
   }
@@ -110,7 +117,7 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
       else y_label2<-effectType
       
       for (showType in showTypes) {
-        y_label<-showType
+        y_label<-plotAxis(showType,hypothesis,design)$label
         extra_y_label<-NULL
         if (is.null(hypothesis$IV2)){
           rVals<-exploreResult$result$rval
@@ -368,11 +375,17 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
                   df1<-exploreResult$result$df1
                   showVals<-r2llr(rVals,ns,df1,"dLLR",exploreResult$evidence$llr,exploreResult$evidence$prior)
                 },
+                "LambdaF"={
+                  showVals<-exploreResult$result$param1
+                },
+                "LambdaR"={
+                  showVals<-exploreResult$result$param2
+                },
                 "Lambda"={
-                  showVals<-exploreResult$result$k
+                  showVals<-exploreResult$result$param1
                 },
                 "pNull"={
-                  showVals<-exploreResult$result$pnull
+                  showVals<-exploreResult$result$param2
                 },
                 "PDF"={
                   showVals<-exploreResult$result$dist==effect$world$populationPDF
@@ -425,7 +438,8 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
                   showVals<-exploreResult$result$rs$kt
                 }
         )
-        if (is.element(showType,c("rs","p","ws","n","AIC","log(lrs)","log(lrd)","Lambda","pNull","S",
+        if (is.element(showType,c("rs","p","ws","n","AIC","log(lrs)","log(lrd)",
+                                  "LambdaF","LambdaR","Lambda","pNull","S",
                                   "iv.mn","iv.sd","iv.sk","iv.kt","dv.mn","dv.sd","dv.sk","dv.kt",
                                   "rd.mn","rd.sd","rd.sk","rd.kt"))) {
           quants=(1-quantileShow)/2

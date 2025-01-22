@@ -79,7 +79,12 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
            {}
     )
   }
-  if (is.element(explore$exploreType,c("NoStudies","MetaType"))) showType<-c("Lambda","pNull")
+  if (is.element(explore$exploreType,c("NoStudies","MetaType"))) 
+    switch(exploreResult$metaAnalysis$analysisType,
+           "fixed"={showType<-c("LambdaF")},
+           "random"={showType<-c("LambdaF","LambdaR")},
+           {showType<-c("Lambda","pNull")})
+    
   
   if (length(showType)>1 && showType[2]==" ") showType<-showType[1]
   
@@ -591,11 +596,17 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
                 df1<-result$df1
                 showVals<-r2llr(rVals,ns,df1,"dLLR",evidence$llr,evidence$prior)
               },
+              "LambdaF"={
+                showVals<-result$param1
+              },
+              "LambdaR"={
+                showVals<-result$param2
+              },
               "Lambda"={
-                showVals<-result$k
+                showVals<-result$param1
               },
               "pNull"={
-                showVals<-result$pnull
+                showVals<-result$param2
               },
               "S"={
                 showVals<-result$S

@@ -54,13 +54,13 @@ reportMetaAnalysis<-function(metaResult=braw.res$metaResult){
     if (is.element(metaResult$metaAnalysis$analysisType,c("fixed","random"))) {
       switch(metaResult$metaAnalysis$analysisType,
              "fixed"={
-               outputText<-c(outputText,"!H","!C","r[p]","S"," "," ")
+               outputText<-c(outputText,"!H","!C","r[est]","S"," "," ")
                outputText<-c(outputText,"Actual","mean",brawFormat(metaResult$hypothesis$effect$rIV,digits=3)," "," "," ")
                outputText<-c(outputText,"Estimate","mean",brawFormat(mean(metaResult$fixed$param1Max),digits=3),brawFormat(mean(metaResult$fixed$Smax),digits=3)," "," ")
                outputText<-c(outputText,"","sd",brawFormat(std(metaResult$fixed$param1Max),digits=3),brawFormat(std(metaResult$fixed$Smax),digits=3)," "," ")
              },
              "random"={
-               outputText<-c(outputText,"!H"," ","r[p]","sd(r[p])","S"," ")
+               outputText<-c(outputText,"!H"," ","r[est]","sd(r[est])","S"," ")
                outputText<-c(outputText,"Actual","mean",brawFormat(metaResult$hypothesis$effect$rIV,digits=3),brawFormat(mean(metaResult$hypothesis$effect$rSD),digits=3)," "," ")
                outputText<-c(outputText,"Estimate","mean",brawFormat(mean(metaResult$random$param1Max),digits=3),brawFormat(mean(metaResult$random$param2Max),digits=3),brawFormat(mean(random$Smax),digits=3)," ")
                outputText<-c(outputText,"","sd",brawFormat(std(metaResult$random$param1Max),digits=3),brawFormat(std(metaResult$random$param2Max),digits=3),brawFormat(std(metaResult$random$Smax),digits=3)," ")

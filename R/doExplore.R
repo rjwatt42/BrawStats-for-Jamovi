@@ -87,7 +87,7 @@ resetExploreResult<-function(nsims,n_vals,oldResult=NULL) {
                rIV2=b,rIVIV2DV=b,pIV2=b,pIVIV2DV=b,
                r=list(direct=bm,unique=bm,total=bm),
                p=list(direct=bm,unique=bm,total=bm),
-               k=b,pnull=b
+               param1=b,param2=b
   )
   if (!is.null(oldResult)) {
     result<-mergeExploreResult(oldResult,result)
@@ -138,9 +138,11 @@ storeExploreResult<-function(result,res,ri,vi) {
     result$p$total[ri,vi,1:n]<-res$p$total
   }
   } else {
-  result$k[ri,vi]<-res$bestK
-  result$pnull[ri,vi]<-res$bestNull
-}
+    param1Max<-max(c(res$fixed$param1Max,res$random$param1Max,res$single$param1Max,res$gauss$param1Max,res$exp$param1Max),na.rm=TRUE)
+    param2Max<-max(c(res$fixed$param2Max,res$random$param2Max,res$single$param2Max,res$gauss$param2Max,res$exp$param2Max),na.rm=TRUE)
+    result$param1[ri,vi]<-param1Max
+    result$param2[ri,vi]<-param2Max
+  }
   return(result)
 }
 
@@ -191,8 +193,8 @@ mergeExploreResult<-function(res1,res2) {
     result$pIVIV2DV<-rbind(res1$pIVIV2DV,res2$pIVIV2DV)
   }
     
-    result$k<-rbind(res1$k,res2$k)
-    result$pnull<-rbind(res1$pnull,res2$pnull)
+    result$param1<-rbind(res1$param1,res2$param1)
+    result$param2<-rbind(res1$param2,res2$param2)
     
   return(result)
 }
@@ -357,7 +359,7 @@ runExplore <- function(nsims,exploreResult,doingNull=FALSE,
           "Power"={vals<-seq(minVal,maxVal,length.out=npoints)},
           "Repeats" ={ vals<-minVal:maxVal },
           
-          "NoStudies"={vals<-seq(minVal,maxVal,length.out=npoints)},
+          "NoStudies"={vals<-round(seq(minVal,maxVal,length.out=npoints))},
           "MetaType"={vale<-c("FF","FT","TF","TT")}
   )
   if (substr(explore$exploreType,1,1)=="r" && braw.env$RZ=="z") vals<-tanh(vals)
