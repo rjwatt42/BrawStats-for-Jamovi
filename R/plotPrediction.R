@@ -152,10 +152,10 @@ plotCatParPrediction<-function(g,IV,DV,rho,n,offset=1, within=FALSE){
   # se<-se*2
   mn_pts<-data.frame(x=b+xoff,y=d)
   if (within) {
-    se1_pts<-data.frame(x=b+xoff,y=d-se/4)
-    se2_pts<-data.frame(x=b+xoff,y=d+se/4)
-    g<-addG(g,dataLine(data=se1_pts,colour="white"))
-    g<-addG(g,dataLine(data=se2_pts,colour="white"))
+    se1_pts<-data.frame(x=b+xoff,y=d-se/2)
+    se2_pts<-data.frame(x=b+xoff,y=d+se/2)
+    g<-addG(g,dataLine(data=se1_pts,colour="white",linewidth=2, linetype = "dotted"))
+    g<-addG(g,dataLine(data=se2_pts,colour="white",linewidth=2, linetype = "dotted"))
   } else
     g<-addG(g,dataLine(data=mn_pts))
   

@@ -642,7 +642,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       }
       }
       if (self$options$sendExplore && !is.null(outputNow) && outputNow=="Explore") {
-        newExplore<-reportExplore(returnDataFrame=TRUE)
+        newExplore<-reportExplore(returnDataFrame=TRUE,showType=showExploreParam,reportStats=self$options$reportInferStats)
         nvars<-ncol(newExplore)
         
         keys<-1:nvars

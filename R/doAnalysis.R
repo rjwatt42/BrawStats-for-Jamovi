@@ -824,7 +824,9 @@ doAnalysis<-function(sample=doSample(autoShow=FALSE),evidence=braw.def$evidence,
               if (IV$ncats==2){
                 if (design$sIV1Use=="Within"){
                   an_name<-"t-test: Paired Samples"
-                  tv<-t.test(dv~iv1,paired=TRUE,var.equal=!evidence$Welch)
+                  # tv<-t.test(dv~iv1,paired=TRUE,var.equal=!evidence$Welch)
+                  # tv<-t.test(dv[as.numeric(iv1)==1],dv[as.numeric(iv1)==2],paired=TRUE,var.equal=!evidence$Welch)
+                  tv<-t.test(dv[as.numeric(iv1)==1]-dv[as.numeric(iv1)==2],var.equal=!evidence$Welch)
                   tval<-tv$statistic
                   df<-paste("(",format(tv$parameter),")",sep="")
                   analysis$pIV<-tv$p.value

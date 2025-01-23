@@ -218,7 +218,7 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
               y<-metaResult$random$param2Max
               y1<-0
               ylim<-c(-0.02,0.2)
-              ylabel<-"sd(r[est])"
+              ylabel<-"sd(r)[est]"
               xlabel<-"r[est]"
               useBest<-1:length(x)
             },

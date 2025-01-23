@@ -430,7 +430,7 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ylim<-c(-0.01,0.5)
             ytick<-seq(0,0.5,0.1)
             ymins<-seq(0,0.5,0.05)
-            ylabel<-"sd(r[est])"
+            ylabel<-"sd(r)[est]"
           },
           "k"={
             ylim<-c(-0.01,1.01)

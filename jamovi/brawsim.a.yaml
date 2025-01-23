@@ -419,7 +419,7 @@ options:
       
 # hypothesis anolmalies
     - name: rSD
-      title: '&plusmn'
+      title: 'rand&plusmn'
       type: Number
       default: 0.0
 
@@ -1387,12 +1387,12 @@ options:
     - name: sendMultiple
       title: multiple
       type: Output
-      default: FALSE
+      default: TRUE
       
     - name: sendExplore
       title: explore
       type: Output
-      default: FALSE
+      default: TRUE
 
     - name: brawHelp
       title: Main help?
@@ -1423,7 +1423,7 @@ options:
 
       
     - name: doProject1AsBtn
-      title: 'make data'
+      title: 'sample'
       type: Action
       
     - name: doProject1sBtn
@@ -1473,14 +1473,14 @@ options:
       default: ExamGrade
 
     - name: doProject1sLstB
-      title: 'effect size IV&rarr;DV:'
+      title: 'effect size:'
       type: Number
       default: 0.3
       min: -0.95
       max: 0.95
 
     - name: doProject1sLstC
-      title: 'data view:'
+      title: 'view:'
       type: List
       options:
       - name: Compact
@@ -1494,7 +1494,7 @@ options:
       default: Compact
 
     - name: doProject1sLstD
-      title: 'sample method:'
+      title: 'sampling:'
       type: List
       options:
       - name: Random
@@ -1604,11 +1604,11 @@ options:
       type: Action
 
     - name: doProject2AsBtn
-      title: 'make data'
+      title: 'sample'
       type: Action
 
     - name: doProject2BsBtn
-      title: 'make multiple'
+      title: 'multiple'
       type: Action
       
     - name: doProject2sLst
@@ -1654,14 +1654,14 @@ options:
       default: ExamGrade
 
     - name: doProject2sLstB
-      title: 'effect size IV&rarr;DV:'
+      title: 'effect size:'
       type: Number
       default: 0.3
       min: -0.95
       max: 0.95
 
     - name: doProject2sLstC
-      title: 'data view:'
+      title: 'view:'
       type: List
       options:
       - name: Compact
@@ -1677,7 +1677,7 @@ options:
       default: Infer
 
     - name: doProject2sLstD
-      title: 'sample method:'
+      title: 'sampling:'
       type: List
       options:
       - name: Random
@@ -1698,7 +1698,7 @@ options:
       max: 5000
 
     - name: doProject2sLstF
-      title: 'multiple view:'
+      title: 'view:'
       type: List
       options:
       - name: Basic
@@ -1724,61 +1724,47 @@ options:
       title: 'show'
       type: Action
       
+    - name: doProject3AsBtn
+      title: 'sample'
+      type: Action
+      
     - name: doProject3BsBtn
-      title: 'make multiple'
+      title: 'multiple'
+      type: Action
+
+    - name: doProject3CsBtn
+      title: 'explore'
       type: Action
       
     - name: doProject3sLst
       title: 'IV:'
       type: List
       options:
-      - name: IQ
-        title: IQ
-      - name: Diligence
-        title: Diligence
-      - name: Perfectionism
-        title: Perfectionism
-      - name: Anxiety
-        title: Anxiety
-      - name: Happiness
-        title: Happiness
-      - name: SelfConfidence
-        title: SelfConfidence
-      - name: RiskTaking
-        title: RiskTaking
-      - name: Interesting
-        title: Interesting
-      - name: Musician
-        title: Musician?
-      - name: Smoker
-        title: Smoker?
-      - name: RiskTaker
-        title: RiskTaker?
-      - name: StudySubject
-        title: StudySubject
-      - name: BirthOrder
-        title: BirthOrder
-      default: Perfectionism
+      - name: Interval
+        title: Interval
+      - name: Categorical
+        title: Categorical
+      default: Interval
 
     - name: doProject3sLstA
       title: 'DV:'
       type: List
       options:
-      - name: ExamGrade
-        title: ExamGrade
-      - name: ExamPass
-        title: ExamPass?
-      default: ExamGrade
+      - name: Interval
+        title: Interval
+      - name: Categorical
+        title: Categorical
+      default: Interval
 
     - name: doProject3sLstB
-      title: 'effect size IV&rarr;DV:'
+      title: 'effect size:'
       type: Number
       default: 0.3
       min: -0.95
       max: 0.95
 
     - name: doProject3sLstC
-      title: 'data view:'
+      title: 'view:'
       type: List
       options:
       - name: Compact
@@ -1794,7 +1780,7 @@ options:
       default: Infer
 
     - name: doProject3sLstD
-      title: 'sample method:'
+      title: 'sampling:'
       type: List
       options:
       - name: Random
@@ -1815,14 +1801,14 @@ options:
       max: 5000
 
     - name: doProject3sLstF
-      title: 'multiple view:'
+      title: 'view:'
       type: List
       options:
       - name: Basic
         title: Basic
       - name: NHST
         title: NHST
-      - name: p(sig)
+      - name: 'p(sig)'
         title: 'p(sig)'
       default: Basic
 
@@ -1835,6 +1821,58 @@ options:
       - name: eq
         title: '0 & 0.3'
       default: off
+
+    - name: doProject3sLstH
+      title: 'explore:'
+      type: List
+      options:
+      - name: n
+        title: n
+      - name: rIV
+        title: 'r&#x209a;'
+      default: n
+
+    - name: doProject3sLstI
+      title: 'view:'
+      type: List
+      options:
+      - name: Basic
+        title: Basic
+      - name: NHST
+        title: NHST
+      - name: 'p(sig)'
+        title: 'p(sig)'
+      default: Basic
+
+    - name: doProject3sLstJ
+      title: 'usage:'
+      type: List
+      options:
+      - name: Between
+        title: Between
+      - name: Within
+        title: Within
+      default: Between
+
+    - name: doProject3A1Btn
+      title: do
+      type: Action
+
+    - name: doProject3A3Btn
+      title: do
+      type: Action
+      
+    - name: doProject3B1Btn
+      title: do
+      type: Action
+      
+    - name: doProject3C1Btn
+      title: do
+      type: Action
+    #   
+    # - name: doProject3B2Btn
+    #   title: do
+    #   type: Action
 
 
     # - name: doProject4AhBtn

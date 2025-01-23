@@ -198,11 +198,20 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
             "All"=whichEffects<-1:3
     )
   
-  if (is.character(vals[1]) || length(vals)<10) {
-    xlim<-c(0,length(vals)+1)
-    vals<-1:length(vals)
-    xbreaks<-vals
-    xnames<-exploreResult$vals
+  if (is.character(vals[1]) || length(vals)<9) {
+    if (is.character(vals[1])) {
+      vals<-1:length(vals)
+      xlim<-c(0,length(vals)+1)
+      xbreaks<-vals
+      xnames<-exploreResult$vals
+    } else {
+      if (explore$xlog) vals<-log10(vals)
+      xlim<-c(min(vals),max(vals))
+      valsRange<-diff(xlim)
+      xlim<-xlim+c(-1,1)*valsRange/10
+      xbreaks<-NULL
+      xnames<-NULL
+    }
     doLine=FALSE
   } else {
     if (explore$xlog) vals<-log10(vals)
@@ -786,19 +795,23 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
         } else {
           pts0f<-data.frame(x=vals,y=y50)
           g<-addG(g,dataLine(data=pts0f,linewidth=0.25))
+          if (nrow(rVals)>0)
           sigVals<-isSignificant(braw.env$STMethod,pVals,rVals,nVals,df1Vals,exploreResult$evidence,braw.env$alphaSig)
+          else
+          sigVals<-showVals*0+1
           if (!is.null(showVals)) {
             for (i in 1:length(vals))
               g<-expected_plot(g,
                                data.frame(x=vals[i],y1=showVals[,i],y2=sigVals[,i]),
-                               showType=showType[si],ylim=ylim,scale=2.25/(length(vals)+1),width=0.5,
+                               showType=showType[si],ylim=ylim,
+                               scale=2.25/(length(vals)+1),width=0.5,
                                col=col,
                                npointsMax=500/length(vals))
           }
           g<-addG(g,dataPoint(data=pts0f,fill=col,size=4))
           if (!is.null(y75)) {
           pts1f<-data.frame(x=vals,ymin=y25,ymax=y75)
-          g<-addG(g,dataErrorBar(pts1f))
+          g<-addG(g,dataErrorBar(pts1f,colour=col))
           }
         } # end of line and point
         }

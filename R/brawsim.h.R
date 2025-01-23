@@ -186,15 +186,24 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             doProject2sLstF = "Basic",
             doProject2sLstG = "off",
             doProject3sBtn = NULL,
+            doProject3AsBtn = NULL,
             doProject3BsBtn = NULL,
-            doProject3sLst = "Perfectionism",
-            doProject3sLstA = "ExamGrade",
+            doProject3CsBtn = NULL,
+            doProject3sLst = "Interval",
+            doProject3sLstA = "Interval",
             doProject3sLstB = 0.3,
             doProject3sLstC = "Infer",
             doProject3sLstD = "Random",
             doProject3sLstE = 42,
             doProject3sLstF = "Basic",
-            doProject3sLstG = "off", ...) {
+            doProject3sLstG = "off",
+            doProject3sLstH = "n",
+            doProject3sLstI = "Basic",
+            doProject3sLstJ = "Between",
+            doProject3A1Btn = NULL,
+            doProject3A3Btn = NULL,
+            doProject3B1Btn = NULL,
+            doProject3C1Btn = NULL, ...) {
 
             super$initialize(
                 package="BrawStats",
@@ -1281,34 +1290,29 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..doProject3sBtn <- jmvcore::OptionAction$new(
                 "doProject3sBtn",
                 doProject3sBtn)
+            private$..doProject3AsBtn <- jmvcore::OptionAction$new(
+                "doProject3AsBtn",
+                doProject3AsBtn)
             private$..doProject3BsBtn <- jmvcore::OptionAction$new(
                 "doProject3BsBtn",
                 doProject3BsBtn)
+            private$..doProject3CsBtn <- jmvcore::OptionAction$new(
+                "doProject3CsBtn",
+                doProject3CsBtn)
             private$..doProject3sLst <- jmvcore::OptionList$new(
                 "doProject3sLst",
                 doProject3sLst,
                 options=list(
-                    "IQ",
-                    "Diligence",
-                    "Perfectionism",
-                    "Anxiety",
-                    "Happiness",
-                    "SelfConfidence",
-                    "RiskTaking",
-                    "Interesting",
-                    "Musician",
-                    "Smoker",
-                    "RiskTaker",
-                    "StudySubject",
-                    "BirthOrder"),
-                default="Perfectionism")
+                    "Interval",
+                    "Categorical"),
+                default="Interval")
             private$..doProject3sLstA <- jmvcore::OptionList$new(
                 "doProject3sLstA",
                 doProject3sLstA,
                 options=list(
-                    "ExamGrade",
-                    "ExamPass"),
-                default="ExamGrade")
+                    "Interval",
+                    "Categorical"),
+                default="Interval")
             private$..doProject3sLstB <- jmvcore::OptionNumber$new(
                 "doProject3sLstB",
                 doProject3sLstB,
@@ -1355,6 +1359,40 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "off",
                     "eq"),
                 default="off")
+            private$..doProject3sLstH <- jmvcore::OptionList$new(
+                "doProject3sLstH",
+                doProject3sLstH,
+                options=list(
+                    "n",
+                    "rIV"),
+                default="n")
+            private$..doProject3sLstI <- jmvcore::OptionList$new(
+                "doProject3sLstI",
+                doProject3sLstI,
+                options=list(
+                    "Basic",
+                    "NHST",
+                    "p(sig)"),
+                default="Basic")
+            private$..doProject3sLstJ <- jmvcore::OptionList$new(
+                "doProject3sLstJ",
+                doProject3sLstJ,
+                options=list(
+                    "Between",
+                    "Within"),
+                default="Between")
+            private$..doProject3A1Btn <- jmvcore::OptionAction$new(
+                "doProject3A1Btn",
+                doProject3A1Btn)
+            private$..doProject3A3Btn <- jmvcore::OptionAction$new(
+                "doProject3A3Btn",
+                doProject3A3Btn)
+            private$..doProject3B1Btn <- jmvcore::OptionAction$new(
+                "doProject3B1Btn",
+                doProject3B1Btn)
+            private$..doProject3C1Btn <- jmvcore::OptionAction$new(
+                "doProject3C1Btn",
+                doProject3C1Btn)
 
             self$.addOption(private$..demosHelp)
             self$.addOption(private$..demo1Help)
@@ -1539,7 +1577,9 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..doProject2sLstF)
             self$.addOption(private$..doProject2sLstG)
             self$.addOption(private$..doProject3sBtn)
+            self$.addOption(private$..doProject3AsBtn)
             self$.addOption(private$..doProject3BsBtn)
+            self$.addOption(private$..doProject3CsBtn)
             self$.addOption(private$..doProject3sLst)
             self$.addOption(private$..doProject3sLstA)
             self$.addOption(private$..doProject3sLstB)
@@ -1548,6 +1588,13 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..doProject3sLstE)
             self$.addOption(private$..doProject3sLstF)
             self$.addOption(private$..doProject3sLstG)
+            self$.addOption(private$..doProject3sLstH)
+            self$.addOption(private$..doProject3sLstI)
+            self$.addOption(private$..doProject3sLstJ)
+            self$.addOption(private$..doProject3A1Btn)
+            self$.addOption(private$..doProject3A3Btn)
+            self$.addOption(private$..doProject3B1Btn)
+            self$.addOption(private$..doProject3C1Btn)
         }),
     active = list(
         demosHelp = function() private$..demosHelp$value,
@@ -1733,7 +1780,9 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         doProject2sLstF = function() private$..doProject2sLstF$value,
         doProject2sLstG = function() private$..doProject2sLstG$value,
         doProject3sBtn = function() private$..doProject3sBtn$value,
+        doProject3AsBtn = function() private$..doProject3AsBtn$value,
         doProject3BsBtn = function() private$..doProject3BsBtn$value,
+        doProject3CsBtn = function() private$..doProject3CsBtn$value,
         doProject3sLst = function() private$..doProject3sLst$value,
         doProject3sLstA = function() private$..doProject3sLstA$value,
         doProject3sLstB = function() private$..doProject3sLstB$value,
@@ -1741,7 +1790,14 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         doProject3sLstD = function() private$..doProject3sLstD$value,
         doProject3sLstE = function() private$..doProject3sLstE$value,
         doProject3sLstF = function() private$..doProject3sLstF$value,
-        doProject3sLstG = function() private$..doProject3sLstG$value),
+        doProject3sLstG = function() private$..doProject3sLstG$value,
+        doProject3sLstH = function() private$..doProject3sLstH$value,
+        doProject3sLstI = function() private$..doProject3sLstI$value,
+        doProject3sLstJ = function() private$..doProject3sLstJ$value,
+        doProject3A1Btn = function() private$..doProject3A1Btn$value,
+        doProject3A3Btn = function() private$..doProject3A3Btn$value,
+        doProject3B1Btn = function() private$..doProject3B1Btn$value,
+        doProject3C1Btn = function() private$..doProject3C1Btn$value),
     private = list(
         ..demosHelp = NA,
         ..demo1Help = NA,
@@ -1926,7 +1982,9 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..doProject2sLstF = NA,
         ..doProject2sLstG = NA,
         ..doProject3sBtn = NA,
+        ..doProject3AsBtn = NA,
         ..doProject3BsBtn = NA,
+        ..doProject3CsBtn = NA,
         ..doProject3sLst = NA,
         ..doProject3sLstA = NA,
         ..doProject3sLstB = NA,
@@ -1934,7 +1992,14 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..doProject3sLstD = NA,
         ..doProject3sLstE = NA,
         ..doProject3sLstF = NA,
-        ..doProject3sLstG = NA)
+        ..doProject3sLstG = NA,
+        ..doProject3sLstH = NA,
+        ..doProject3sLstI = NA,
+        ..doProject3sLstJ = NA,
+        ..doProject3A1Btn = NA,
+        ..doProject3A3Btn = NA,
+        ..doProject3B1Btn = NA,
+        ..doProject3C1Btn = NA)
 )
 
 BrawSimResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -1985,6 +2050,7 @@ BrawSimResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "showInferParam",
                     "inferVar1",
                     "inferVar2",
+                    "reportInferStats",
                     "showInferDimension",
                     "makeMultipleBtn",
                     "showMultipleParam",
@@ -2251,7 +2317,9 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param doProject2sLstF .
 #' @param doProject2sLstG .
 #' @param doProject3sBtn .
+#' @param doProject3AsBtn .
 #' @param doProject3BsBtn .
+#' @param doProject3CsBtn .
 #' @param doProject3sLst .
 #' @param doProject3sLstA .
 #' @param doProject3sLstB .
@@ -2260,6 +2328,13 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param doProject3sLstE .
 #' @param doProject3sLstF .
 #' @param doProject3sLstG .
+#' @param doProject3sLstH .
+#' @param doProject3sLstI .
+#' @param doProject3sLstJ .
+#' @param doProject3A1Btn .
+#' @param doProject3A3Btn .
+#' @param doProject3B1Btn .
+#' @param doProject3C1Btn .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$BrawStatsInstructions} \tab \tab \tab \tab \tab a html \cr
@@ -2455,15 +2530,24 @@ BrawSim <- function(
     doProject2sLstF = "Basic",
     doProject2sLstG = "off",
     doProject3sBtn,
+    doProject3AsBtn,
     doProject3BsBtn,
-    doProject3sLst = "Perfectionism",
-    doProject3sLstA = "ExamGrade",
+    doProject3CsBtn,
+    doProject3sLst = "Interval",
+    doProject3sLstA = "Interval",
     doProject3sLstB = 0.3,
     doProject3sLstC = "Infer",
     doProject3sLstD = "Random",
     doProject3sLstE = 42,
     doProject3sLstF = "Basic",
-    doProject3sLstG = "off") {
+    doProject3sLstG = "off",
+    doProject3sLstH = "n",
+    doProject3sLstI = "Basic",
+    doProject3sLstJ = "Between",
+    doProject3A1Btn,
+    doProject3A3Btn,
+    doProject3B1Btn,
+    doProject3C1Btn) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("BrawSim requires jmvcore to be installed (restart may be required)")
@@ -2650,7 +2734,9 @@ BrawSim <- function(
         doProject2sLstF = doProject2sLstF,
         doProject2sLstG = doProject2sLstG,
         doProject3sBtn = doProject3sBtn,
+        doProject3AsBtn = doProject3AsBtn,
         doProject3BsBtn = doProject3BsBtn,
+        doProject3CsBtn = doProject3CsBtn,
         doProject3sLst = doProject3sLst,
         doProject3sLstA = doProject3sLstA,
         doProject3sLstB = doProject3sLstB,
@@ -2658,7 +2744,14 @@ BrawSim <- function(
         doProject3sLstD = doProject3sLstD,
         doProject3sLstE = doProject3sLstE,
         doProject3sLstF = doProject3sLstF,
-        doProject3sLstG = doProject3sLstG)
+        doProject3sLstG = doProject3sLstG,
+        doProject3sLstH = doProject3sLstH,
+        doProject3sLstI = doProject3sLstI,
+        doProject3sLstJ = doProject3sLstJ,
+        doProject3A1Btn = doProject3A1Btn,
+        doProject3A3Btn = doProject3A3Btn,
+        doProject3B1Btn = doProject3B1Btn,
+        doProject3C1Btn = doProject3C1Btn)
 
     analysis <- BrawSimClass$new(
         options = options,

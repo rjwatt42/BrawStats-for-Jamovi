@@ -34,7 +34,7 @@ makeExplore<-function(exploreType="n",exploreNPoints=13,
 getExploreRange<-function(explore) {
   
   exploreType<-explore$exploreType
-  if (is.element(exploreType,c("rIV","rIV2","rIVIV2","rIVIV2DV"))) exploreType<-"rs"
+  if (is.element(exploreType,c("rIV2","rIVIV2","rIVIV2DV"))) exploreType<-"rs"
   if (is.element(exploreType,c("IVskew","DVskew","Heteroscedasticity","Dependence","Outliers","NonResponse"))) exploreType<-"anom"
   if (is.element(exploreType,c("IVRange","IVRangeC","DVRange"))) exploreType<-"anom1"
   if (is.element(exploreType,c("IVRangeE"))) exploreType<-"anom2"
@@ -42,6 +42,7 @@ getExploreRange<-function(explore) {
   
   switch(exploreType,
          "n"=range<-list(minVal=10,maxVal=250,logScale=FALSE,np=13),
+         "rIV"=range<-list(minVal=0,maxVal=0.9,logScale=FALSE,np=13),
          "rs"=range<-list(minVal=-0.9,maxVal=0.9,logScale=FALSE,np=13),
          "anom"=range<-list(minVal=0,maxVal=1,logScale=FALSE,np=13),
          "anom1"=range<-list(minVal=0.1,maxVal=3,logScale=FALSE,np=13),
@@ -359,11 +360,12 @@ runExplore <- function(nsims,exploreResult,doingNull=FALSE,
           "Power"={vals<-seq(minVal,maxVal,length.out=npoints)},
           "Repeats" ={ vals<-minVal:maxVal },
           
-          "NoStudies"={vals<-round(seq(minVal,maxVal,length.out=npoints))},
-          "MetaType"={vale<-c("FF","FT","TF","TT")}
+          "NoStudies"={vals<-seq(minVal,maxVal,length.out=npoints)},
+          "MetaType"={vals<-c("FF","FT","TF","TT")}
   )
   if (substr(explore$exploreType,1,1)=="r" && braw.env$RZ=="z") vals<-tanh(vals)
   if (xlog) vals<-10^vals
+  if (is.element(explore$exploreType,c("IVlevels","DVlevels","n","NoStudies"))) vals<-round(vals)
   
   exploreResult$vals<-vals
   exploreResult$explore<-explore

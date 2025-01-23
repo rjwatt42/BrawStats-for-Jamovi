@@ -15,7 +15,7 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
 ){
   if (is.null(exploreResult)) exploreResult<-doExplore(autoShow=FALSE)
   
-  precision<-braw.env$report_precision-1
+  precision<-braw.env$report_precision
   reportMeans<-(reportStats=="Means")
   reportQuants<-FALSE
   
@@ -47,7 +47,7 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
   oldAlpha<-braw.env$alphaSig
   on.exit(braw.env$alphaSig<-oldAlpha)
   
-  max_cols<-7
+  max_cols<-10
   
   vals<-exploreResult$vals
   if (explore$exploreType=="pNull" && braw.env$pPlus) vals<-1-vals
@@ -95,6 +95,9 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
       exploreTypeShow<-paste0("r[p]",gsub("^r","",explore$exploreType))
     }
   } else exploreTypeShow<-explore$exploreType
+  
+  returnData<-data.frame(vals=vals)
+  names(returnData)[1]<-explore$exploreType
   
   tableHeader<-FALSE
   for (whichEffect in whichEffects)  {
@@ -452,11 +455,9 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
             ysd[i]<-sd(showVals[,i],na.rm=TRUE)
           }
           
-          if (returnDataFrame) {
-            d<-data.frame(vals=vals,means=ymn,sds=ysd,medians=y50,iqr=yiqr)
-            names(d)[1]<-explore$exploreType
-            return(d)
-          }
+          oldNames<-names(returnData)
+          returnData<-cbind(returnData,data.frame(means=ymn,sds=ysd))
+          names(returnData)<-c(oldNames,paste0('mean(',showType,')'),paste0('sd(',showType,')'))
           
           if (reportMeans){
             outputText<-c(outputText,rep(" ",nc))
@@ -611,6 +612,11 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
       }
     }
   }
+  
+  if (returnDataFrame) {
+    return(returnData)
+  }
+  
   outputText<-c(outputText,rep("",nc))
   nr=length(outputText)/nc
   reportPlot(outputText,nc,nr)        

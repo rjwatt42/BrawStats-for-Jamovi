@@ -13,10 +13,9 @@ svgY<-function(y) {return((1-y)*(svgBoxY()-20)+10)}
 # svgY<-function(y) {return((1-y)*(svgBoxY()))}
 
 joinHTML<-function(p1,p2) {
-  paste0('<div style="display: inline-block; float center;">',
+  paste0('<div style="display: inline-block; float left;"> ',
          p1,
-         '</div>',
-         '<div style="display: inline-block; float center;">',
+         '</div><div style="display: inline-block;">',
          p2,
          '</div>')
 }
@@ -700,7 +699,7 @@ dataErrorBar<-function(data,colour="black",linewidth=0.25) {
   i<-1
   g<-c()
   for (i in 1:length(data$x)) {
-    thisError<-data.frame(x=rep(data$x[i],2),y=c(data$ymin[i]-1,data$ymax[i]+1))
+    thisError<-data.frame(x=rep(data$x[i],2),y=c(data$ymin[i],data$ymax[i]))
     g<-c(g,dataPath(thisError,colour=colour,linewidth=linewidth))
   }
   return(g)

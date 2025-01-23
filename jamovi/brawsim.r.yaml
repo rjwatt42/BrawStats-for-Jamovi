@@ -30,6 +30,7 @@ items:
       - showInferParam
       - inferVar1
       - inferVar2
+      - reportInferStats
       - showInferDimension
       - makeMultipleBtn
       - showMultipleParam

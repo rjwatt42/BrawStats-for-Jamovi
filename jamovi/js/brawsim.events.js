@@ -160,88 +160,42 @@ const events =  {
     },
     
     onChange_Project1sH: function(ui) {
-        let variable1 = ui.doProject1sLst.value();
-        variable1 = variable1.replace("?","")
-        ui.presetIV.setValue(variable1)
-        let variable2 = ui.doProject1sLstA.value();
-        variable2 = variable2.replace("?","")
-        ui.presetDV.setValue(variable2)
-        let variable3 = ui.doProject1sLstB.value();
-        if (variable3>0.95) {
-          variable3 = 0.95
-          ui.doProject1sLstB.setValue(variable3);
-        }
-        if (variable3< -0.95) {
-          variable3 = -0.95
-          ui.doProject1sLstB.setValue(variable3);
-        }
-        ui.EffectSize1.setValue(variable3);
+        demo1SetUp(ui)
+        ui.showHypothesisBtn.setValue(true)
     },
     
     onChange_Project1sD: function(ui) {
-        let variable5 = ui.doProject1sLstD.value()
-        ui.SampleMethod.setValue(variable5)
-        let variable6 = ui.doProject1sLstE.value()
-        ui.SampleSize.setValue(variable6);
+        demo1SetUp(ui)
+        ui.showHypothesisBtn.setValue(true)
     },
 
     onChange_Project2sH: function(ui) {
-        let variable1 = ui.doProject2sLst.value();
-        variable1 = variable1.replace("?","")
-        ui.presetIV.setValue(variable1)
-        let variable2 = ui.doProject2sLstA.value();
-        variable2 = variable2.replace("?","")
-        ui.presetDV.setValue(variable2)
-        let variable3 = ui.doProject2sLstB.value();
-        if (variable3>0.95) {
-          variable3 = 0.95
-          ui.doProject2sLstB.setValue(variable3);
-        }
-        if (variable3< -0.95) {
-          variable3 = -0.95
-          ui.doProject2sLstB.setValue(variable3);
-        }
-        ui.EffectSize1.setValue(variable3);
+        demo2SetUp(ui)
+        ui.showHypothesisBtn.setValue(true)
     },
     
     onChange_Project2sD: function(ui) {
-        let variable5 = ui.doProject2sLstD.value()
-        ui.SampleMethod.setValue(variable5)
-        let variable6 = ui.doProject2sLstE.value()
-        ui.SampleSize.setValue(variable6);
+        demo2SetUp(ui)
+        ui.showHypothesisBtn.setValue(true)
     },
     
     onChange_Project3sH: function(ui) {
-        let variable1 = ui.doProject3sLst.value();
-        variable1 = variable1.replace("?","")
-        ui.presetIV.setValue(variable1)
-        let variable2 = ui.doProject3sLstA.value();
-        variable2 = variable2.replace("?","")
-        ui.presetDV.setValue(variable2)
-        let variable3 = ui.doProject3sLstB.value();
-        if (variable3>0.95) {
-          variable3 = 0.95
-          ui.doProject3sLstB.setValue(variable3);
-        }
-        if (variable3< -0.95) {
-          variable3 = -0.95
-          ui.doProject3sLstB.setValue(variable3);
-        }
-        ui.EffectSize1.setValue(variable3);
+        demo3SetUp(ui)
+        ui.showHypothesisBtn.setValue(true)
     },
     
     onChange_Project3sD: function(ui) {
-        let variable5 = ui.doProject3sLstD.value()
-        ui.SampleMethod.setValue(variable5)
-        let variable6 = ui.doProject3sLstE.value()
-        ui.SampleSize.setValue(variable6);
+        demo3SetUp(ui)
+        ui.showHypothesisBtn.setValue(true)
     },
     
     onChange_Project1As: function(ui) {
       let BtnOn1 = ui.doProject1AsBtn.value();
       let BtnOn2A = ui.doProject2AsBtn.value();
       let BtnOn2B = ui.doProject2BsBtn.value();
-      let BtnOn3 = ui.doProject3BsBtn.value();
+      let BtnOn3A = ui.doProject3AsBtn.value();
+      let BtnOn3B = ui.doProject3BsBtn.value();
+      let BtnOn3C = ui.doProject3CsBtn.value();
       if (BtnOn1==true) {
         demo1SetUp(ui)
         ui.makeSampleBtn.setValue(true)
@@ -254,9 +208,17 @@ const events =  {
         demo2SetUp(ui)
         ui.makeMultipleBtn.setValue(true)
       }
-      if (BtnOn3==true) {
+      if (BtnOn3A==true) {
+        demo3SetUp(ui)
+        ui.makeSampleBtn.setValue(true)
+      }
+      if (BtnOn3B==true) {
         demo3SetUp(ui)
         ui.makeMultipleBtn.setValue(true)
+      }
+      if (BtnOn3C==true) {
+        demo3SetUp(ui)
+        ui.makeExploreBtn.setValue(true)
       }
     },
     
@@ -404,19 +366,66 @@ const events =  {
       }
     },
     
-    onChange_project2C4: function(ui) {
-      let BtnOn = ui.doProject2C4Btn.value();
+    onChange_project3A1: function(ui) {
+      let BtnOn = ui.doProject3A1Btn.value();
       if (BtnOn==true) {
-        let rval = ui.doProject2sLstB.value()
-        switch(nval) {
-          case 'r00': ui.doProject2sLstB.setValue("r01")
-          case 'r01': ui.doProject2sLstB.setValue("r03")
-          case 'r03': ui.doProject2sLstB.setValue("r05")
-          case 'r05': ui.doProject2sLstB.setValue("r00")
-        }
+        ui.doProject3sLstF.setValue("p(sig)")
+        demo3SetUp(ui)
+        ui.makeMultipleBtn.setValue(true)
       }
     },
 
+    onChange_project3A3: function(ui) {
+      let BtnOn = ui.doProject3A3Btn.value();
+      if (BtnOn==true) {
+        ui.doProject3sLstH.setValue("n")
+        ui.doProject3sLstI.setValue("p(sig)")
+        demo3SetUp(ui)
+        ui.makeExploreBtn.setValue(true)
+      }
+    },
+
+    onChange_project3B1: function(ui) {
+      let BtnOn = ui.doProject3B1Btn.value();
+      if (BtnOn==true) {
+        ui.doProject3sLstH.setValue("rIV")
+        ui.doProject3sLstI.setValue("p(sig)")
+        demo3SetUp(ui)
+        ui.makeExploreBtn.setValue(true)
+      }
+    },
+
+    onChange_project3C1: function(ui) {
+      let BtnOn = ui.doProject3C1Btn.value();
+      if (BtnOn==true) {
+        ui.doProject3sLst.setValue("Categorical")
+        ui.doProject3sLstF.setValue("p(sig)")
+        demo3SetUp(ui)
+        ui.makeMultipleBtn.setValue(true)
+      }
+    },
+
+    onChange_project3C2: function(ui) {
+      let BtnOn = ui.doProject3C1Btn.value();
+      if (BtnOn==true) {
+        ui.doProject3sLst.setValue("Categorical")
+        ui.doProject3sLstJ.setValue("Within")
+        ui.doProject3sLstF.setValue("p(sig)")
+        demo3SetUp(ui)
+        ui.makeMultipleBtn.setValue(true)
+      }
+    },
+
+    onChange_project3C3: function(ui) {
+      let BtnOn = ui.doProject3C1Btn.value();
+      if (BtnOn==true) {
+        ui.doProject3sLstH.setValue("rIV")
+        ui.doProject3sLstI.setValue("p(sig)")
+        demo3SetUp(ui)
+        ui.makeExploreBtn.setValue(true)
+      }
+    },
+    
     onChange_project4As: function(ui) {
       let BtnOn = ui.doProject4AsBtn.value();
       if (BtnOn==true) {
@@ -820,6 +829,12 @@ let demo1SetUp = function(ui) {
         variable2 = variable2.replace("?","")
         ui.presetDV.setValue(variable2)
         let variable3 = ui.doProject1sLstB.value();
+        if (variable3>0.95) {
+          variable3 = 0.95
+        }
+        if (variable3< -0.95) {
+          variable3 = -0.95
+        }
         ui.EffectSize1.setValue(variable3);
         let variable4 = ui.doProject1sLstC.value();
         ui.showSampleType.setValue(variable4)
@@ -838,27 +853,19 @@ let demo2SetUp = function(ui) {
         variable2 = variable2.replace("?","")
         ui.presetDV.setValue(variable2)
         let variable3 = ui.doProject2sLstB.value();
-      switch(variable3) {
-        case "r00": ui.EffectSize1.setValue(0.0); break;
-        case "r01": ui.EffectSize1.setValue(0.1); break;
-        case "r02": ui.EffectSize1.setValue(0.2); break;
-        case "r03": ui.EffectSize1.setValue(0.3); break;
-        case "r05": ui.EffectSize1.setValue(0.5); break;
-        case "r075": ui.EffectSize1.setValue(0.75); break;
-      }
+        if (variable3>0.95) {
+          variable3 = 0.95
+        }
+        if (variable3< -0.95) {
+          variable3 = -0.95
+        }
+        ui.EffectSize1.setValue(variable3);
         let variable4 = ui.doProject2sLstC.value();
         ui.showSampleType.setValue(variable4)
         let variable5 = ui.doProject2sLstD.value()
         ui.SampleMethod.setValue(variable5)
         let variable6 = ui.doProject2sLstE.value()
-      switch(variable6) {
-        case "n20": ui.SampleSize.setValue(20); break;
-        case "n40": ui.SampleSize.setValue(40); break;
-        case "n80": ui.SampleSize.setValue(80); break;
-        case "n160": ui.SampleSize.setValue(160); break;
-        case "n320": ui.SampleSize.setValue(320); break;
-        case "n640": ui.SampleSize.setValue(640); break;
-      }
+        ui.SampleSize.setValue(variable6);
        let variable7 = ui.doProject2sLstF.value()
         ui.showMultipleParam.setValue(variable7)
        let variable8 = ui.doProject2sLstG.value()
@@ -882,33 +889,41 @@ let demo2SetUp = function(ui) {
 let demo3SetUp = function(ui) {
 //        defaultSetUp(ui)    
         let variable1 = ui.doProject3sLst.value();
-        variable1 = variable1.replace("?","")
-        ui.presetIV.setValue(variable1)
+        switch (variable1) {
+          case "Interval":
+            ui.presetIV.setValue("IV")
+            ui.IVtype.setValue("Interval")
+            break;
+          case "Categorical":
+            ui.presetIV.setValue("IV")
+            ui.IVtype.setValue("Categorical")
+            break;
+        }
         let variable2 = ui.doProject3sLstA.value();
-        variable2 = variable2.replace("?","")
-        ui.presetDV.setValue(variable2)
+        switch (variable2) {
+          case "Interval":
+            ui.presetDV.setValue("DV")
+            ui.DVtype.setValue("Interval")
+            break;
+          case "Categorical":
+            ui.presetDV.setValue("DV")
+            ui.DVtype.setValue("Categorical")
+            break;
+        }
         let variable3 = ui.doProject3sLstB.value();
-      switch(variable3) {
-        case "r00": ui.EffectSize1.setValue(0.0); break;
-        case "r01": ui.EffectSize1.setValue(0.1); break;
-        case "r02": ui.EffectSize1.setValue(0.2); break;
-        case "r03": ui.EffectSize1.setValue(0.3); break;
-        case "r05": ui.EffectSize1.setValue(0.5); break;
-        case "r075": ui.EffectSize1.setValue(0.75); break;
-      }
+        if (variable3>0.95) {
+          variable3 = 0.95
+        }
+        if (variable3< -0.95) {
+          variable3 = -0.95
+        }
+        ui.EffectSize1.setValue(variable3);
         let variable4 = ui.doProject3sLstC.value();
         ui.showSampleType.setValue(variable4)
         let variable5 = ui.doProject3sLstD.value()
         ui.SampleMethod.setValue(variable5)
         let variable6 = ui.doProject3sLstE.value()
-      switch(variable6) {
-        case "n20": ui.SampleSize.setValue(20); break;
-        case "n40": ui.SampleSize.setValue(40); break;
-        case "n80": ui.SampleSize.setValue(80); break;
-        case "n160": ui.SampleSize.setValue(160); break;
-        case "n320": ui.SampleSize.setValue(320); break;
-        case "n640": ui.SampleSize.setValue(640); break;
-      }
+        ui.SampleSize.setValue(variable6);
        let variable7 = ui.doProject3sLstF.value()
         ui.showMultipleParam.setValue(variable7)
        let variable8 = ui.doProject3sLstG.value()
@@ -926,7 +941,22 @@ let demo3SetUp = function(ui) {
           ui.SampleSpreadOn.setValue(false);
           break;
       }
-
+       let variable9 = ui.doProject3sLstH.value()
+       switch (variable9) {
+         case "n":
+          ui.exploreMode.setValue("designExplore")
+          ui.designExploreList.setValue("n")
+          break;
+         case "rIV":
+          ui.exploreMode.setValue("hypothesisExplore")
+          ui.hypothesisExploreList.setValue("rIV")
+          break;
+       }
+       let variable10 = ui.doProject3sLstI.value()
+      ui.showExploreParam.setValue(variable10)
+      ui.numberExplores.setValue(100)
+      let variable11 = ui.doProject3sLstJ.value()
+      ui.SampleUsage1.setValue(variable11)
     }
 
 let makeVar = function(name) {
@@ -1053,6 +1083,8 @@ let makeRange = function(min,max,xlog,np) {
            var range={min:10,max:250,xlog:false,np:13};
           break;
         case "rIV":
+           var range={min:0,max:0.9,xlog:false,np:13};
+          break;
         case "rIV2":
         case "rIVIV2":
         case "rIVIV2DV":
