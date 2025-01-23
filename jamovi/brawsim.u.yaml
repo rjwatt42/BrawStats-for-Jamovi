@@ -1472,7 +1472,7 @@ children:
                                                             label: ' '
                                                             minWidth: 13
                                                           - type: Label
-                                                            label: '- and run Multiple, view "p(sig)"'
+                                                            label: '- and repeat step 1'
                                           - type: LayoutBox
                                             style: list
                                             children:
