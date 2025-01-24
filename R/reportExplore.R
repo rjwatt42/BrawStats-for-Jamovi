@@ -19,7 +19,7 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
   reportMeans<-(reportStats=="Means")
   reportQuants<-FALSE
   
-  if (is.element(exploreResult$explore$exploreType,c("NoStudies","MetaType"))) 
+  if (exploreResult$doingMetaAnalysis) 
     switch(exploreResult$metaAnalysis$analysisType,
            "fixed"={showType<-"LambdaF"},
            "random"={showType<-"LambdaF;LambdaR"},
@@ -59,15 +59,6 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
   }
   nc<-length(useVals)+2
   
-  outputText<-rep("",nc)
-  if (is.element(showTypes[1],c("NHST","Hits","Misses")) && sum(!is.na(exploreResult$nullresult$rval[,1]))>0) {
-    outputText[1:2]<-c("!TExplore  ",paste("nsims = ",brawFormat(exploreResult$count),"+",brawFormat(exploreResult$nullcount),sep=""))
-  } else {
-    outputText[1:2]<-c("!TExplore  ",paste("nsims = ",brawFormat(exploreResult$count,digits=0),sep=""))
-  }
-  outputText<-c(outputText,rep("",nc))
-  
-  
   if (is.null(hypothesis$IV2))    {
     effectTypes<-"direct"
     whichEffects<-"Main 1"
@@ -99,11 +90,20 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
   returnData<-data.frame(vals=vals)
   names(returnData)[1]<-explore$exploreType
   
+  outputText<-rep("",nc)
+  if (is.element(showTypes[1],c("NHST","Hits","Misses")) && sum(!is.na(exploreResult$nullresult$rval[,1]))>0) {
+    outputText[1:2]<-c(paste0("!TExplore: ",exploreTypeShow),paste("  nsims = ",brawFormat(exploreResult$count),"+",brawFormat(exploreResult$nullcount),sep=""))
+  } else {
+    outputText[1:2]<-c(paste0("!TExplore: ",exploreTypeShow),paste("  nsims = ",brawFormat(exploreResult$count),sep=""))
+  }
+  outputText<-c(outputText,rep("",nc))
+  
+  
   tableHeader<-FALSE
   for (whichEffect in whichEffects)  {
     for (effectType in effectTypes) {
       if (!tableHeader) {
-        outputText<-c(outputText,paste0("!T",exploreTypeShow),rep(" ",2),rep(" ",nc-3))
+        outputText<-c(outputText,"!T"," ",exploreTypeShow,rep(" ",nc-3))
         headerText<-c(paste0("!H"),"!D ")
         if (explore$exploreType=="rIV" && braw.env$RZ=="z")  vals<-atanh(vals)
         for (i in 1:length(useVals)) {

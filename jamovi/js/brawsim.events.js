@@ -1083,12 +1083,15 @@ let makeRange = function(min,max,xlog,np) {
            var range={min:10,max:250,xlog:false,np:13};
           break;
         case "rIV":
-           var range={min:0,max:0.9,xlog:false,np:13};
+           var range={min:0,max:0.75,xlog:false,np:13};
           break;
         case "rIV2":
         case "rIVIV2":
         case "rIVIV2DV":
-           var range={min:-0.9,max:0.9,xlog:false,np:13};
+           var range={min:-0.75,max:0.75,xlog:false,np:13};
+          break;
+        case "rSD":
+           var range={min:0,max:0.4,xlog:false,np:13};
           break;
         case "IVskew":
         case "DVskew":

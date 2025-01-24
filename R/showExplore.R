@@ -86,11 +86,12 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
            {}
     )
   }
-  if (is.element(explore$exploreType,c("NoStudies","MetaType"))) 
+  if (exploreResult$doingMetaAnalysis) 
     switch(exploreResult$metaAnalysis$analysisType,
            "fixed"={showType<-c("LambdaF")},
            "random"={showType<-c("LambdaF","LambdaR")},
-           {showType<-c("Lambda","pNull")})
+           {showType<-c("Lambda","pNull")}
+           )
     
   
   if (length(showType)>1 && showType[2]==" ") showType<-showType[1]

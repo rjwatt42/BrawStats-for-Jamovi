@@ -1101,13 +1101,11 @@ runSimulation<-function(hypothesis,design,evidence,sigOnly=FALSE,onlyAnalysis=FA
   ntrials<-0
   p_min<-1
   while (1==1) {
-    if (!evidence$shortHand) {
-      # sample<-doSample(IV,IV2,DV,effect,design)
-      # res<-doAnalysis(IV,IV2,DV,effect,design,evidence,sample)
+    # if (!evidence$shortHand) {
       res<-getSample(hypothesis,design,evidence)
-    } else {
-      res<-sampleShortCut(hypothesis,design,evidence,1,FALSE)
-    }
+    # } else {
+    #   res<-sampleShortCut(hypothesis,design,evidence,1,FALSE)
+    # }
     res1<-res
     if (design$sBudgetOn) {
       if (res$pIV<p_min) {
@@ -1127,13 +1125,11 @@ runSimulation<-function(hypothesis,design,evidence,sigOnly=FALSE,onlyAnalysis=FA
   
   # sig only
   while (sigOnly && !isSignificant(braw.env$STMethod,res$pIV,res$rIV,res$nval,res$df1,evidence)) {
-    if (!evidence$shortHand) {
-      # sample<-doSample(IV,IV2,DV,effect,design)
-      # res<-doAnalysis(IV,IV2,DV,effect,design,evidence,sample)
+    # if (!evidence$shortHand) {
       res<-getSample(hypothesis,design,evidence)
-    } else {
-      res<-sampleShortCut(hypothesis,design,evidence,1,FALSE)
-    }
+    # } else {
+    #   res<-sampleShortCut(hypothesis,design,evidence,1,FALSE)
+    # }
   }
   # Replication?
   res<-replicateSample(hypothesis,design,evidence,sample,res)

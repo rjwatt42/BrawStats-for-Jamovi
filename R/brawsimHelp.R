@@ -59,6 +59,7 @@ brawDemosHelp<-function(open,indent,titleWidth,demos) {
       title="Samples of Data:",
       tabs=c("Overview","1a","1b","1c"),
       indent=0,
+      width=500,
       titleWidth=titleWidth,
       tabContents=c(
         demoInstructions("1"),
@@ -73,6 +74,7 @@ brawDemosHelp<-function(open,indent,titleWidth,demos) {
       title="Uncertainty:",
       tabs=c("Overview","2a","2b","2c"),
       indent=0,
+      width=500,
       titleWidth=0,
       tabContents=c(
         demoInstructions("2"),
@@ -86,6 +88,7 @@ brawDemosHelp<-function(open,indent,titleWidth,demos) {
       title="Design:",
       tabs=c("Overview","3a","3b","3c"),
       indent=0,
+      width=500,
       titleWidth=0,
       tabContents=c(
         demoInstructions("3"),
@@ -99,6 +102,7 @@ brawDemosHelp<-function(open,indent,titleWidth,demos) {
       title="Linear Models:",
       tabs=c("Overview","4a","4b","4c"),
       indent=0,
+      width=500,
       titleWidth=0,
       tabContents=c(
         demoInstructions("4"),
@@ -112,6 +116,7 @@ brawDemosHelp<-function(open,indent,titleWidth,demos) {
       title="Path Models:",
       tabs=c("Overview","5a","5b","5c"),
       indent=0,
+      width=500,
       titleWidth=0,
       tabContents=c(
         demoInstructions("5"),

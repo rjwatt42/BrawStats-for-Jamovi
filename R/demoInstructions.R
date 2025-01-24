@@ -121,7 +121,7 @@ demoInstructions <- function(HelpType="1") {
          },
          
          "3"={output<-c(
-           '<b>Design to improve inferences</b>',
+           '<b>Design to reduce errors</b>',
            '<br>',
            ' ',
            ' ',
@@ -129,13 +129,13 @@ demoInstructions <- function(HelpType="1") {
            '<ul style=margin:0px;>',
            '<li> The effects of sample size.',
            '<li> Taking into account population effect size.',
-           '<li> Using Within/between designs.',
+           '<li> Using within/between designs.',
            '</ul>'
          )},
          "3a"={output<-c(
            '<b>Demo 3a</b>',
            '<br>',
-           'A demo about the importance of design - larger samples have lower uncertainty.',
+           'Choosing sample size.',
            '<ul style=margin:0px;>',
            '<li> Use the "Multiple" function to make a large number of samples.',
            '<li> Repeat this with different sample sizes. Larger samples give more chance of a significant result.',
@@ -146,22 +146,22 @@ demoInstructions <- function(HelpType="1") {
          "3b"={output<-c(
            '<b>Demo 3b</b>',
            '<br>',
-           'A demo about the importance of design - larger samples have lower uncertainty.',
+           'Population effect size matters.',
            '<ul style=margin:0px;>',
-           '<li> Use the "Multiple" function to make a large number of samples.',
-           '<li> Repeat this with different sample sizes. Larger samples give more chance of a significant result.',
-           '<li> Use the "Explore" function to see how p(sig) varies with sample size.',
+           '<li> Use the "Explore" function to see how p(sig) varies with effect size.',
+           '<li> Repeat this with different sample sizes.',
+           '<li> What are the consequences of poor sampling?',
            '</ul>'
          )
          },
          "3c"={output<-c(
            '<b>Demo 3c</b>',
            '<br>',
-           'A demo about the importance of design - larger samples have lower uncertainty.',
+           'A demo about the sample usage - within samples have lower uncertainty.',
            '<ul style=margin:0px;>',
            '<li> Use the "Multiple" function to make a large number of samples.',
-           '<li> Repeat this with different sample sizes. Larger samples give more chance of a significant result.',
-           '<li> Use the "Explore" function to see how p(sig) varies with sample size.',
+           '<li> Compare this with the result of "Within" sampling.',
+           '<li> Use the "Explore" function to see how p(sig) varies with effect size for the two usages.',
            '</ul>'
          )
          },

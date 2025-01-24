@@ -1272,6 +1272,12 @@ children:
                                             maxHeight: 24
                                             events:
                                               change: ./BrawSim.events::onChange_project3A3
+                              - type: ActionButton
+                                name: doProject3AhBtn
+                                margin: none
+                                minWidth: 10
+                                maxWidth: 10
+                                maxHeight: 24
                           - type: LayoutBox
                             style: inline
                             children:
@@ -1412,6 +1418,12 @@ children:
                                                 label: ' '
                                                 margin: none
                                                 maxWidth: 79
+                              - type: ActionButton
+                                name: doProject3BhBtn
+                                margin: none
+                                minWidth: 10
+                                maxWidth: 10
+                                maxHeight: 24
                           - type: LayoutBox
                             style: inline
                             children:
@@ -1546,6 +1558,12 @@ children:
                                                 label: ' '
                                                 margin: none
                                                 maxWidth: 79
+                              - type: ActionButton
+                                name: doProject3ChBtn
+                                margin: none
+                                minWidth: 10
+                                maxWidth: 10
+                                maxHeight: 24
                       - type: ActionButton
                         name: demo3Help
                         margin: none
@@ -3117,3 +3135,30 @@ children:
                   - name: systemMag
                     type: TextBox
                     format: number
+      - type: LayoutBox
+        style: inline
+        margin: none
+        children:
+          - type: Label
+            label: ' '
+            minWidth: 13
+          - type: CollapseBox
+            name: Settings4
+            collapsed: true
+            label: 'Other:'
+            margin: none
+            minWidth: 330
+            children:
+              - type: LayoutBox
+                style: inline
+                margin: none
+                children:
+                  - type: Label
+                    label: ' '
+                    minWidth: 13
+                  - type: Label
+                    label: ' '
+                    minWidth: 13
+                  - type: CheckBox
+                    name: shorthandCalculations
+                    minWidth: 100

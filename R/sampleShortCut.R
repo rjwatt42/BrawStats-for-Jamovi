@@ -21,7 +21,7 @@ sampleShortCut<-function(hypothesis,design,evidence,nsims,appendData,oldanalysis
     if (!effect$world$worldOn) {
       effect$world$populationPDF<-"Single"
       effect$world$populationRZ<-"r"
-      effect$world$populationPDFk<-effect$rIV
+      effect$world$populationPDFk<-tanh(atanh(effect$rIV)+rnorm(1,0,atanh(effect$rSD)))
       effect$world$populationNullp<-0
     }
     switch (paste0(effect$world$populationPDF,"_",effect$world$populationRZ),
@@ -109,7 +109,9 @@ sampleShortCut<-function(hypothesis,design,evidence,nsims,appendData,oldanalysis
                    rpIV=rbind(matrix(r_effects[1:nsims],ncol=1),oldanalysis$rpIV),
                    nval=rbind(matrix(n_effects[1:nsims],ncol=1),oldanalysis$nval),
                    df1=rbind(matrix(rep(df1,nsims),ncol=1),oldanalysis$df1),
-                   dv=rbind(matrix(rep(0,nsims),ncol=1),oldanalysis$dv)
+                   dv=rbind(matrix(rep(0,nsims),ncol=1),oldanalysis$dv),
+                   aic=rbind(matrix(rep(NA,nsims),ncol=1),oldanalysis$aic),
+                   aicNull=rbind(matrix(rep(NA,nsims),ncol=1),oldanalysis$aicNull)
     )
     
   } else {
@@ -118,7 +120,8 @@ sampleShortCut<-function(hypothesis,design,evidence,nsims,appendData,oldanalysis
                  rpIV=matrix(rp_effects[1:nsims],ncol=1),
                  nval=matrix(n_effects[1:nsims],ncol=1),
                  df1=matrix(rep(df1,nsims),ncol=1),
-                 dv=rep(0,nsims)
+                 dv=rep(0,nsims),
+                 aic=NA,aicNull=NA
   )
   }
   analysis$participant<-1:length(analysis$rIV)

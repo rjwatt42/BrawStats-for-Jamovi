@@ -1157,6 +1157,8 @@ options:
           title: Covariation
         - name: rIVIV2DV
           title: Interaction
+        - name: rSD
+          title: rSD
         - name: Heteroscedasticity
           title: Hscedast
         - name: blank0h
@@ -1395,12 +1397,17 @@ options:
       default: TRUE
 
     - name: brawHelp
-      title: Main help?
+      title: Main help
       type: Bool
       default: true
 
     - name: showHTML
-      title: HTML graphics?
+      title: HTML graphics
+      type: Bool
+      default: false
+
+    - name: shorthandCalculations
+      title: shorthand Calculations
       type: Bool
       default: false
 
@@ -1854,6 +1861,10 @@ options:
         title: Within
       default: Between
 
+    - name: doProject3AhBtn
+      title: '?'
+      type: Action
+
     - name: doProject3A1Btn
       title: do
       type: Action
@@ -1862,10 +1873,18 @@ options:
       title: do
       type: Action
       
+    - name: doProject3BhBtn
+      title: '?'
+      type: Action
+
     - name: doProject3B1Btn
       title: do
       type: Action
       
+    - name: doProject3ChBtn
+      title: '?'
+      type: Action
+
     - name: doProject3C1Btn
       title: do
       type: Action

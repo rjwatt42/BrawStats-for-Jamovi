@@ -42,8 +42,9 @@ getExploreRange<-function(explore) {
   
   switch(exploreType,
          "n"=range<-list(minVal=10,maxVal=250,logScale=FALSE,np=13),
-         "rIV"=range<-list(minVal=0,maxVal=0.9,logScale=FALSE,np=13),
-         "rs"=range<-list(minVal=-0.9,maxVal=0.9,logScale=FALSE,np=13),
+         "rIV"=range<-list(minVal=0,maxVal=0.75,logScale=FALSE,np=13),
+         "rSD"=range<-list(minVal=0,maxVal=0.4,logScale=FALSE,np=13),
+         "rs"=range<-list(minVal=-0.75,maxVal=0.75,logScale=FALSE,np=13),
          "anom"=range<-list(minVal=0,maxVal=1,logScale=FALSE,np=13),
          "anom1"=range<-list(minVal=0.1,maxVal=3,logScale=FALSE,np=13),
          "anom2"=range<-list(minVal=-3,maxVal=3,logScale=FALSE,np=13),
@@ -104,12 +105,15 @@ storeExploreResult<-function(result,res,ri,vi) {
   result$poval[ri,vi]<-res$poIV
   result$nval[ri,vi]<-res$nval
   result$df1[ri,vi]<-res$df1
+  
+  if (!is.null(res$aic)) {
   result$aic[ri,vi]<-res$aic
   result$aicNull[ri,vi]<-res$aicNull
-  
+  }
   if (!is.null(res$sem))
     result$sem[ri,vi]<-res$sem[1,8]
   
+  if (!is.null(res$iv)) {
   result$iv$mn[ri,vi]<-res$iv.mn
   result$iv$sd[ri,vi]<-res$iv.sd
   result$iv$sk[ri,vi]<-res$iv.sk
@@ -122,6 +126,7 @@ storeExploreResult<-function(result,res,ri,vi) {
   result$rd$sd[ri,vi]<-res$rd.sd
   result$rd$sk[ri,vi]<-res$rd.sk
   result$rd$kt[ri,vi]<-res$rd.kt
+  }
   
   if (!is.null(res$rIV2)){
     result$rIV2[ri,vi]<-res$rIV2
@@ -218,7 +223,7 @@ mergeExploreResult<-function(res1,res2) {
 #' @export
 doExplore<-function(nsims=10,exploreResult=braw.res$explore,explore=braw.def$explore,
                     hypothesis=braw.def$hypothesis,design=braw.def$design,evidence=braw.def$evidence,metaAnalysis=braw.def$metaAnalysis,
-                      doingNull=FALSE,autoShow=FALSE,showType="rs"
+                      doingNull=FALSE,doingMetaAnalysis=FALSE,autoShow=FALSE,showType="rs"
 ) {
   autoShowLocal<-braw.env$autoShow
   assign("autoShow",FALSE,braw.env)
@@ -234,6 +239,7 @@ doExplore<-function(nsims=10,exploreResult=braw.res$explore,explore=braw.def$exp
                         hypothesis=hypothesis,
                         design=design,
                         evidence=evidence,
+                        doingMetaAnalysis=doingMetaAnalysis,
                         metaAnalysis=metaAnalysis
     )
   }
@@ -250,13 +256,14 @@ doExplore<-function(nsims=10,exploreResult=braw.res$explore,explore=braw.def$exp
   }
   
   exploreResult <- runExplore(nsims=nsims,exploreResult,doingNull=doingNull,
+                              doingMetaAnalysis=doingMetaAnalysis,
                               autoShow=autoShow,showType=showType)
   assign("autoShow",autoShowLocal,braw.env)
   
   return(exploreResult)
 }
 
-runExplore <- function(nsims,exploreResult,doingNull=FALSE,
+runExplore <- function(nsims,exploreResult,doingNull=FALSE,doingMetaAnalysis=FALSE,
                        autoShow=FALSE,showType="rs"){
   max_r<-0.9
   
@@ -306,6 +313,7 @@ runExplore <- function(nsims,exploreResult,doingNull=FALSE,
           "DVprop"={vals<-seq(minVal,maxVal,length.out=npoints)},
           "DVskew"={vals<-seq(minVal,maxVal,length.out=npoints)},
           "DVkurtosis"={vals<-seq(minVal,maxVal,length.out=npoints)},
+          "rSD"={vals<-seq(minVal,maxVal,length.out=npoints)},
           "rIV"={
             if (is.null(IV2)) vals<-seq(minVal,maxVal,length.out=npoints)
             else {
@@ -379,8 +387,6 @@ runExplore <- function(nsims,exploreResult,doingNull=FALSE,
   if (doingNull && exploreResult$nullcount<exploreResult$count)
     nsims<-min(exploreResult$count,exploreResult$nullcount)+nsims
   else   nsims<-exploreResult$count+nsims
-  
-  doingMetaAnalysis<-FALSE
   
   time.at.start<-Sys.time()
   while (((doingNonNull && exploreResult$count<nsims) || (doingNull && exploreResult$nullcount<nsims)) && Sys.time()-time.at.start<braw.env$timeLimit){
@@ -636,6 +642,9 @@ runExplore <- function(nsims,exploreResult,doingNull=FALSE,
                   DV$type<-"Interval"
                   DV$kurtosis<-10^vals[vi]
                 },
+                "rSD"={
+                  effect$rSD<-vals[vi]
+                },
                 "rIV"={
                   if (effect$world$worldOn) {
                     effect$world$populationPDFk<-vals[vi]
@@ -763,6 +772,7 @@ runExplore <- function(nsims,exploreResult,doingNull=FALSE,
         hypothesis$IV2<-IV2
         hypothesis$DV<-DV
         hypothesis$effect<-effect
+        hypothesis$doingMetaAnalysis<-doingMetaAnalysis
         
         if (doingMetaAnalysis) {
           res<-doMetaAnalysis(1,NULL,metaAnalysis,hypothesis,design,evidence)

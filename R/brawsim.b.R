@@ -54,7 +54,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       # self$results$debug$setVisible(TRUE)
       # return()
       
-      doDemos<-2 # set to 6 to include path demos
+      doDemos<-3 # set to 6 to include path demos
       systemAsHTML<-TRUE
       nestedHelp<-TRUE
       joinSystem<-TRUE
@@ -92,11 +92,18 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (self$options$doProject1ChBtn) statusStore$demoHelpWhich<-c(2,4)
       if (self$options$doProject2AhBtn) statusStore$demoHelpWhich<-c(3,2)
       if (self$options$doProject2BhBtn) statusStore$demoHelpWhich<-c(3,3)
-      if (self$options$doProject2ChBtn) statusStore$demoHelpWhich<-c(3,4)
-      if (doDemos>3 && self$options$doProject4AhBtn) statusStore$demoHelpWhich<-c(5,2)
-      if (doDemos>3 && self$options$doProject4BhBtn) statusStore$demoHelpWhich<-c(5,3)
-      if (doDemos>3 && self$options$doProject4ChBtn) statusStore$demoHelpWhich<-c(5,4)
-      if (doDemos>4 && self$options$doProject5AhBtn) statusStore$demoHelpWhich<-c(6,2)
+      if (self$options$doProject2ChBtn) statusStore$demoHelpWhich<-c(4,4)
+      if (self$options$doProject3AhBtn) statusStore$demoHelpWhich<-c(4,2)
+      if (self$options$doProject3BhBtn) statusStore$demoHelpWhich<-c(4,3)
+      if (self$options$doProject3ChBtn) statusStore$demoHelpWhich<-c(4,4)
+      if (doDemos>3) {
+        if (self$options$doProject4AhBtn) statusStore$demoHelpWhich<-c(5,2)
+        if (self$options$doProject4BhBtn) statusStore$demoHelpWhich<-c(5,3)
+        if (self$options$doProject4ChBtn) statusStore$demoHelpWhich<-c(5,4)
+      }
+      if (doDemos>4) {
+        if (self$options$doProject5AhBtn) statusStore$demoHelpWhich<-c(6,2)
+      }
       if (all(statusStore$demoHelpWhich==old_demoHelpWhich))statusStore$demoHelpWhich<-c(0,0)
       
       statusStore$openJamovi<-0
@@ -205,6 +212,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                              ssqType=self$options$ssq,sigOnly=FALSE,
                              Welch=self$options$equalVar=="no",
                              Transform=self$options$Transform,
+                             shortHand=self$options$shorthandCalculations,
                              doSEM=self$options$doSEM,useAIC=self$options$useAIC
       )
       changedE<- !identical(oldE,evidence)
@@ -376,7 +384,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       }
       
       # are any of the existing stored results now invalid?
-      if (changedH || changedD) {
+      if (changedH || changedD || changedM) {
         braw.res$result<<-NULL
         braw.res$multiple<<-NULL
         braw.res$explore<<-NULL
@@ -441,7 +449,8 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         numberExplores<-self$options$numberExplores
         # do we need to do this, or are we just returning to the existing one?
         if (is.null(braw.res$explore) || statusStore$lastOutput=="Explore") 
-          exploreResult<-doExplore(nsims=numberExplores,exploreResult=braw.res$explore)
+          exploreResult<-doExplore(nsims=numberExplores,exploreResult=braw.res$explore,
+                                   doingMetaAnalysis=self$options$MetaAnalysisOn)
         outputNow<-"Explore"
       }
 

@@ -59,7 +59,7 @@ getMaxLikelihood<-function(zs,ns,df1,dist,metaAnalysis) {
   }
   if (dist=="random") {
     param1<-seq(-1,1,length.out=np1points)*0.95
-    param2<-seq(0,0.25,length.out=np2points)*0.95
+    param2<-seq(0,0.5,length.out=np2points)*0.95
   }
   
   remove_nonsig<-metaAnalysis$includeBias
