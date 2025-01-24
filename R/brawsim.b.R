@@ -566,7 +566,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                  "Infer"= self$results$simGraph$setState(c(outputNow,showInferParam,showInferDimension)),
                  "Likelihood"= self$results$simGraph$setState(c(outputNow,self$options$likelihoodType,likelihoodCutaway)),
                  "Multiple"= self$results$simGraph$setState(c(outputNow,showMultipleParam,showMultipleDimension,whichShowMultipleOut)),
-                 "Explore"= self$results$simGraph$setState(c(outputNow,showExploreParam,showExploreDimension,whichShowExploreOut)),
+                 "Explore"= self$results$simGraph$setState(c(outputNow,showExploreParam,showExploreDimension,whichShowExploreOut,self$options$fixedAxes)),
                  "MetaSingle"  =self$results$simGraph$setState(outputNow),
                  "MetaMultiple"  =self$results$simGraph$setState(outputNow),
                  self$results$simGraph$setState(outputNow)
@@ -682,7 +682,10 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                "Multiple"  =outputGraph<-showMultiple(showType=image$state[2],dimension=image$state[3],effectType=image$state[4]),
                "MetaSingle"  =outputGraph<-showMetaSingle(),
                "MetaMultiple"  =outputGraph<-showMetaMultiple(),
-               "Explore"   =outputGraph<-showExplore(showType=image$state[2],dimension=image$state[3],effectType=image$state[4])
+               "Explore"   =outputGraph<-showExplore(showType=image$state[2],
+                                                     dimension=image$state[3],
+                                                     effectType=image$state[4],
+                                                     autoYlim=image$state[5])
         )
         print(outputGraph)
         return(TRUE)

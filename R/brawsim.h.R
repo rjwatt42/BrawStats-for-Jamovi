@@ -108,7 +108,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             MetaAnalysisType = "random",
             MetaAnalysisNulls = "yes",
             MetaAnalysisBias = "yes",
-            MetaAnalysisNStudies = 10,
+            MetaAnalysisNStudies = 20,
             MetaAnalysisStudiesSig = "sigOnly",
             showHypothesisBtn = NULL,
             makeSampleBtn = FALSE,
@@ -149,6 +149,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             whichShowMultiple = "all",
             brawHelp = TRUE,
             showHTML = FALSE,
+            fixedAxes = FALSE,
             shorthandCalculations = FALSE,
             systemMag = 0.5,
             doProject1AhBtn = NULL,
@@ -799,7 +800,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..MetaAnalysisNStudies <- jmvcore::OptionNumber$new(
                 "MetaAnalysisNStudies",
                 MetaAnalysisNStudies,
-                default=10)
+                default=20)
             private$..MetaAnalysisStudiesSig <- jmvcore::OptionList$new(
                 "MetaAnalysisStudiesSig",
                 MetaAnalysisStudiesSig,
@@ -1098,6 +1099,10 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..showHTML <- jmvcore::OptionBool$new(
                 "showHTML",
                 showHTML,
+                default=FALSE)
+            private$..fixedAxes <- jmvcore::OptionBool$new(
+                "fixedAxes",
+                fixedAxes,
                 default=FALSE)
             private$..shorthandCalculations <- jmvcore::OptionBool$new(
                 "shorthandCalculations",
@@ -1558,6 +1563,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..sendExplore)
             self$.addOption(private$..brawHelp)
             self$.addOption(private$..showHTML)
+            self$.addOption(private$..fixedAxes)
             self$.addOption(private$..shorthandCalculations)
             self$.addOption(private$..systemMag)
             self$.addOption(private$..doProject1AhBtn)
@@ -1765,6 +1771,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         sendExplore = function() private$..sendExplore$value,
         brawHelp = function() private$..brawHelp$value,
         showHTML = function() private$..showHTML$value,
+        fixedAxes = function() private$..fixedAxes$value,
         shorthandCalculations = function() private$..shorthandCalculations$value,
         systemMag = function() private$..systemMag$value,
         doProject1AhBtn = function() private$..doProject1AhBtn$value,
@@ -1971,6 +1978,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..sendExplore = NA,
         ..brawHelp = NA,
         ..showHTML = NA,
+        ..fixedAxes = NA,
         ..shorthandCalculations = NA,
         ..systemMag = NA,
         ..doProject1AhBtn = NA,
@@ -2310,6 +2318,7 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param whichShowMultiple .
 #' @param brawHelp .
 #' @param showHTML .
+#' @param fixedAxes .
 #' @param shorthandCalculations .
 #' @param systemMag .
 #' @param doProject1AhBtn .
@@ -2486,7 +2495,7 @@ BrawSim <- function(
     MetaAnalysisType = "random",
     MetaAnalysisNulls = "yes",
     MetaAnalysisBias = "yes",
-    MetaAnalysisNStudies = 10,
+    MetaAnalysisNStudies = 20,
     MetaAnalysisStudiesSig = "sigOnly",
     showHypothesisBtn,
     makeSampleBtn = FALSE,
@@ -2527,6 +2536,7 @@ BrawSim <- function(
     whichShowMultiple = "all",
     brawHelp = TRUE,
     showHTML = FALSE,
+    fixedAxes = FALSE,
     shorthandCalculations = FALSE,
     systemMag = 0.5,
     doProject1AhBtn,
@@ -2735,6 +2745,7 @@ BrawSim <- function(
         whichShowMultiple = whichShowMultiple,
         brawHelp = brawHelp,
         showHTML = showHTML,
+        fixedAxes = fixedAxes,
         shorthandCalculations = shorthandCalculations,
         systemMag = systemMag,
         doProject1AhBtn = doProject1AhBtn,

@@ -3124,11 +3124,8 @@ children:
                     label: ' '
                     minWidth: 13
                   - type: CheckBox
-                    name: showHTML
+                    name: fixedAxes
                     minWidth: 100
-                  - type: Label
-                    label: ' '
-                    minWidth: 13
                   - type: CheckBox
                     name: brawHelp
                     minWidth: 100
@@ -3161,4 +3158,7 @@ children:
                     minWidth: 13
                   - type: CheckBox
                     name: shorthandCalculations
+                    minWidth: 100
+                  - type: CheckBox
+                    name: showHTML
                     minWidth: 100

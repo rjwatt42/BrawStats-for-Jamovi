@@ -849,7 +849,7 @@ options:
     - name: MetaAnalysisNStudies
       title: 'no of studies'
       type: Number
-      default: 10
+      default: 20
 
     - name: MetaAnalysisStudiesSig
       title: ' '
@@ -1406,13 +1406,18 @@ options:
       type: Bool
       default: false
 
+    - name: fixedAxes
+      title: fixed Axes
+      type: Bool
+      default: false
+
     - name: shorthandCalculations
       title: shorthand Calculations
       type: Bool
       default: false
 
     - name: systemMag
-      title: system Magnification
+      title: zoom
       type: Number
       default: 0.5
 
