@@ -834,7 +834,7 @@ options:
         title: yes
       - name: no
         title: no
-      default: yes
+      default: no
 
     - name: MetaAnalysisBias
       title: 'bias'
@@ -844,7 +844,7 @@ options:
         title: yes
       - name: no
         title: no
-      default: yes
+      default: no
 
     - name: MetaAnalysisNStudies
       title: 'no of studies'
@@ -1420,6 +1420,14 @@ options:
       title: zoom
       type: Number
       default: 0.5
+      
+    - name: goBack
+      title: '<<'
+      type: Action
+      
+    - name: goForwards
+      title: '>>'
+      type: Action
 
     - name: doProject1AhBtn
       title: '?'

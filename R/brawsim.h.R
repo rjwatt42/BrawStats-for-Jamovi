@@ -106,8 +106,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             useAIC = "AIC",
             MetaAnalysisOn = FALSE,
             MetaAnalysisType = "random",
-            MetaAnalysisNulls = "yes",
-            MetaAnalysisBias = "yes",
+            MetaAnalysisNulls = "no",
+            MetaAnalysisBias = "no",
             MetaAnalysisNStudies = 20,
             MetaAnalysisStudiesSig = "sigOnly",
             showHypothesisBtn = NULL,
@@ -152,6 +152,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             fixedAxes = FALSE,
             shorthandCalculations = FALSE,
             systemMag = 0.5,
+            goBack = NULL,
+            goForwards = NULL,
             doProject1AhBtn = NULL,
             doProject1A1Btn = NULL,
             doProject1A2Btn = NULL,
@@ -789,14 +791,14 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=list(
                     "yes",
                     "no"),
-                default="yes")
+                default="no")
             private$..MetaAnalysisBias <- jmvcore::OptionList$new(
                 "MetaAnalysisBias",
                 MetaAnalysisBias,
                 options=list(
                     "yes",
                     "no"),
-                default="yes")
+                default="no")
             private$..MetaAnalysisNStudies <- jmvcore::OptionNumber$new(
                 "MetaAnalysisNStudies",
                 MetaAnalysisNStudies,
@@ -1112,6 +1114,12 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "systemMag",
                 systemMag,
                 default=0.5)
+            private$..goBack <- jmvcore::OptionAction$new(
+                "goBack",
+                goBack)
+            private$..goForwards <- jmvcore::OptionAction$new(
+                "goForwards",
+                goForwards)
             private$..doProject1AhBtn <- jmvcore::OptionAction$new(
                 "doProject1AhBtn",
                 doProject1AhBtn)
@@ -1566,6 +1574,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..fixedAxes)
             self$.addOption(private$..shorthandCalculations)
             self$.addOption(private$..systemMag)
+            self$.addOption(private$..goBack)
+            self$.addOption(private$..goForwards)
             self$.addOption(private$..doProject1AhBtn)
             self$.addOption(private$..doProject1A1Btn)
             self$.addOption(private$..doProject1A2Btn)
@@ -1774,6 +1784,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         fixedAxes = function() private$..fixedAxes$value,
         shorthandCalculations = function() private$..shorthandCalculations$value,
         systemMag = function() private$..systemMag$value,
+        goBack = function() private$..goBack$value,
+        goForwards = function() private$..goForwards$value,
         doProject1AhBtn = function() private$..doProject1AhBtn$value,
         doProject1A1Btn = function() private$..doProject1A1Btn$value,
         doProject1A2Btn = function() private$..doProject1A2Btn$value,
@@ -1981,6 +1993,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..fixedAxes = NA,
         ..shorthandCalculations = NA,
         ..systemMag = NA,
+        ..goBack = NA,
+        ..goForwards = NA,
         ..doProject1AhBtn = NA,
         ..doProject1A1Btn = NA,
         ..doProject1A2Btn = NA,
@@ -2321,6 +2335,8 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param fixedAxes .
 #' @param shorthandCalculations .
 #' @param systemMag .
+#' @param goBack .
+#' @param goForwards .
 #' @param doProject1AhBtn .
 #' @param doProject1A1Btn .
 #' @param doProject1A2Btn .
@@ -2493,8 +2509,8 @@ BrawSim <- function(
     useAIC = "AIC",
     MetaAnalysisOn = FALSE,
     MetaAnalysisType = "random",
-    MetaAnalysisNulls = "yes",
-    MetaAnalysisBias = "yes",
+    MetaAnalysisNulls = "no",
+    MetaAnalysisBias = "no",
     MetaAnalysisNStudies = 20,
     MetaAnalysisStudiesSig = "sigOnly",
     showHypothesisBtn,
@@ -2539,6 +2555,8 @@ BrawSim <- function(
     fixedAxes = FALSE,
     shorthandCalculations = FALSE,
     systemMag = 0.5,
+    goBack,
+    goForwards,
     doProject1AhBtn,
     doProject1A1Btn,
     doProject1A2Btn,
@@ -2748,6 +2766,8 @@ BrawSim <- function(
         fixedAxes = fixedAxes,
         shorthandCalculations = shorthandCalculations,
         systemMag = systemMag,
+        goBack = goBack,
+        goForwards = goForwards,
         doProject1AhBtn = doProject1AhBtn,
         doProject1A1Btn = doProject1A1Btn,
         doProject1A2Btn = doProject1A2Btn,

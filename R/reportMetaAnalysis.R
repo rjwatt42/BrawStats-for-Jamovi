@@ -5,24 +5,23 @@ reportMetaAnalysis<-function(metaResult=braw.res$metaResult){
   nc<-6
   
   # header
-  outputText<-c(paste0("\bMeta Analysis"," - ",metaResult$metaAnalysis$analysisType),paste("nstudies=",brawFormat(metaResult$metaAnalysis$nstudies)),paste("nsims=",brawFormat(length(metaResult$bestDist)),sep=""),rep("",nc-3))
+  outputText<-c(paste0("\bMeta Analysis"," - ",metaResult$metaAnalysis$analysisType," (nstudies=",brawFormat(metaResult$metaAnalysis$nstudies),")"),paste("nsims=",brawFormat(metaResult$count),sep=""),rep("",nc-2))
   outputText<-c(outputText,rep("",nc))
   
   if (metaResult$count==1) {
     if (is.element(metaResult$metaAnalysis$analysisType,c("fixed","random"))) {
-      outputText<-c(outputText,"!H!C","\bDistr"," ","\b\u03bb","\b\u00b1","\bllk")
-      if (metaResult$hypothesis$effect$world$worldOn)
-        outputText<-c(outputText,"Actual",metaResult$hypothesis$effect$world$populationPDF," ",brawFormat(metaResult$hypothesis$effect$world$populationPDFk,digits=3),brawFormat(metaResult$hypothesis$effect$world$populationNullp,digits=3),"")
-      else
-        outputText<-c(outputText,"Actual"," "," ",brawFormat(metaResult$hypothesis$effect$rIV,digits=3),brawFormat(metaResult$hypothesis$effect$rSD,digits=3),"")
-      switch (metaResult$metaAnalysis$analysisType,
-              "fixed"={mr<-metaResult$fixed},
-              "random"={mr<-metaResult$random}
-              )
-      outputText<-c(outputText,"Estimate",metaResult$metaAnalysis$analysisType," ",
-                    brawFormat(mean(mr$param1Max),digits=3),
-                    brawFormat(mean(mr$param2Max),digits=3),
-                    brawFormat(mean(mr$Smax),digits=3))
+      switch(metaResult$metaAnalysis$analysisType,
+             "fixed"={
+               outputText<-c(outputText,"!H","!C","r[est]","S"," "," ")
+               outputText<-c(outputText,"Actual","mean",brawFormat(metaResult$hypothesis$effect$rIV,digits=3)," "," "," ")
+               outputText<-c(outputText,"Estimate","mean",brawFormat(mean(metaResult$fixed$param1Max),digits=3),brawFormat(mean(metaResult$fixed$Smax),digits=3)," "," ")
+             },
+             "random"={
+               outputText<-c(outputText,"!H"," ","r[est]","σ(r[est])","S"," ")
+               outputText<-c(outputText,"Actual","mean",brawFormat(metaResult$hypothesis$effect$rIV,digits=3),brawFormat(mean(metaResult$hypothesis$effect$rSD),digits=3)," "," ")
+               outputText<-c(outputText,"Estimate","mean",brawFormat(mean(metaResult$random$param1Max),digits=3),brawFormat(mean(metaResult$random$param2Max),digits=3),brawFormat(mean(metaResult$random$Smax),digits=3)," ")
+             }
+      )
     } else {
       outputText<-c(outputText,"!H!C","\bDistr","","\b\u03bb","\bp(0)","\bllk")
       outputText<-c(outputText,"Actual",metaResult$hypothesis$effect$world$populationPDF,"",brawFormat(metaResult$hypothesis$effect$world$populationPDFk,digits=3),brawFormat(metaResult$hypothesis$effect$world$populationNullp,digits=3),"")
@@ -60,9 +59,9 @@ reportMetaAnalysis<-function(metaResult=braw.res$metaResult){
                outputText<-c(outputText,"","sd",brawFormat(std(metaResult$fixed$param1Max),digits=3),brawFormat(std(metaResult$fixed$Smax),digits=3)," "," ")
              },
              "random"={
-               outputText<-c(outputText,"!H"," ","r[est]","sd(r)[est]","S"," ")
+               outputText<-c(outputText,"!H"," ","r[est]","σ(r[est])","S"," ")
                outputText<-c(outputText,"Actual","mean",brawFormat(metaResult$hypothesis$effect$rIV,digits=3),brawFormat(mean(metaResult$hypothesis$effect$rSD),digits=3)," "," ")
-               outputText<-c(outputText,"Estimate","mean",brawFormat(mean(metaResult$random$param1Max),digits=3),brawFormat(mean(metaResult$random$param2Max),digits=3),brawFormat(mean(random$Smax),digits=3)," ")
+               outputText<-c(outputText,"Estimate","mean",brawFormat(mean(metaResult$random$param1Max),digits=3),brawFormat(mean(metaResult$random$param2Max),digits=3),brawFormat(mean(metaResult$random$Smax),digits=3)," ")
                outputText<-c(outputText,"","sd",brawFormat(std(metaResult$random$param1Max),digits=3),brawFormat(std(metaResult$random$param2Max),digits=3),brawFormat(std(metaResult$random$Smax),digits=3)," ")
              }
              )

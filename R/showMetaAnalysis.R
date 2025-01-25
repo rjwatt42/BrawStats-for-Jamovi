@@ -12,16 +12,15 @@ worldLabel<-function(metaResult,whichMeta=NULL) {
     p1<-metaResult[[Dist]]$param1Max
     p2<-metaResult[[Dist]]$param2Max
 
-    if (is.element(Dist,c("random","fixed"))) label1<-"rp" else label1<-Dist
-  lb<-paste0(label1,"(",brawFormat(mean(p1,na.rm=TRUE),digits=2))
+    if (is.element(Dist,c("random","fixed"))) label1<-"r[est]" else label1<-Dist
+  lb<-paste0(label1,"=",brawFormat(mean(p1,na.rm=TRUE),digits=2))
   if (length(p1)>1)
-    lb<-paste0(lb,"\u00B1",brawFormat(std(p1),digits=2))
-  lb<-paste0(lb,")")
+    lb<-paste0(lb,"~'\u00B1 ",brawFormat(std(p1),digits=2),"'")
   if (!is.null(p2)) {
-    if (is.element(Dist,c("random","fixed"))) label2<-"sd(rp)" else label2<-"p(null)"
+    if (is.element(Dist,c("random","fixed"))) label2<-"σ(r[est])" else label2<-"p(null)"
     lb<-paste0(lb,"\n",label2,"=",brawFormat(mean(p2,na.rm=TRUE),digits=2))
     if (length(p2)>1)
-      lb<-paste0(lb,"\u00B1",brawFormat(std(p2),digits=2))
+      lb<-paste0(lb,"~'\u00B1 ",brawFormat(std(p2),digits=2),"'")
   }
   return(lb)
 }
@@ -217,8 +216,8 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
               x<-metaResult$random$param1Max
               y<-metaResult$random$param2Max
               y1<-0
-              ylim<-c(-0.02,0.2)
-              ylabel<-"sd(r)[est]"
+              ylim<-c(-0.02,0.5)
+              ylabel<-"σ(r[est])"
               xlabel<-"r[est]"
               useBest<-1:length(x)
             },
@@ -247,9 +246,13 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
 
       dotSize=min(4,max(4,sqrt(50/length(x))))
       
-      g<-addG(g,dataPoint(data=pts,shape=braw.env$plotShapes$meta, colour = "black", fill = "grey", size = dotSize))
+      g<-addG(g,dataPoint(data=pts,shape=braw.env$plotShapes$meta, 
+                          colour="black", fill="grey", alpha=min(1,2.5/sqrt(length(x))), 
+                          size = dotSize))
       pts<-data.frame(x=x[useBest],y=y[useBest])
-      g<-addG(g,dataPoint(data=pts,shape=braw.env$plotShapes$meta, colour = "black", fill = "yellow", size = dotSize))
+      g<-addG(g,dataPoint(data=pts,shape=braw.env$plotShapes$meta,
+                          colour="black", fill="yellow", alpha=min(1,2.5/sqrt(length(x))), 
+                          size = dotSize))
       
       if (showType=="S-S") {
         g<-addG(g,dataPath(data=data.frame(x=xlim,y=ylim),colour="red"))

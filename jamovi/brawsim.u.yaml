@@ -1148,7 +1148,6 @@ children:
                                   column: 0
                                 events:
                                   change: ./BrawSim.events::onChange_Project1As
-
                           - type: LayoutBox
                             style: inline
                             children:
@@ -1174,7 +1173,9 @@ children:
                                             verticalAlignment: center
                                             children:
                                               - type: Label
-                                                label: '1. make Multiple samples, view as "p(sig)"'
+                                                label: >-
+                                                  1. make Multiple samples, view as
+                                                  "p(sig)"
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1244,7 +1245,7 @@ children:
                                             minWidth: 301
                                             children:
                                               - type: Label
-                                                label: '3. Explore "n", view as "p(sig)"'
+                                                label: 3. Explore "n", view as "p(sig)"
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1258,7 +1259,9 @@ children:
                                                             label: ' '
                                                             minWidth: 13
                                                           - type: Label
-                                                            label: '- n80 is the sample size to give p(sig)=0.8'
+                                                            label: >-
+                                                              - n80 is the sample size to give
+                                                              p(sig)=0.8
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1286,7 +1289,7 @@ children:
                                 minWidth: 5
                               - type: CollapseBox
                                 collapsed: true
-                                label: b. population effect size and n80 
+                                label: b. population effect size and n80
                                 margin: none
                                 minWidth: 400
                                 maxWidth: 400
@@ -1302,7 +1305,7 @@ children:
                                             minWidth: 301
                                             children:
                                               - type: Label
-                                                label: '1. Explore r&#x209a;, viewed as "p(sig)"'
+                                                label: 1. Explore r&#x209a;, viewed as "p(sig)"
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1346,7 +1349,7 @@ children:
                                             minWidth: 301
                                             children:
                                               - type: Label
-                                                label: '2. change sample size'
+                                                label: 2. change sample size
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1386,7 +1389,7 @@ children:
                                             minWidth: 301
                                             children:
                                               - type: Label
-                                                label: '3. change sampling to "Convenience"'
+                                                label: 3. change sampling to "Convenience"
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1432,7 +1435,9 @@ children:
                                 minWidth: 5
                               - type: CollapseBox
                                 collapsed: true
-                                label: c. within-designs, making best use of participants 
+                                label: >-
+                                  c. within-designs, making best use of
+                                  participants
                                 margin: none
                                 minWidth: 400
                                 maxWidth: 400
@@ -1448,7 +1453,7 @@ children:
                                             minWidth: 301
                                             children:
                                               - type: Label
-                                                label: '1. set the IV to Categorical'
+                                                label: 1. set the IV to Categorical
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1484,7 +1489,7 @@ children:
                                             minWidth: 301
                                             children:
                                               - type: Label
-                                                label: '2. set sample usage to "Within"'
+                                                label: 2. set sample usage to "Within"
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1518,7 +1523,7 @@ children:
                                             minWidth: 301
                                             children:
                                               - type: Label
-                                                label: '3. Explore r&#x209a;, viewed as "p(sig)"'
+                                                label: 3. Explore r&#x209a;, viewed as "p(sig)"
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -3058,6 +3063,26 @@ children:
                         minWidth: 10
                         maxWidth: 10
                         maxHeight: 24
+  - type: Label
+    label: ' '
+  - type: CollapseBox
+    collapsed: true
+    label: History
+    margin: none
+    maxWidth: 356
+    children:
+      - type: LayoutBox
+        style: inline
+        margin: none
+        children:
+          - type: ActionButton
+            name: goBack
+            margin: none
+            maxHeight: 24
+          - type: ActionButton
+            name: goForwards
+            margin: none
+            maxHeight: 24
   - type: Label
     label: ' '
   - type: CollapseBox

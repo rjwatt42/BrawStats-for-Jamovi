@@ -467,7 +467,7 @@ axisText<-function(data,label, hjust=0, vjust=0, colour="black",size=1,angle=0,d
       label<-gsub("\\[([^ ]*)\\]","\\['\\1'\\]",label)
       label<-gsub("=","==",label)
       parse=TRUE
-      if (fontface=="bold") label<-paste0('bold(',label,')')
+      # if (fontface=="bold") label<-paste0('bold(',label,')')
     }
     
     #   mathlabel<-grepl("['[']{1}",label) #| grepl("[\\^]{1}",label)
@@ -496,7 +496,7 @@ axisText<-function(data,label, hjust=0, vjust=0, colour="black",size=1,angle=0,d
     
     x<-svgX(data$x)
     y<-svgY(data$y)
-    if (containsSubscript(label)) y<-y-0.025*braw.env$plotArea[4]*svgBoxY()
+    # if (containsSubscript(label)) y<-y-0.025*braw.env$plotArea[4]*svgBoxY()
     labels<-""
     
     if (!background) filter<-'' else {
@@ -587,7 +587,8 @@ dataPoint<-function(data,shape=21,colour="black",fill="white",alpha=1,size=3) {
 }
 axisPoint<-function(data,shape=21,colour="black",fill="white",alpha=1,size=3) {
   size<-0.75*size*(braw.env$plotArea[4])^0.5
-    if (!braw.env$graphHTML) {
+  if (alpha<1) colour=fill
+  if (!braw.env$graphHTML) {
       size<-size*1.5
     if (is.null(data$fill)) {
       g<-geom_point(data=data,aes(x=x,y=y),shape=shape,colour=colour,fill=fill,alpha=alpha,size=size*0.9)
@@ -727,10 +728,12 @@ dataLegend<-function(data,title="title",fontsize=0.6,shape=21) {
   for (i in 1:length(names)) {
     if (!is.na(data$colours[i]))
     g<-c(g,
-        list(axisPoint(data=data.frame(x=rangeX(1-ncols*dx+dx),y=rangeY(1-dy*(i+tn))),fill=data$colours[i],shape=shape[i]))
+        list(axisPoint(data=data.frame(x=rangeX(1-ncols*dx+dx),y=rangeY(1-dy*(i+tn))),
+                       fill=data$colours[i],shape=shape[i]))
     )
     g<-c(g,
-         list(axisText(data=data.frame(x=rangeX(1-ncols*dx+2*dx),y=rangeY(1-dy*(i+tn))),label=data$names[i],vjust=0.5,size=fontsize))
+         list(axisText(data=data.frame(x=rangeX(1-ncols*dx+2*dx),y=rangeY(1-dy*(i+tn))),
+                       label=data$names[i],vjust=0.5,size=fontsize))
     )
   }
   return(g)

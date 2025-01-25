@@ -5,11 +5,10 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
   "BrawSimClass",
   inherit = BrawSimBase,
   private = list(
-    # .htmlwidget = NULL,  # Add instance for HTMLWidget
+    .history=NULL,
     
     .init = function() {
-      # private$.htmlwidget <- HTMLWidget$new() # Initialize the HTMLWidget instance 
-      
+
       # initialization code 
       if (!exists("braw.env")) {
         BrawOpts(graphC="transparent",reducedOutput=TRUE,reportHTML=TRUE,autoShow=FALSE,
@@ -34,7 +33,12 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                           nrowTableSEM=1
         )
         braw.env$statusStore<<-statusStore
-        # braw.env$counter<<-0
+        .history<<-list(
+          history=NULL,
+          historyData=NULL,
+          historyOptions=NULL,
+          historyPlace=0
+        )
       }
     },
     
@@ -62,6 +66,8 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (joinSystem) self$results$SystemHTML$setVisible(FALSE)
       else self$results$SystemHTML$setVisible(TRUE)
       
+      history<-.history
+
       statusStore<-braw.env$statusStore
       if (self$options$showHTML) {
         if (self$results$simGraph$visible) self$results$simGraph$setVisible(FALSE)
@@ -109,6 +115,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       statusStore$openJamovi<-0
       if (self$options$doProject1A2Btn) statusStore$openJamovi<-1
       
+      if (!self$options$goBack && !self$options$goForwards) {
       # get some display parameters for later
       # single sample
       makeSampleNow<-self$options$makeSampleBtn
@@ -453,10 +460,29 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                    doingMetaAnalysis=self$options$MetaAnalysisOn)
         outputNow<-"Explore"
       }
+      } else {
+        nhist<-length(history$history)
+        if (self$options$goBack) history$historyPlace<-max(history$historyPlace-1,1)
+        if (self$options$goForwards) history$historyPlace<-min(history$historyPlace+1,nhist)
+        outputNow<-history$history[history$historyPlace]
+        historyOptions<-history$historyOptions[[history$historyPlace]]
+        showSampleType<-historyOptions$showSampleType
+        showInferParam<-historyOptions$showInferParam
+        showInferDimension<-historyOptions$showInferDimension
+        showMultipleParam<-historyOptions$showMultipleParam
+        showMultipleDimension<-historyOptions$showMultipleDimension
+        whichShowMultipleOut<-historyOptions$whichShowMultipleOut
+        showExploreParam<-historyOptions$showExploreParam
+        showExploreDimension<-historyOptions$showExploreDimension
+        whichShowExploreOut<-historyOptions$whichShowExploreOut
+        
+        braw.res$result<<-history$historyData[[history$historyPlace]]$result
+        braw.res$multiple<<-history$historyData[[history$historyPlace]]$multiple
+        braw.res$explore<<-history$historyData[[history$historyPlace]]$explore
+        braw.res$metaResult<<-history$historyData[[history$historyPlace]]$metaResult
+        braw.res$metaMultiple<<-history$historyData[[history$historyPlace]]$metaMultiple
+      }
 
-      # self$results$debug$setVisible(TRUE)
-      # self$results$debug$setContent(outRep)
-      
       # what are we showing?
       # main results graphs/reports
       if (!is.null(outputNow))  {
@@ -492,8 +518,10 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                      "Sample"= graphSingle<-paste0(showSample(),reportSample()),
                      "Describe"= graphSingle<-paste0(showDescription(),reportDescription()),
                      "Infer"= graphSingle<-paste0(showInference(showType=showInferParam,dimension=showInferDimension),reportInference()),
-                     "Likelihood"=graphSingle<-paste0(showPossible(showType=self$options$likelihoodType,cutaway=likelihoodCutaway),reportLikelihood())
-                     )
+                     "Likelihood"=graphSingle<-paste0(showPossible(showType=self$options$likelihoodType,cutaway=likelihoodCutaway),reportLikelihood()),
+                     "MetaSingle"  =graphSingle<-paste0(showMetaSingle(),reportMetaAnalysis()),
+                     "MetaMultiple"  =graphSingle<-paste0(showMetaMultiple(),reportMetaAnalysis()),
+              )
             else graphSingle<-nullPlot()
             if (!is.null(braw.res$multiple))
               graphMultiple<-paste0(showMultiple(showType=showMultipleParam,dimension=showMultipleDimension,effectType=whichShowMultipleOut),
@@ -607,15 +635,50 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (!is.null(outputNow))  statusStore$lastOutput<-outputNow
       braw.env$statusStore<<-statusStore
       
+      if (!is.null(outputNow) && !self$options$goBack && !self$options$goForwards) {
+        historyOptions<-list(showSampleType=showSampleType,
+                              showInferParam=showInferParam,
+                              showInferDimension=showInferDimension,
+                              showMultipleParam=showMultipleParam,
+                              showMultipleDimension=showMultipleDimension,
+                              whichShowMultipleOut=whichShowMultipleOut,
+                              showExploreParam=showExploreParam,
+                              showExploreDimension=showExploreDimension,
+                              whichShowExploreOut=whichShowExploreOut
+        )
+        if (is.null(history$history)) {
+          nD<-1
+        } else {
+          nD<-length(history$history)+1
+        }
+          history$history[nD]<-outputNow
+          history$historyData[[nD]]<-list(result=braw.res$result,
+                                          multiple=braw.res$multiple,
+                                          explore=braw.res$explore,
+                                          metaResult=braw.res$metaResult,
+                                          metaMultiple=braw.res$metaMultiple
+                                          )
+          history$historyOptions[[nD]]<-historyOptions
+          if (nD>12) {
+            use<-(nD-11):nD
+            history$history<-history$history[use]
+            history$historyData<-history$historyData[use]
+            history$historyOptions<-history$historyOptions[use]
+            nD<-12
+          }
+          history$historyPlace<-nD
+        }
+      .history<<-history
+      
       # now we save any results to the Jamovi spreadsheet
       # single result first
       if (self$options$sendSample && !is.null(braw.res$result)) {
-        if (is.null(IV2)) {
+        if (is.null(braw.def$hypothesis$IV2)) {
           newVariables<-data.frame(braw.res$result$participant,braw.res$result$dv,braw.res$result$iv,braw.res$result$dv+NA)
-          names(newVariables)<-c("ID",DV$name,IV$name,"-")
+          names(newVariables)<-c("ID",braw.def$hypothesis$DV$name,braw.def$hypothesis$IV$name,"-")
         } else {
           newVariables<-data.frame(braw.res$result$participant,braw.res$result$dv,braw.res$result$iv,braw.res$result$iv2)
-          names(newVariables)<-c("ID",DV$name,IV$name,IV2$name)
+          names(newVariables)<-c("ID",braw.def$hypothesis$DV$name,braw.def$hypothesis$IV$name,braw.def$hypothesis$IV2$name)
         }
 
         keys<-1:length(newVariables)

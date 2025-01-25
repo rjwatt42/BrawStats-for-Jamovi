@@ -22,7 +22,6 @@ doMetaAnalysis<-function(nsims=100,metaResult=braw.res$metaMultiple,metaAnalysis
     studies<-multipleAnalysis(metaAnalysis$nstudies,hypothesis,design,evidence)
     metaResult<-runMetaAnalysis(metaAnalysis,studies,metaResult)
   }
-  metaResult$count<-length(metaResult$bestDist)
   metaResult$hypothesis<-hypothesis
   metaResult$design<-design
   setBrawRes("metaResult",metaResult)
@@ -134,10 +133,12 @@ if (is.element(metaAnalysis$analysisType,c("fixed","random"))) {
     fixed$param1Max<-c(metaResult$fixed$param1Max,fixed$param1Max)
     fixed$Smax<-c(metaResult$fixed$Smax,fixed$Smax)
     fixed$param2Max<-c(metaResult$fixed$param2Max,fixed$param2Max)
+    count<-length(fixed$Smax)
   } else {
     random$param1Max<-c(metaResult$random$param1Max,random$param1Max)
     random$Smax<-c(metaResult$random$Smax,random$Smax)
     random$param2Max<-c(metaResult$random$param2Max,random$param2Max)
+    count<-length(random$Smax)
   }  
   bestDist<-NA
   bestK<-NA
@@ -156,6 +157,7 @@ if (is.element(metaAnalysis$analysisType,c("fixed","random"))) {
     bestK<-c(metaResult$bestK,bestK)
     bestNull<-c(metaResult$bestNull,bestNull)
     bestS<-c(metaResult$bestS,bestS)
+    count<-length(bestS)
     single$param1Max<-c(metaResult$single$param1Max,single$param1Max)
     single$Smax<-c(metaResult$single$Smax,single$Smax)
     single$param2Max<-c(metaResult$single$param2Max,single$param2Max)
@@ -178,7 +180,7 @@ if (is.element(metaAnalysis$analysisType,c("fixed","random"))) {
                    bestK=bestK,
                    bestNull=bestNull,
                    bestS=bestS,
-                   count=length(metaResult$bestDist),
+                   count=count,
                    metaAnalysis=metaAnalysis,
                    result=studies
   )
