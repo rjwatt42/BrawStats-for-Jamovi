@@ -13,16 +13,16 @@ worldLabel<-function(metaResult,whichMeta=NULL) {
     p2<-metaResult[[Dist]]$param2Max
 
     if (is.element(Dist,c("random","fixed"))) label1<-"r[est]" else label1<-Dist
-  lb<-paste0(label1,"=",brawFormat(mean(p1,na.rm=TRUE),digits=2))
-  if (length(p1)>1)
-    lb<-paste0(lb,"~'\u00B1 ",brawFormat(std(p1),digits=2),"'")
-  if (!is.null(p2)) {
-    if (is.element(Dist,c("random","fixed"))) label2<-"σ(r[est])" else label2<-"p(null)"
-    lb<-paste0(lb,"\n",label2,"=",brawFormat(mean(p2,na.rm=TRUE),digits=2))
-    if (length(p2)>1)
-      lb<-paste0(lb,"~'\u00B1 ",brawFormat(std(p2),digits=2),"'")
-  }
-  return(lb)
+    lb<-paste0(label1,"=",brawFormat(mean(p1,na.rm=TRUE),digits=2))
+    if (length(p1)>1)
+      lb<-paste0(lb,"\u00B1",brawFormat(std(p1),digits=2))
+    if (!is.null(p2)) {
+      if (is.element(Dist,c("random","fixed"))) label2<-"σ(r[est])" else label2<-"p(null)"
+      lb<-paste0(lb,"\n",label2,"=",brawFormat(mean(p2,na.rm=TRUE),digits=2))
+      if (length(p2)>1)
+        lb<-paste0(lb,"\u00B1",brawFormat(std(p2),digits=2))
+    }
+    return(lb)
 }
 
 #' show a single meta-analysis 
@@ -92,8 +92,10 @@ showMetaSingle<-function(metaResult=braw.res$metaResult,showTheory=FALSE) {
     g<-addG(g,dataPoint(data=ptsNull,shape=braw.env$plotShapes$study, colour = darken(col2,off=-colgain), fill = col2,  size = dotSize))
   }
   
-  lb<-worldLabel(metaResult,"random")
-  g<-addG(g,dataLegend(data.frame(names=strsplit(lb,"\n")[[1]],colours=c(braw.env$plotColours$descriptionC,NA)),title="",shape=22))
+  lb<-worldLabel(metaResult,metaAnalysis$analysisType)
+  names=strsplit(lb,"\n")[[1]]
+  if (length(names)==1) colours=braw.env$plotColours$descriptionC else colours=c(braw.env$plotColours$descriptionC,NA)
+  g<-addG(g,dataLegend(data.frame(names=names,colours=colours),title="",shape=22))
   # g<-addG(g,plotTitle(lb,"left",size=1))
   
   if (braw.env$graphHTML && braw.env$autoShow) {

@@ -466,6 +466,7 @@ axisText<-function(data,label, hjust=0, vjust=0, colour="black",size=1,angle=0,d
     if (any(mathlabel)) {
       label<-gsub("\\[([^ ]*)\\]","\\['\\1'\\]",label)
       label<-gsub("=","==",label)
+      label<-gsub("\u00B1([0-9.]*)","~'\u00B1 \\1'",label)
       parse=TRUE
       # if (fontface=="bold") label<-paste0('bold(',label,')')
     }
@@ -706,7 +707,7 @@ dataErrorBar<-function(data,colour="black",linewidth=0.25) {
   return(g)
 }
 dataLegend<-function(data,title="title",fontsize=0.6,shape=21) {
-  dy=0.055*fontsize
+  dy=0.075*fontsize
   dx=0.025*fontsize/braw.env$plotArea[3]
   names<-data$names
   if (nchar(title)>0) tn<-1.2 else tn<-0

@@ -132,7 +132,9 @@ if (is.element(metaAnalysis$analysisType,c("fixed","random"))) {
   if (metaAnalysis$analysisType=="fixed") {
     fixed$param1Max<-c(metaResult$fixed$param1Max,fixed$param1Max)
     fixed$Smax<-c(metaResult$fixed$Smax,fixed$Smax)
-    fixed$param2Max<-c(metaResult$fixed$param2Max,fixed$param2Max)
+    if (metaAnalysis$includeNulls)
+      fixed$param2Max<-c(metaResult$fixed$param2Max,fixed$param2Max)
+    else fixed$param2Max<-NULL
     count<-length(fixed$Smax)
   } else {
     random$param1Max<-c(metaResult$random$param1Max,random$param1Max)
