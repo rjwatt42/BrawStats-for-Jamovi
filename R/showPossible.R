@@ -204,7 +204,7 @@ showPossible <- function(possibleResult=NULL,
   BoxColSamples<-darken(BoxCol,off=0.35)
   BoxColPopulations<-darken(BoxCol,off=0.4)
   
-  colS<-"yellow"
+  colS<-braw.env$plotColours$metaAnalysis
   if (showP>0)  colS<-braw.env$plotColours$infer_nsigC
   colSdark=darken(colS,off=-0.67)
   colSlight=darken(colS,off=0.2)

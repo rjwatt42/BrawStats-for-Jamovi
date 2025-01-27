@@ -440,8 +440,8 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (makeMultipleNow) {
         numberSamples<-self$options$numberSamples
         if (self$options$MetaAnalysisOn) {
-          if (statusStore$lastOutput=="MetaMultiple") 
-            metaMultipleResult<-doMetaAnalysis(numberSamples,braw.res$metaMultiple)
+          if (is.null(braw.res$metaMultiple) || statusStore$lastOutput=="MetaMultiple") 
+            doMetaAnalysis(numberSamples,braw.res$metaMultiple)
           outputNow<-"MetaMultiple"
         } else {
           # do we need to do this, or are we just returning to the existing one?
@@ -611,7 +611,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                    "Multiple"= self$results$simReport$setContent(reportMultiple(showType=showMultipleParam,reportStats=self$options$reportInferStats)),
                    "Explore"= self$results$simReport$setContent(reportExplore(showType=showExploreParam,reportStats=self$options$reportInferStats)),
                    "MetaSingle"  =self$results$simReport$setContent(reportMetaAnalysis()),
-                   "MetaMultiple"  =self$results$simReport$setContent(reportMetaAnalysis()),
+                   "MetaMultiple"  =self$results$simReport$setContent(reportMetaAnalysis(reportStats=self$options$reportInferStats)),
                    self$results$simReport$setContent(reportPlot(NULL))
             )
           }

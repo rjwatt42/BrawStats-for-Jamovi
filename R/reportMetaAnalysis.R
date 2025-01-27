@@ -1,10 +1,25 @@
 
-reportMetaAnalysis<-function(metaResult=braw.res$metaResult){
+reportMetaAnalysis<-function(metaResult=braw.res$metaResult,reportStats="Medians"){
   if (is.null(metaResult)) metaResult<-doMetaAnalysis()
   
   nc<-6
-  
+  switch(reportStats,
+         "Medians"={
+           funcCT<-median
+           lbCT<-"median"
+           funcDP<-iqr
+           lbDP<-"iqr"
+         },
+         "Means"={
+           funcCT<-mean
+           lbCT<-"mean"
+           funcDP<-std
+           lbDP<-"sd"
+         })
   # header
+  if (metaResult$count==1)
+    outputText<-c(paste0("\bMeta Analysis"," - ",metaResult$metaAnalysis$analysisType," (nstudies=",brawFormat(metaResult$metaAnalysis$nstudies),")"),rep("",nc-1))
+  else
   outputText<-c(paste0("\bMeta Analysis"," - ",metaResult$metaAnalysis$analysisType," (nstudies=",brawFormat(metaResult$metaAnalysis$nstudies),")"),paste("nsims=",brawFormat(metaResult$count),sep=""),rep("",nc-2))
   outputText<-c(outputText,rep("",nc))
   
@@ -13,39 +28,39 @@ reportMetaAnalysis<-function(metaResult=braw.res$metaResult){
       switch(metaResult$metaAnalysis$analysisType,
              "fixed"={
                outputText<-c(outputText,"!H","!C","r[est]","S"," "," ")
-               outputText<-c(outputText,"Actual","mean",brawFormat(metaResult$hypothesis$effect$rIV,digits=3)," "," "," ")
-               outputText<-c(outputText,"Estimate","mean",brawFormat(mean(metaResult$fixed$param1Max),digits=3),brawFormat(mean(metaResult$fixed$Smax),digits=3)," "," ")
+               outputText<-c(outputText,"Actual"," ",brawFormat(metaResult$hypothesis$effect$rIV,digits=3)," "," "," ")
+               outputText<-c(outputText,"Estimate"," ",brawFormat(metaResult$fixed$param1Max,digits=3),brawFormat(metaResult$fixed$Smax,digits=3)," "," ")
              },
              "random"={
-               outputText<-c(outputText,"!H"," ","r[est]","σ(r[est])","S"," ")
-               outputText<-c(outputText,"Actual","mean",brawFormat(metaResult$hypothesis$effect$rIV,digits=3),brawFormat(mean(metaResult$hypothesis$effect$rSD),digits=3)," "," ")
-               outputText<-c(outputText,"Estimate","mean",brawFormat(mean(metaResult$random$param1Max),digits=3),brawFormat(mean(metaResult$random$param2Max),digits=3),brawFormat(mean(metaResult$random$Smax),digits=3)," ")
+               outputText<-c(outputText,"!H"," ","r[est]","σ(r)[est]","S"," ")
+               outputText<-c(outputText,"Actual"," ",brawFormat(metaResult$hypothesis$effect$rIV,digits=3),brawFormat(metaResult$hypothesis$effect$rSD,digits=3)," "," ")
+               outputText<-c(outputText,"Estimate"," ",brawFormat(metaResult$random$param1Max,digits=3),brawFormat(metaResult$random$param2Max,digits=3),brawFormat(metaResult$random$Smax,digits=3)," ")
              }
       )
     } else {
       outputText<-c(outputText,"!H!C","\bDistr","","\b\u03bb","\bp(0)","\bllk")
       outputText<-c(outputText,"Actual",metaResult$hypothesis$effect$world$populationPDF,"",brawFormat(metaResult$hypothesis$effect$world$populationPDFk,digits=3),brawFormat(metaResult$hypothesis$effect$world$populationNullp,digits=3),"")
-      outputText<-c(outputText,"Best",metaResult$bestDist," ",brawFormat(mean(metaResult$bestK),digits=3),brawFormat(mean(metaResult$bestNull),digits=3),brawFormat(mean(metaResult$bestS),digits=3))
+      outputText<-c(outputText,"Best",metaResult$bestDist," ",brawFormat(funcCT(metaResult$bestK),digits=3),brawFormat(funcCT(metaResult$bestNull),digits=3),brawFormat(funcCT(metaResult$bestS),digits=3))
       outputText<-c(outputText,rep(" ",nc))
       if (metaResult$metaAnalysis$modelPDF=="Single" || (metaResult$metaAnalysis$modelPDF=="All" && braw.env$includeSingle)) {
         outputText<-c(outputText,"Estimated","Single"," ",
-                      paste0(brawFormat(mean(metaResult$single$param1Max),digits=3)),
-                      paste0(brawFormat(mean(metaResult$single$param2Max),digits=3)),
-                      paste0(brawFormat(mean(metaResult$single$Smax),digits=3))
+                      paste0(brawFormat(funcCT(metaResult$single$param1Max),digits=3)),
+                      paste0(brawFormat(funcCT(metaResult$single$param2Max),digits=3)),
+                      paste0(brawFormat(funcCT(metaResult$single$Smax),digits=3))
         )
       }
       if (metaResult$metaAnalysis$modelPDF=="Gauss" || metaResult$metaAnalysis$modelPDF=="All") {
         outputText<-c(outputText," ","Gauss"," ",
-                      paste0(brawFormat(mean(metaResult$gauss$param1Max),digits=3)),
-                      paste0(brawFormat(mean(metaResult$gauss$param2Max),digits=3)),
-                      paste0(brawFormat(mean(metaResult$gauss$Smax),digits=3))
+                      paste0(brawFormat(funcCT(metaResult$gauss$param1Max),digits=3)),
+                      paste0(brawFormat(funcCT(metaResult$gauss$param2Max),digits=3)),
+                      paste0(brawFormat(funcCT(metaResult$gauss$Smax),digits=3))
         )
       }
       if (metaResult$metaAnalysis$modelPDF=="Exp" || metaResult$metaAnalysis$modelPDF=="All") {
         outputText<-c(outputText," ","Exp"," ",
-                      paste0(brawFormat(mean(metaResult$exp$param1Max),digits=3)),
-                      paste0(brawFormat(mean(metaResult$exp$param2Max),digits=3)),
-                      paste0(brawFormat(mean(metaResult$exp$Smax),digits=3))
+                      paste0(brawFormat(funcCT(metaResult$exp$param1Max),digits=3)),
+                      paste0(brawFormat(funcCT(metaResult$exp$param2Max),digits=3)),
+                      paste0(brawFormat(funcCT(metaResult$exp$Smax),digits=3))
         )
       }
     }
@@ -54,15 +69,15 @@ reportMetaAnalysis<-function(metaResult=braw.res$metaResult){
       switch(metaResult$metaAnalysis$analysisType,
              "fixed"={
                outputText<-c(outputText,"!H","!C","r[est]","S"," "," ")
-               outputText<-c(outputText,"Actual","mean",brawFormat(metaResult$hypothesis$effect$rIV,digits=3)," "," "," ")
-               outputText<-c(outputText,"Estimate","mean",brawFormat(mean(metaResult$fixed$param1Max),digits=3),brawFormat(mean(metaResult$fixed$Smax),digits=3)," "," ")
-               outputText<-c(outputText,"","sd",brawFormat(std(metaResult$fixed$param1Max),digits=3),brawFormat(std(metaResult$fixed$Smax),digits=3)," "," ")
+               outputText<-c(outputText,"Actual"," ",brawFormat(metaResult$hypothesis$effect$rIV,digits=3)," "," "," ")
+               outputText<-c(outputText,"Estimate",lbCT,brawFormat(funcCT(metaResult$fixed$param1Max),digits=3),brawFormat(funcCT(metaResult$fixed$Smax),digits=3)," "," ")
+               outputText<-c(outputText,"",lbDP,brawFormat(funcDP(metaResult$fixed$param1Max),digits=3),brawFormat(funcDP(metaResult$fixed$Smax),digits=3)," "," ")
              },
              "random"={
-               outputText<-c(outputText,"!H"," ","r[est]","σ(r[est])","S"," ")
-               outputText<-c(outputText,"Actual","mean",brawFormat(metaResult$hypothesis$effect$rIV,digits=3),brawFormat(mean(metaResult$hypothesis$effect$rSD),digits=3)," "," ")
-               outputText<-c(outputText,"Estimate","mean",brawFormat(mean(metaResult$random$param1Max),digits=3),brawFormat(mean(metaResult$random$param2Max),digits=3),brawFormat(mean(metaResult$random$Smax),digits=3)," ")
-               outputText<-c(outputText,"","sd",brawFormat(std(metaResult$random$param1Max),digits=3),brawFormat(std(metaResult$random$param2Max),digits=3),brawFormat(std(metaResult$random$Smax),digits=3)," ")
+               outputText<-c(outputText,"!H"," ","r[est]","σ(r)[est]","S"," ")
+               outputText<-c(outputText,"Actual"," ",brawFormat(metaResult$hypothesis$effect$rIV,digits=3),brawFormat(metaResult$hypothesis$effect$rSD,digits=3)," "," ")
+               outputText<-c(outputText,"Estimate",lbCT,brawFormat(funcCT(metaResult$random$param1Max),digits=3),brawFormat(funcCT(metaResult$random$param2Max),digits=3),brawFormat(funcCT(metaResult$random$Smax),digits=3)," ")
+               outputText<-c(outputText,"",lbDP,brawFormat(funcDP(metaResult$random$param1Max),digits=3),brawFormat(funcDP(metaResult$random$param2Max),digits=3),brawFormat(funcDP(metaResult$random$Smax),digits=3)," ")
              }
              )
     } else {
@@ -71,28 +86,28 @@ reportMetaAnalysis<-function(metaResult=braw.res$metaResult){
       n3<-sum(metaResult$bestDist=="Exp")
       use<-which.max(c(n1,n2,n3))
       bestD<-c("Single","Gauss","Exp")[use]
-      outputText<-c(outputText,"Best",bestD,paste0(sum(metaResult$bestDist==bestD),"/",length(metaResult$bestDist)),brawFormat(mean(metaResult$bestK),digits=3),brawFormat(mean(metaResult$bestNull),digits=3),brawFormat(mean(metaResult$bestS),digits=3))
+      outputText<-c(outputText,"Best",bestD,paste0(sum(metaResult$bestDist==bestD),"/",length(metaResult$bestDist)),brawFormat(funcCT(metaResult$bestK),digits=3),brawFormat(funcCT(metaResult$bestNull),digits=3),brawFormat(funcCT(metaResult$bestS),digits=3))
       outputText<-c(outputText,rep(" ",nc))
       
       if (metaResult$metaAnalysis$modelPDF=="Single" || (metaResult$metaAnalysis$modelPDF=="All" && braw.env$includeSingle)) {
         outputText<-c(outputText,"Estimated","Single",brawFormat(n1),
-                      paste0(brawFormat(mean(metaResult$single$param1Max),digits=3),"\u00B1",brawFormat(std(metaResult$single$param1Max),digits=2)),
-                      paste0(brawFormat(mean(metaResult$single$param2Max),digits=3),"\u00B1",brawFormat(std(metaResult$single$param2Max),digits=2)),
-                      paste0(brawFormat(mean(metaResult$single$Smax),digits=3),"\u00B1",brawFormat(std(metaResult$single$Smax),digits=2))
+                      paste0(brawFormat(funcCT(metaResult$single$param1Max),digits=3),"\u00B1",brawFormat(funcDP(metaResult$single$param1Max),digits=2)),
+                      paste0(brawFormat(funcCT(metaResult$single$param2Max),digits=3),"\u00B1",brawFormat(funcDP(metaResult$single$param2Max),digits=2)),
+                      paste0(brawFormat(funcCT(metaResult$single$Smax),digits=3),"\u00B1",brawFormat(funcDP(metaResult$single$Smax),digits=2))
         )
       }
       if (metaResult$metaAnalysis$modelPDF=="Gauss" || metaResult$metaAnalysis$modelPDF=="All") {
         outputText<-c(outputText," ","Gauss",brawFormat(n2),
-                      paste0(brawFormat(mean(metaResult$gauss$param1Max),digits=3),"\u00B1",brawFormat(std(metaResult$gauss$param1Max),digits=2)),
-                      paste0(brawFormat(mean(metaResult$gauss$param2Max),digits=3),"\u00B1",brawFormat(std(metaResult$gauss$param2Max),digits=2)),
-                      paste0(brawFormat(mean(metaResult$gauss$Smax),digits=3),"\u00B1",brawFormat(std(metaResult$gauss$Smax),digits=2))
+                      paste0(brawFormat(funcCT(metaResult$gauss$param1Max),digits=3),"\u00B1",brawFormat(funcDP(metaResult$gauss$param1Max),digits=2)),
+                      paste0(brawFormat(funcCT(metaResult$gauss$param2Max),digits=3),"\u00B1",brawFormat(funcDP(metaResult$gauss$param2Max),digits=2)),
+                      paste0(brawFormat(funcCT(metaResult$gauss$Smax),digits=3),"\u00B1",brawFormat(funcDP(metaResult$gauss$Smax),digits=2))
         )
       }
       if (metaResult$metaAnalysis$modelPDF=="Exp" || metaResult$metaAnalysis$modelPDF=="All") {
         outputText<-c(outputText," ","Exp",brawFormat(n3),
-                      paste0(brawFormat(mean(metaResult$exp$param1Max),digits=3),"\u00B1",brawFormat(std(metaResult$exp$param1Max),digits=2)),
-                      paste0(brawFormat(mean(metaResult$exp$param2Max),digits=3),"\u00B1",brawFormat(std(metaResult$exp$param2Max),digits=2)),
-                      paste0(brawFormat(mean(metaResult$exp$Smax),digits=3),"\u00B1",brawFormat(std(metaResult$exp$Smax),digits=2))
+                      paste0(brawFormat(funcCT(metaResult$exp$param1Max),digits=3),"\u00B1",brawFormat(funcDP(metaResult$exp$param1Max),digits=2)),
+                      paste0(brawFormat(funcCT(metaResult$exp$param2Max),digits=3),"\u00B1",brawFormat(funcDP(metaResult$exp$param2Max),digits=2)),
+                      paste0(brawFormat(funcCT(metaResult$exp$Smax),digits=3),"\u00B1",brawFormat(funcDP(metaResult$exp$Smax),digits=2))
         )
       }
     }

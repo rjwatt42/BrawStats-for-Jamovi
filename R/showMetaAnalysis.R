@@ -17,7 +17,7 @@ worldLabel<-function(metaResult,whichMeta=NULL) {
     if (length(p1)>1)
       lb<-paste0(lb,"\u00B1",brawFormat(std(p1),digits=2))
     if (!is.null(p2)) {
-      if (is.element(Dist,c("random","fixed"))) label2<-"σ(r[est])" else label2<-"p(null)"
+      if (is.element(Dist,c("random","fixed"))) label2<-"σ(r)[est]" else label2<-"p(null)"
       lb<-paste0(lb,"\n",label2,"=",brawFormat(mean(p2,na.rm=TRUE),digits=2))
       if (length(p2)>1)
         lb<-paste0(lb,"\u00B1",brawFormat(std(p2),digits=2))
@@ -69,7 +69,7 @@ showMetaSingle<-function(metaResult=braw.res$metaResult,showTheory=FALSE) {
   }
   
   g<-drawWorld(hypothesis,design,metaResult,g,
-               darken(braw.env$plotColours$descriptionC,off=0.1),showTheory=showTheory)
+               darken(braw.env$plotColours$metaAnalysis,off=0.1),showTheory=showTheory)
   if (metaAnalysis$includeBias) {
     rv<-seq(min(xlim),max(xlim),length.out=101)
     nv<-rw2n(rv,0.5)
@@ -86,7 +86,7 @@ showMetaSingle<-function(metaResult=braw.res$metaResult,showTheory=FALSE) {
     colgain<-1-min(1,sqrt(max(0,(length(d1)-50))/200))
     dotSize<-dotSize/(ceil(length(d1)/400))
     cl<-"black"
-    col1<-braw.env$plotColours$descriptionC
+    col1<-braw.env$plotColours$metaAnalysis
     col2<-braw.env$plotColours$infer_nsigC
     g<-addG(g,dataPoint(data=ptsAll, shape=braw.env$plotShapes$study, colour = darken(col1,off=-colgain), fill = col1, size = dotSize))
     g<-addG(g,dataPoint(data=ptsNull,shape=braw.env$plotShapes$study, colour = darken(col2,off=-colgain), fill = col2,  size = dotSize))
@@ -94,7 +94,7 @@ showMetaSingle<-function(metaResult=braw.res$metaResult,showTheory=FALSE) {
   
   lb<-worldLabel(metaResult,metaAnalysis$analysisType)
   names=strsplit(lb,"\n")[[1]]
-  if (length(names)==1) colours=braw.env$plotColours$descriptionC else colours=c(braw.env$plotColours$descriptionC,NA)
+  if (length(names)==1) colours=braw.env$plotColours$metaAnalysis else colours=c(braw.env$plotColours$metaAnalysis,NA)
   g<-addG(g,dataLegend(data.frame(names=names,colours=colours),title="",shape=22))
   # g<-addG(g,plotTitle(lb,"left",size=1))
   
@@ -219,7 +219,7 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
               y<-metaResult$random$param2Max
               y1<-0
               ylim<-c(-0.02,0.5)
-              ylabel<-"σ(r[est])"
+              ylabel<-"σ(r)[est]"
               xlabel<-"r[est]"
               useBest<-1:length(x)
             },
@@ -246,14 +246,14 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
                      xticks=makeTicks(xticks),xlabel=makeLabel(xlabel),
                      top=TRUE,g=g)
 
-      dotSize=min(4,max(4,sqrt(50/length(x))))
+      dotSize=16*min(1,2.5/sqrt(length(x)))
       
       g<-addG(g,dataPoint(data=pts,shape=braw.env$plotShapes$meta, 
                           colour="black", fill="grey", alpha=min(1,2.5/sqrt(length(x))), 
                           size = dotSize))
       pts<-data.frame(x=x[useBest],y=y[useBest])
       g<-addG(g,dataPoint(data=pts,shape=braw.env$plotShapes$meta,
-                          colour="black", fill="yellow", alpha=min(1,2.5/sqrt(length(x))), 
+                          colour="black", fill=braw.env$plotColours$metaAnalysis, alpha=min(1,2.5/sqrt(length(x))), 
                           size = dotSize))
       
       if (showType=="S-S") {
@@ -279,7 +279,7 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
       if (length(metaY$Smax)>1) fullText<-paste0(fullText,"\u00B1",format(std(metaY$Smax),digits=2),")")
       fullText<-paste0(fullText," (",format(sum(y>x)),"/",length(metaResult$bestDist),")")
       
-      if (mean(y>x)) colM="yellow"  else colM="grey"
+      if (mean(y>x)) colM=braw.env$plotColours$metaAnalysis  else colM="grey"
       names<-strsplit(fullText,"\n")[[1]]
       g<-addG(g,dataLegend(data.frame(names=names,colours=c(colM,rep(NA,length(names)-1))),title="",shape=braw.env$plotShapes$meta))
       
@@ -294,25 +294,24 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
       if (length(metaX$Smax)>1) fullText<-paste0(fullText,"\u00B1",format(std(metaX$Smax),digits=2),")")
       fullText<-paste0(fullText," (",format(sum(x>y)),"/",length(metaResult$bestDist),")")
       
-      if (mean(y>x)) colM="grey"  else colM="yellow"
+      if (mean(y>x)) colM="grey"  else colM=braw.env$plotColours$metaAnalysis
       names<-strsplit(fullText,"\n")[[1]]
       g<-addG(g,dataLegend(data.frame(names=names,colours=c(colM,rep(NA,length(names)-1))),title="",shape=braw.env$plotShapes$meta))
     } else {
 
       if (is.element(showType,c("S-k","sd-k"))) {
-        colM="yellow"
+        colM=braw.env$plotColours$metaAnalysis
         lb<-worldLabel(metaResult,whichMeta)
         names<-strsplit(lb,"\n")[[1]]
-        names[1]<-gsub("single","rp",names[1])
-        
-        if (showType=="sd-k") names[2]<-gsub("p(null)","sd(rp)",names[2])
-        else names[2]<-gsub("p(null)","S",names[2])
-        g<-addG(g,dataLegend(data.frame(names=names,colours=c(colM,NA)),title="",
+
+        if (whichMeta=="fixed") {names<-names[1]; colours<-colM;}
+        else colours<-c(colM,NA)
+        g<-addG(g,dataLegend(data.frame(names=names,colours=colours),title="",
                              shape=braw.env$plotShapes$meta))
       } else {
         use<-which.max(c(n1,n2,n3))
         bestD<-c("Single","Gauss","Exp")[use]
-        if (whichMeta==bestD)  colM="yellow" else colM="grey"
+        if (whichMeta==bestD)  colM=braw.env$plotColours$metaAnalysis else colM="grey"
         lb<-worldLabel(metaResult,whichMeta)
         g<-addG(g,dataLegend(data.frame(names=strsplit(lb,"\n")[[1]],colours=c(colM,NA)),title="",shape=braw.env$plotShapes$meta))
       }     

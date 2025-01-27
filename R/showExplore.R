@@ -188,7 +188,7 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
   else effectTypes<-effectType
   
 # prepare the x-axis  
-  if (is.character(vals[1]) || length(vals)<9) {
+  if (is.character(vals[1]) || length(vals)<=10) {
     if (is.character(vals[1])) {
       vals<-1:length(vals)
       xlim<-c(0,length(vals)+1)
@@ -785,29 +785,37 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
             g<-addG(g,dataLine(data.frame(x=vals,y=y62),colour="white",alpha=0.6))
           }
           pts0f<-data.frame(x=vals,y=y50)
-          
-          g<-addG(g,dataLine(data=pts0f))
+          g<-addG(g,dataLine(data=pts0f,linewidth=0.75))
           g<-addG(g,dataPoint(data=pts0f,fill=col,size=4))
-        } else {
-          pts0f<-data.frame(x=vals,y=y50)
-          g<-addG(g,dataLine(data=pts0f,linewidth=0.25))
+        } else { # not doLine
           if (nrow(rVals)>0)
           sigVals<-isSignificant(braw.env$STMethod,pVals,rVals,nVals,df1Vals,exploreResult$evidence,braw.env$alphaSig)
           else
           sigVals<-showVals*0+1
           if (!is.null(showVals)) {
-            for (i in 1:length(vals))
+            for (i in 1:length(vals)) {
+              if (i==1) left=(vals[i+1]-vals[i])*0.35 else left=(vals[i]-vals[i-1])*0.35
+              if (i==length(vals)) right=(vals[i]-vals[i-1])*0.35 else right=(vals[i+1]-vals[i])*0.35
               g<-expected_plot(g,
                                data.frame(x=vals[i],y1=showVals[,i],y2=sigVals[,i]),
                                showType=showType[si],ylim=ylim,
-                               scale=2.25/(length(vals)+1),width=0.5,
-                               col=col,
-                               npointsMax=500/length(vals))
+                               scale=3/(length(vals)+1),
+                               width=c(left,right),
+                               col=col,useSignificanceCols=FALSE,
+                               histStyle="wide",
+                               alpha=min(1,2.5/sqrt(length(showVals[,i]))),
+                               npointsMax=500/length(vals)
+              )
+            }
           }
+          pts0f<-data.frame(x=vals,y=y50)
+          g<-addG(g,dataLine(data=pts0f,linewidth=0.75))
           g<-addG(g,dataPoint(data=pts0f,fill=col,size=4))
           if (!is.null(y75)) {
-          pts1f<-data.frame(x=vals,ymin=y25,ymax=y75)
-          g<-addG(g,dataErrorBar(pts1f,colour=col))
+            g<-addG(g,dataLine(data.frame(x=vals,y=y25),colour="white",alpha=0.9))
+            g<-addG(g,dataLine(data.frame(x=vals,y=y75),colour="white",alpha=0.9))
+            pts1f<-data.frame(x=vals,ymin=y25,ymax=y75)
+            g<-addG(g,dataErrorBar(pts1f,colour=col))
           }
         } # end of line and point
         }

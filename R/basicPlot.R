@@ -221,16 +221,7 @@ startPlot<-function(xlim=c(0,1),ylim=c(0,1),gaps=NULL,box="both",top=0,
   plotLimits(xlim = xlim, ylim = ylim,orientation=orientation,gaps,fontScale=braw.env$labelSize*fontScale)
   
   if (is.null(g)) g<-nullPlot()
-    # yside<-data.frame(x=c(0,braw.env$plotLimits$gap[1],braw.env$plotLimits$gap[1],0),y=c(braw.env$plotLimits$gap[2],braw.env$plotLimits$gap[2],1-braw.env$plotLimits$gap[4],1-braw.env$plotLimits$gap[4]))
-    # g<-addG(g,axisPolygon(data=rangeXY(yside), fill="red"))
-    # xside<-data.frame(x=c(braw.env$plotLimits$gap[1],1-braw.env$plotLimits$gap[3],1-braw.env$plotLimits$gap[3],gaps[1]),y=c(0,0,braw.env$plotLimits$gap[2],braw.env$plotLimits$gap[2]))
-    # g<-addG(g,axisPolygon(data=rangeXY(xside), fill="green"))
-    # topside<-data.frame(x=c(braw.env$plotLimits$gap[1],1-braw.env$plotLimits$gap[3],1-braw.env$plotLimits$gap[3],braw.env$plotLimits$gap[1]),y=c(1,1,1-braw.env$plotLimits$gap[4],1-braw.env$plotLimits$gap[4]))
-    # g<-addG(g,axisPolygon(data=rangeXY(topside), fill="yellow"))
-    # farside<-data.frame(x=c(1,1-braw.env$plotLimits$gap[3],1-braw.env$plotLimits$gap[3],1),y=c(braw.env$plotLimits$gap[2],braw.env$plotLimits$gap[2],1-braw.env$plotLimits$gap[4],1-braw.env$plotLimits$gap[4]))
-    # g<-addG(g,axisPolygon(data=rangeXY(farside), fill="yellow"))
-    
-  
+
   if (!(is.character(backC) && backC=="transparent")) {
     back<-data.frame(x=xlim[c(1,2,2,1)],y=ylim[c(1,1,2,2)])
     # g<-addG(g,axisPath(data=data.frame(x=c(0,1,1,0,0),y=c(0,0,1,1,0)),colour="red"))

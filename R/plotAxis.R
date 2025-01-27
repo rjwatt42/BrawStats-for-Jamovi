@@ -425,24 +425,28 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ytick<-seq(-1,1,0.2)
             ymins<-seq(-1,1,0.1)
             ylabel<-"r[est]"
+            use_cols<-braw.env$plotColours$metaAnalysis
           },
           "LambdaR"={
             ylim<-c(-0.01,0.5)
             ytick<-seq(0,0.5,0.1)
             ymins<-seq(0,0.5,0.05)
-            ylabel<-"σ(r[est])"
+            ylabel<-"σ(r)[est]"
+            use_cols<-braw.env$plotColours$metaAnalysis
           },
           "k"={
             ylim<-c(-0.01,1.01)
             ytick<-seq(0,1,0.2)
             ymins<-seq(0,1,0.1)
             ylabel<-braw.env$Llabel
+            use_cols<-braw.env$plotColours$metaAnalysis
           },
           "pNull"={
             ylim<-c(-0.01,1.01)
             ytick<-seq(0,1,0.2)
             ymins<-seq(0,1,0.1)
             ylabel<-braw.env$Plabel
+            use_cols<-braw.env$plotColours$metaAnalysis
           },
           "PDF"={
             ylim<-c(0,1)
@@ -454,6 +458,7 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ylim<-c(min(result$Ss),max(result$Ss))
             ylabel<-"S"
             ytick<-seq(ceil(min(result$Ss)),ceil(max(result$Ss)),1)
+            use_cols<-braw.env$plotColours$metaAnalysis
           },
           "iv.mn"={
             var<-hypothesis$IV
