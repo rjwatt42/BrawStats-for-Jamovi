@@ -39,6 +39,8 @@ items:
       - showExploreParam
       - showExploreDimension
       - whichShowMultiple
+      - goBack
+      - goForwards
 
     - name: simReport
       # title: ' '

@@ -2110,7 +2110,9 @@ BrawSimResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "makeExploreBtn",
                     "showExploreParam",
                     "showExploreDimension",
-                    "whichShowMultiple")))
+                    "whichShowMultiple",
+                    "goBack",
+                    "goForwards")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="simReport",
