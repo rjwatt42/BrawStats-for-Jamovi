@@ -320,15 +320,40 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
 
 }
 
-makeWorldDist<-function(metaResult,design,world,x,y,sigOnly=FALSE) {
-  if (metaResult$metaAnalysis$analysisType=="random") {
-    lambda<-metaResult$random$param1Max
-    shape<-metaResult$random$param2Max
-    nullP<-0
-  } else {
+makeWorldDist<-function(metaResult,design,world,x,y,sigOnly=FALSE,doTheory=FALSE) {
+  if (doTheory) {
     lambda<-world$populationPDFk
+    nullP<-world$populationNullp
+    offset<-0
     shape<-0
     nullP<-world$populationNullp
+    if (metaResult$metaAnalysis$analysisType=="random") {
+      lambda<-metaResult$hypothesis$effect$rSD
+      offset<-metaResult$hypothesis$effect$rIV
+      nullP<-0
+      world$populationPDF<-"Gauss"
+    }
+    if (metaResult$metaAnalysis$analysisType=="fixed") {
+      lambda<-metaResult$hypothesis$effect$rIV
+      nullP<-0
+      world$populationPDF<-"Single"
+    }
+  } else {
+    lambda<-metaResult$bestK
+    nullP<-metaResult$bestNull
+    offset<-0
+    shape<-0
+    if (metaResult$metaAnalysis$analysisType=="random") {
+      lambda<-metaResult$random$param1Max
+      shape<-metaResult$random$param2Max
+      nullP<-0
+      world$populationPDF<-"Single"
+    }
+    if (metaResult$metaAnalysis$analysisType=="fixed") {
+      lambda<-metaResult$random$param1Max
+      nullP<-0
+      world$populationPDF<-"Single"
+    }
   }
   sigma<-1/sqrt(y-3)
   gain<-dgamma(y-braw.env$minN,shape=design$sNRandK,scale=(design$sN-braw.env$minN)/design$sNRandK)
@@ -348,7 +373,7 @@ makeWorldDist<-function(metaResult,design,world,x,y,sigOnly=FALSE) {
           },
           "Gauss"={
             for (i in 1:length(y)) {
-              z1<-GaussSamplingPDF(atanh(x),lambda,sigma[i])$pdf*(1-nullP)+
+              z1<-GaussSamplingPDF(atanh(x),lambda,sigma[i],offset)$pdf*(1-nullP)+
                 SingleSamplingPDF(atanh(x),0,sigma[i])$pdf*nullP
               if (sigOnly) {
                 zcrit<-qnorm(1-braw.env$alphaSig/2,0,sigma[i])
@@ -381,14 +406,14 @@ drawWorld<-function(hypothesis,design,metaResult,g,colour="white",showTheory=FAL
   x<-seq(-1,1,length.out=101)*braw.env$r_range
   y<-seq(5,braw.env$maxN,length.out=101)
 
-  za<-makeWorldDist(metaResult,design,world,x,y)
+  za<-makeWorldDist(metaResult,design,world,x,y,doTheory=TRUE)
 
   if (!is.element(metaResult$metaAnalysis$analysisType,c("fixed","random"))) {
     world$populationPDF<-metaResult$bestDist
     world$populationPDFk<-metaResult$bestK
     world$populationNullp<-metaResult$bestNull
   }
-  zb<-makeWorldDist(metaResult,design,world,x,y)
+  zb<-makeWorldDist(metaResult,design,world,x,y,doTheory=FALSE)
   
   if (braw.env$nPlotScale=="log10") {y<-log10(y)}
   
@@ -408,7 +433,7 @@ drawWorld<-function(hypothesis,design,metaResult,g,colour="white",showTheory=FAL
   # white is the actual world
   # black is the best fit world
   if (showTheory) {
-    g<-addG(g,dataContour(data=ptsa,colour="white",linetype="dotted"))
+    g<-addG(g,dataContour(data=ptsa,colour="white"))
   }
   g<-addG(g,dataContour(data=ptsb,colour=colour,linewidth=0.5))
   return(g)

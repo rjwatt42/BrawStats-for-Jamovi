@@ -188,7 +188,7 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
   else effectTypes<-effectType
   
 # prepare the x-axis  
-  if (is.character(vals[1]) || length(vals)<=10) {
+  if (is.character(vals[1]) || length(vals)<=10 || length(vals)>=25) {
     if (is.character(vals[1])) {
       vals<-1:length(vals)
       xlim<-c(0,length(vals)+1)
@@ -812,8 +812,8 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
           g<-addG(g,dataLine(data=pts0f,linewidth=0.75))
           g<-addG(g,dataPoint(data=pts0f,fill=col,size=4))
           if (!is.null(y75)) {
-            g<-addG(g,dataLine(data.frame(x=vals,y=y25),colour="white",alpha=0.9))
-            g<-addG(g,dataLine(data.frame(x=vals,y=y75),colour="white",alpha=0.9))
+            g<-addG(g,dataLine(data.frame(x=vals,y=y25),colour="black",alpha=0.9))
+            g<-addG(g,dataLine(data.frame(x=vals,y=y75),colour="black",alpha=0.9))
             pts1f<-data.frame(x=vals,ymin=y25,ymax=y75)
             g<-addG(g,dataErrorBar(pts1f,colour=col))
           }
