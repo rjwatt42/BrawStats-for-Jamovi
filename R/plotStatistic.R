@@ -81,19 +81,21 @@ makeFiddle<-function(y,yd,orientation="horiz"){
   xG<-(braw.env$plotArea[3]-braw.env$plotLimits$gap[3]-braw.env$plotLimits$gap[1])/diff(braw.env$plotLimits$xsc)
   rX<-function(x) x*xG
   
+  possible_xs<-seq(0,500,by=0.01)
+  
   yz<-y[1]
+  yzR<-rY(yz)
   xz<-0
+  xzR<-rX(xz)
   if (length(y)>1)
   for (i in 2:length(y)){
     this_y<-rY(y[i])
-    this_yz<-rY(yz)
-    dy2<-(this_yz-this_y)^2
-    this_xz<-rX(xz)
-    for (possible_x in seq(0,500,by=0.01)) {
+    dy2<-(yzR-this_y)^2
+    for (possible_x in possible_xs) {
       this_x<-rX(possible_x)
       this_xneg<- -this_x
-      distances1=dy2+(this_xz-this_x)^2
-      distances2=dy2+(this_xz-this_xneg)^2
+      distances1=dy2+(xzR-this_x)^2
+      distances2=dy2+(xzR-this_xneg)^2
       use1<-min(distances1)
       use2<-min(distances2)
       if (all(c(use1,use2)>d2)) {
@@ -102,7 +104,9 @@ makeFiddle<-function(y,yd,orientation="horiz"){
       }
     }
     xz<-c(xz,possible_x)
+    xzR<-c(xzR,rX(possible_x))
     yz<-c(yz,y[i])
+    yzR<-c(yzR,this_y)
   }
   if (orientation=="horz") xz<-xz/2
   return(xz)
