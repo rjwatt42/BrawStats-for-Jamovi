@@ -24,7 +24,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                           showExploreDimension="1D",
                           whichShowExploreOut="all",
                           exploreMode="Design",
-                          basicHelpWhich=1,
+                          basicHelpWhich=0,
                           demoHelpWhich=c(0,0),
                           simHelpWhich=0,
                           openJamovi=0,
@@ -45,12 +45,6 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     .run = function() {
       # debug information
 
-      # changing the mode selector triggers a call here which we can ignore
-      if (!is.null(braw.env$statusStore$planMode) && braw.env$statusStore$planMode!=self$options$planOptions) {
-        braw.env$statusStore$planMode<<-self$options$planOptions
-        return()
-      }
-      
       # if (self$options$doProject1AsBtn) return()
       # if (self$options$doProject2AsBtn) return()
       
@@ -320,6 +314,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         if (changedD && !design$sNRand) openSystem<-1
         if (changedH) openSystem<-1
         if (changedE) openSystem<-1
+        if (!self$options$autoShowHypothesis) openSystem<-0
         assign("graphHTML",TRUE,braw.env)
         svgBox(400*self$options$systemMag)
         h<-showHypothesis()
@@ -339,13 +334,6 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             joinHTML(h,e),
             joinHTML(sd,rd)
           ),
-          # tabs=c("Hypothesis","Design","Expected","Likelihood"),
-          # tabContents = c(
-          #   h,
-          #   joinHTML(sd,rd),
-          #   e,
-          #   l
-          # ),
           open=openSystem
         )
         assign("graphHTML",self$options$showHTML,braw.env)

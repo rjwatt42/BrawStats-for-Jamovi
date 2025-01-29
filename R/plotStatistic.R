@@ -480,6 +480,7 @@ expected_plot<-function(g,pts,showType=NULL,analysis=NULL,IV=NULL,DV=NULL,
       dens<-c(hists$h1[i],hists$h2[i],hists$h3[i],hists$h4[i])
       # dens<-cumsum(dens)
       use<-order(dens)
+      use<-rev(1:length(dens))
       ystart<-0
       for (j in use) {
         if (dens[j]>0) {
@@ -491,11 +492,11 @@ expected_plot<-function(g,pts,showType=NULL,analysis=NULL,IV=NULL,DV=NULL,
             w<-0.5/0.35
           }
           data<-data.frame(y=c(hists$x[i],hists$x[i],hists$x[i+1],hists$x[i+1]),
-                           x=c(-w,-ystart,-ystart,-w)*width[1]+xoff)
+                           x=(c(-w,0,0,-w)-ystart)*width[1]+xoff)
           g<-addG(g,dataPolygon(data=data,
                                 colour=NA, fill = cols[j],alpha=alpha))
         data<-data.frame(y=c(hists$x[i],hists$x[i],hists$x[i+1],hists$x[i+1]),
-                         x=c(w,ystart,ystart,w)*width[2]+xoff)
+                         x=(c(w,0,0,w)+ystart)*width[2]+xoff)
         g<-addG(g,dataPolygon(data=data,
                               colour=NA, fill = cols[j],alpha=alpha))
         ystart<-dens[j]

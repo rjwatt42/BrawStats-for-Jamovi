@@ -1416,6 +1416,11 @@ options:
       type: Bool
       default: false
 
+    - name: autoShowHypothesis
+      title: auto hypothesis
+      type: Bool
+      default: false
+
     - name: systemMag
       title: zoom
       type: Number

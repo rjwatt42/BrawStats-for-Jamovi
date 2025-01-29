@@ -151,6 +151,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             showHTML = FALSE,
             fixedAxes = FALSE,
             shorthandCalculations = FALSE,
+            autoShowHypothesis = FALSE,
             systemMag = 0.5,
             goBack = NULL,
             goForwards = NULL,
@@ -1110,6 +1111,10 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "shorthandCalculations",
                 shorthandCalculations,
                 default=FALSE)
+            private$..autoShowHypothesis <- jmvcore::OptionBool$new(
+                "autoShowHypothesis",
+                autoShowHypothesis,
+                default=FALSE)
             private$..systemMag <- jmvcore::OptionNumber$new(
                 "systemMag",
                 systemMag,
@@ -1573,6 +1578,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..showHTML)
             self$.addOption(private$..fixedAxes)
             self$.addOption(private$..shorthandCalculations)
+            self$.addOption(private$..autoShowHypothesis)
             self$.addOption(private$..systemMag)
             self$.addOption(private$..goBack)
             self$.addOption(private$..goForwards)
@@ -1783,6 +1789,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         showHTML = function() private$..showHTML$value,
         fixedAxes = function() private$..fixedAxes$value,
         shorthandCalculations = function() private$..shorthandCalculations$value,
+        autoShowHypothesis = function() private$..autoShowHypothesis$value,
         systemMag = function() private$..systemMag$value,
         goBack = function() private$..goBack$value,
         goForwards = function() private$..goForwards$value,
@@ -1992,6 +1999,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..showHTML = NA,
         ..fixedAxes = NA,
         ..shorthandCalculations = NA,
+        ..autoShowHypothesis = NA,
         ..systemMag = NA,
         ..goBack = NA,
         ..goForwards = NA,
@@ -2336,6 +2344,7 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param showHTML .
 #' @param fixedAxes .
 #' @param shorthandCalculations .
+#' @param autoShowHypothesis .
 #' @param systemMag .
 #' @param goBack .
 #' @param goForwards .
@@ -2556,6 +2565,7 @@ BrawSim <- function(
     showHTML = FALSE,
     fixedAxes = FALSE,
     shorthandCalculations = FALSE,
+    autoShowHypothesis = FALSE,
     systemMag = 0.5,
     goBack,
     goForwards,
@@ -2767,6 +2777,7 @@ BrawSim <- function(
         showHTML = showHTML,
         fixedAxes = fixedAxes,
         shorthandCalculations = shorthandCalculations,
+        autoShowHypothesis = autoShowHypothesis,
         systemMag = systemMag,
         goBack = goBack,
         goForwards = goForwards,

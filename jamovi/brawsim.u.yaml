@@ -104,7 +104,7 @@ children:
                                 events:
                                   change: ./BrawSim.events::onChange_Project1sH
                           - type: Label
-                            label: 'Do:'
+                            label: ' '
                             style: inline
                             margin: none
                             minWidth: 38
@@ -550,7 +550,7 @@ children:
                                 events:
                                   change: ./BrawSim.events::onChange_Project2sH
                           - type: Label
-                            label: 'Do:'
+                            label: ' '
                             style: inline
                             margin: none
                             minWidth: 38
@@ -1088,7 +1088,7 @@ children:
                                 events:
                                   change: ./BrawSim.events::onChange_Project3sH
                           - type: Label
-                            label: 'Do:'
+                            label: ' '
                             style: inline
                             margin: none
                             minWidth: 38
@@ -3187,3 +3187,5 @@ children:
                   - type: CheckBox
                     name: showHTML
                     minWidth: 100
+                  - type: CheckBox
+                    name: autoShowHypothesis
