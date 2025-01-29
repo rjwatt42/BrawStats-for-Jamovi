@@ -39,6 +39,9 @@ items:
       - showExploreParam
       - showExploreDimension
       - whichShowMultiple
+      - MetaAnalysisType
+      - MetaAnalysisBias
+      - MetaAnalysisNulls
       - goBack
       - goForwards
 

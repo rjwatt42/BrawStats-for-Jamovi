@@ -379,7 +379,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       }
       
       # are any of the existing stored results now invalid?
-      if (changedH || changedD || changedM) {
+      if (changedH || changedD) {
         braw.res$result<<-NULL
         braw.res$multiple<<-NULL
         braw.res$explore<<-NULL
@@ -390,7 +390,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (changedE) {
         braw.res$multiple<<-NULL
         braw.res$explore<<-NULL
-        braw.res$metaAnalysis<<-NULL
+        braw.res$metaSingle<<-NULL
         braw.res$metaMultiple<<-NULL
         if (!is.null(braw.res$result) && is.element(statusStore$lastOutput,c("Compact","Sample","Describe","Infer","Variables","Likelihood"))) {
           braw.res$result<<-doAnalysis(sample=braw.res$result)
@@ -400,9 +400,15 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (changedX) {
         braw.res$explore<<-NULL
       }
-      if (changedM) {
-        braw.res$metaAnalysis<<-NULL
+
+      if (changedM && statusStore$lastOutput=="MetaSingle") {
         braw.res$metaMultiple<<-NULL
+        if (oldM$nstudies==metaAnalysis$nstudies && oldM$sigOnlySource==metaAnalysis$sigOnlySource) {
+          braw.res$metaSingle<-doMetaAnalysis(braw.res$metaSingle,keepStudies=TRUE)
+          outputNow<-"MetaSingle"
+        } else {
+          braw.res$metaSingle<<-NULL
+        }
       }
 
       if (systemAsHTML && !is.null(outputNow) && outputNow=="System") outputNow<-NULL
@@ -414,7 +420,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         if (self$options$MetaAnalysisOn) {
           # do we need to do this, or are we just returning to the existing one?
           if (is.null(braw.res$metaSingle) || statusStore$lastOutput=="MetaSingle") 
-            doMetaAnalysis(1,NULL)
+            doMetaAnalysis(NULL)
           outputNow<-"MetaSingle"
         } else {
           # do we need to do this, or are we just returning to the existing one?
@@ -429,7 +435,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         numberSamples<-self$options$numberSamples
         if (self$options$MetaAnalysisOn) {
           if (is.null(braw.res$metaMultiple) || statusStore$lastOutput=="MetaMultiple") 
-            doMetaAnalysis(numberSamples,braw.res$metaMultiple)
+            doMetaMultiple(numberSamples,braw.res$metaMultiple)
           outputNow<-"MetaMultiple"
         } else {
           # do we need to do this, or are we just returning to the existing one?
@@ -467,7 +473,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         braw.res$result<<-history$historyData[[history$historyPlace]]$result
         braw.res$multiple<<-history$historyData[[history$historyPlace]]$multiple
         braw.res$explore<<-history$historyData[[history$historyPlace]]$explore
-        braw.res$metaResult<<-history$historyData[[history$historyPlace]]$metaResult
+        braw.res$metaSingle<<-history$historyData[[history$historyPlace]]$metaSingle
         braw.res$metaMultiple<<-history$historyData[[history$historyPlace]]$metaMultiple
       }
 
@@ -507,8 +513,8 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                      "Describe"= graphSingle<-paste0(showDescription(),reportDescription()),
                      "Infer"= graphSingle<-paste0(showInference(showType=showInferParam,dimension=showInferDimension),reportInference()),
                      "Likelihood"=graphSingle<-paste0(showPossible(showType=self$options$likelihoodType,cutaway=likelihoodCutaway),reportLikelihood()),
-                     "MetaSingle"  =graphSingle<-paste0(showMetaSingle(),reportMetaAnalysis()),
-                     "MetaMultiple"  =graphSingle<-paste0(showMetaMultiple(),reportMetaAnalysis()),
+                     "MetaSingle"  =graphSingle<-paste0(showMetaSingle(),reportMetaSingle()),
+                     "MetaMultiple"  =graphSingle<-paste0(showMetaMultiple(),reportMetaMultiple()),
               )
             else graphSingle<-nullPlot()
             if (!is.null(braw.res$multiple))
@@ -598,8 +604,8 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                    "Likelihood"=self$results$simReport$setContent(reportLikelihood()),
                    "Multiple"= self$results$simReport$setContent(reportMultiple(showType=showMultipleParam,reportStats=self$options$reportInferStats)),
                    "Explore"= self$results$simReport$setContent(reportExplore(showType=showExploreParam,reportStats=self$options$reportInferStats)),
-                   "MetaSingle"  =self$results$simReport$setContent(reportMetaAnalysis()),
-                   "MetaMultiple"  =self$results$simReport$setContent(reportMetaAnalysis(reportStats=self$options$reportInferStats)),
+                   "MetaSingle"  =self$results$simReport$setContent(reportMetaSingle()),
+                   "MetaMultiple"  =self$results$simReport$setContent(reportMetaMultiple(reportStats=self$options$reportInferStats)),
                    self$results$simReport$setContent(reportPlot(NULL))
             )
           }
@@ -643,7 +649,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           history$historyData[[nD]]<-list(result=braw.res$result,
                                           multiple=braw.res$multiple,
                                           explore=braw.res$explore,
-                                          metaResult=braw.res$metaResult,
+                                          metaSingle=braw.res$metaSingle,
                                           metaMultiple=braw.res$metaMultiple
                                           )
           history$historyOptions[[nD]]<-historyOptions
@@ -755,8 +761,8 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                "Sample"    =outputGraph<-reportSample(),
                "Describe"  =outputGraph<-reportDescription(),
                "Infer"     =outputGraph<-reportInference(),
-               "MetaSingle"  =outputGraph<-reportMetaAnalysis(),
-               "MetaMultiple"  =outputGraph<-reportMetaAnalysis(),
+               "MetaSingle"  =outputGraph<-reportMetaSingle(),
+               "MetaMultiple"  =outputGraph<-reportMetaMultiple(),
                "Multiple"  =outputGraph<-reportMultiple(showType=image$state[2]),
                "Explore"   =outputGraph<-reportExplore(showType=image$state[2])
         )

@@ -3184,8 +3184,19 @@ children:
                   - type: CheckBox
                     name: shorthandCalculations
                     minWidth: 100
+              - type: LayoutBox
+                style: inline
+                margin: none
+                children:
+                  - type: Label
+                    label: ' '
+                    minWidth: 13
+                  - type: Label
+                    label: ' '
+                    minWidth: 13
                   - type: CheckBox
                     name: showHTML
                     minWidth: 100
                   - type: CheckBox
                     name: autoShowHypothesis
+                    minWidth: 100

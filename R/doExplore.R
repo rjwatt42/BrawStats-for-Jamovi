@@ -775,7 +775,7 @@ runExplore <- function(nsims,exploreResult,doingNull=FALSE,doingMetaAnalysis=FAL
         hypothesis$doingMetaAnalysis<-doingMetaAnalysis
         
         if (doingMetaAnalysis) {
-          res<-doMetaAnalysis(1,NULL,metaAnalysis,hypothesis,design,evidence)
+          res<-doMetaAnalysis(NULL,metaAnalysis,hypothesis,design,evidence)
           result<-storeExploreResult(result,res,ri,vi)
         } else {
           if (doingNonNull) {

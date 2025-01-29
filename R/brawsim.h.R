@@ -2119,6 +2119,9 @@ BrawSimResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "showExploreParam",
                     "showExploreDimension",
                     "whichShowMultiple",
+                    "MetaAnalysisType",
+                    "MetaAnalysisBias",
+                    "MetaAnalysisNulls",
                     "goBack",
                     "goForwards")))
             self$add(jmvcore::Html$new(

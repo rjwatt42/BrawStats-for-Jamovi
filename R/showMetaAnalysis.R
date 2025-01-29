@@ -17,7 +17,7 @@ worldLabel<-function(metaResult,whichMeta=NULL) {
     if (length(p1)>1)
       lb<-paste0(lb,"\u00B1",brawFormat(std(p1),digits=2))
     if (!is.null(p2)) {
-      if (is.element(Dist,c("random","fixed"))) label2<-"σ(r)[est]" else label2<-"p(null)"
+      if (is.element(Dist,c("random","fixed"))) label2<-"sd(r)[est]" else label2<-"p(null)"
       lb<-paste0(lb,"\n",label2,"=",brawFormat(mean(p2,na.rm=TRUE),digits=2))
       if (length(p2)>1)
         lb<-paste0(lb,"\u00B1",brawFormat(std(p2),digits=2))
@@ -29,10 +29,10 @@ worldLabel<-function(metaResult,whichMeta=NULL) {
 #' 
 #' @return ggplot2 object - and printed
 #' @examples
-#' showSingleMeta(metaResult=doMetaAnalysis(1),showTheory=FALSE)
+#' showSingleMeta(metaResult=doMetaAnalysis(),showTheory=FALSE)
 #' @export
-showMetaSingle<-function(metaResult=braw.res$metaResult,showTheory=FALSE) {
-  if (is.null(metaResult)) metaResult<-doMetaAnalysis(1)
+showMetaSingle<-function(metaResult=braw.res$metaSingle,showTheory=FALSE) {
+  if (is.null(metaResult)) metaResult<-doMetaAnalysis()
   
   metaAnalysis<-metaResult$metaAnalysis
   hypothesis<-metaResult$hypothesis
@@ -112,8 +112,8 @@ showMetaSingle<-function(metaResult=braw.res$metaResult,showTheory=FALSE) {
 #' @examples
 #' showMultipleMeta<-function(metaResult=doMetaAnalysis(),showType="n-k")
 #' @export
-showMetaMultiple<-function(metaResult=braw.res$metaResult,showType="n-k") {
-  if (is.null(metaResult)) metaResult<-doMetaAnalysis()
+showMetaMultiple<-function(metaResult=braw.res$metaMultiple,showType="n-k") {
+  if (is.null(metaResult)) metaResult<-doMetaMultiple()
 
   if (metaResult$metaAnalysis$analysisType=="fixed") showType<-"S-k"
   if (metaResult$metaAnalysis$analysisType=="random") showType<-"sd-k"
@@ -144,7 +144,7 @@ showMetaMultiple<-function(metaResult=braw.res$metaResult,showType="n-k") {
   else return(g)  
 }
 
-drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k",g=NULL) {
+drawMeta<-function(metaResult=doMetaMultiple(),whichMeta="Single",showType="n-k",g=NULL) {
   
   metaAnalysis<-metaResult$metaAnalysis
 
@@ -219,7 +219,7 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
               y<-metaResult$random$param2Max
               y1<-0
               ylim<-c(-0.02,0.5)
-              ylabel<-"σ(r)[est]"
+              ylabel<-"sd(r)[est]"
               xlabel<-"r[est]"
               useBest<-1:length(x)
             },
@@ -246,7 +246,7 @@ drawMeta<-function(metaResult=doMetaAnalysis(),whichMeta="Single",showType="n-k"
                      xticks=makeTicks(xticks),xlabel=makeLabel(xlabel),
                      top=TRUE,g=g)
 
-      dotSize=16*min(1,2.5/sqrt(length(x)))
+      dotSize=16*min(0.25,2.5/sqrt(length(x)))
       
       g<-addG(g,dataPoint(data=pts,shape=braw.env$plotShapes$meta, 
                           colour="black", fill="grey", alpha=min(1,2.5/sqrt(length(x))), 
@@ -350,7 +350,7 @@ makeWorldDist<-function(metaResult,design,world,x,y,sigOnly=FALSE,doTheory=FALSE
       world$populationPDF<-"Single"
     }
     if (metaResult$metaAnalysis$analysisType=="fixed") {
-      lambda<-metaResult$random$param1Max
+      lambda<-metaResult$fixed$param1Max
       nullP<-0
       world$populationPDF<-"Single"
     }

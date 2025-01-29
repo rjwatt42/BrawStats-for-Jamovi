@@ -306,7 +306,7 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
 braw.res$result<-NULL 
 braw.res$multiple<-NULL 
 braw.res$explore<-NULL 
-braw.res$metaResult<-NULL
+braw.res$metaSingle<-NULL
 braw.res$metaMultiple<-NULL
 braw.res$possibleResult<-NULL
 
