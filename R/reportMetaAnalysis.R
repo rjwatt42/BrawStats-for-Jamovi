@@ -24,12 +24,12 @@ reportMetaSingle<-function(metaResult=braw.res$metaSingle,reportStats="Medians")
     switch(metaResult$metaAnalysis$analysisType,
            "fixed"={
              outputText<-c(outputText,"!H","!C","r[est]","S"," "," ")
-             outputText<-c(outputText,"Actual"," ",brawFormat(metaResult$hypothesis$effect$rIV,digits=3)," "," "," ")
+             outputText<-c(outputText,"Actual"," ",brawFormat(metaResult$result$rpIV[1],digits=3)," "," "," ")
              outputText<-c(outputText,"Estimate"," ",brawFormat(metaResult$fixed$param1Max,digits=3),brawFormat(metaResult$fixed$Smax,digits=3)," "," ")
            },
            "random"={
-             outputText<-c(outputText,"!H"," ","r[est]","σ(r)[est]","S"," ")
-             outputText<-c(outputText,"Actual"," ",brawFormat(metaResult$hypothesis$effect$rIV,digits=3),brawFormat(metaResult$hypothesis$effect$rSD,digits=3)," "," ")
+             outputText<-c(outputText,"!H"," ","r[est]","sd(r)[est]","S"," ")
+             outputText<-c(outputText,"Actual"," ",brawFormat(metaResult$result$rpIV[1],digits=3),brawFormat(metaResult$hypothesis$effect$rSD,digits=3)," "," ")
              outputText<-c(outputText,"Estimate"," ",brawFormat(metaResult$random$param1Max,digits=3),brawFormat(metaResult$random$param2Max,digits=3),brawFormat(metaResult$random$Smax,digits=3)," ")
            }
     )
@@ -97,7 +97,7 @@ reportMetaMultiple<-function(metaResult=braw.res$metaMultiple,reportStats="Media
              outputText<-c(outputText,"",lbDP,brawFormat(funcDP(metaResult$fixed$param1Max),digits=3),brawFormat(funcDP(metaResult$fixed$Smax),digits=3)," "," ")
            },
            "random"={
-             outputText<-c(outputText,"!H"," ","r[est]","σ(r)[est]","S"," ")
+             outputText<-c(outputText,"!H"," ","r[est]","sd(r)[est]","S"," ")
              outputText<-c(outputText,"Actual"," ",brawFormat(metaResult$hypothesis$effect$rIV,digits=3),brawFormat(metaResult$hypothesis$effect$rSD,digits=3)," "," ")
              outputText<-c(outputText,"Estimate",lbCT,brawFormat(funcCT(metaResult$random$param1Max),digits=3),brawFormat(funcCT(metaResult$random$param2Max),digits=3),brawFormat(funcCT(metaResult$random$Smax),digits=3)," ")
              outputText<-c(outputText,"",lbDP,brawFormat(funcDP(metaResult$random$param1Max),digits=3),brawFormat(funcDP(metaResult$random$param2Max),digits=3),brawFormat(funcDP(metaResult$random$Smax),digits=3)," ")

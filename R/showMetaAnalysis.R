@@ -14,13 +14,13 @@ worldLabel<-function(metaResult,whichMeta=NULL) {
 
     if (is.element(Dist,c("random","fixed"))) label1<-"r[est]" else label1<-Dist
     lb<-paste0(label1,"=",brawFormat(mean(p1,na.rm=TRUE),digits=2))
-    if (length(p1)>1)
-      lb<-paste0(lb,"\u00B1",brawFormat(std(p1),digits=2))
+    # if (length(p1)>1)
+    #   lb<-paste0(lb,"\u00B1",brawFormat(std(p1),digits=2))
     if (!is.null(p2)) {
       if (is.element(Dist,c("random","fixed"))) label2<-"sd(r)[est]" else label2<-"p(null)"
       lb<-paste0(lb,"\n",label2,"=",brawFormat(mean(p2,na.rm=TRUE),digits=2))
-      if (length(p2)>1)
-        lb<-paste0(lb,"\u00B1",brawFormat(std(p2),digits=2))
+      # if (length(p2)>1)
+      #   lb<-paste0(lb,"\u00B1",brawFormat(std(p2),digits=2))
     }
     return(lb)
 }
@@ -115,7 +115,10 @@ showMetaSingle<-function(metaResult=braw.res$metaSingle,showTheory=FALSE) {
 showMetaMultiple<-function(metaResult=braw.res$metaMultiple,showType="n-k") {
   if (is.null(metaResult)) metaResult<-doMetaMultiple()
 
-  if (metaResult$metaAnalysis$analysisType=="fixed") showType<-"S-k"
+  if (metaResult$metaAnalysis$analysisType=="fixed") {
+    if (metaResult$hypothesis$effect$world$worldOn) showType<-"k-rp"
+    else showType<-"S-k"
+  }
   if (metaResult$metaAnalysis$analysisType=="random") showType<-"sd-k"
   if (showType=="S-S") {
     braw.env$plotArea<-c(0,0,1,1)
@@ -214,6 +217,15 @@ drawMeta<-function(metaResult=doMetaMultiple(),whichMeta="Single",showType="n-k"
               ylabel<-"p[null]"
               xlabel<-braw.env$Llabel
             },
+            "k-rp"={
+              x<-metaResult$fixed$rpIV
+              y<-metaResult$fixed$param1Max
+              y1<-0
+              ylim<-c(-1,1)
+              ylabel<-"r[est]"
+              xlabel<-"r[p]"
+              useBest<-1:length(x)
+            },
             "sd-k"={
               x<-metaResult$random$param1Max
               y<-metaResult$random$param2Max
@@ -299,6 +311,7 @@ drawMeta<-function(metaResult=doMetaMultiple(),whichMeta="Single",showType="n-k"
       g<-addG(g,dataLegend(data.frame(names=names,colours=c(colM,rep(NA,length(names)-1))),title="",shape=braw.env$plotShapes$meta))
     } else {
 
+      if (showType!="k-rp") {
       if (is.element(showType,c("S-k","sd-k"))) {
         colM=braw.env$plotColours$metaAnalysis
         lb<-worldLabel(metaResult,whichMeta)
@@ -314,7 +327,8 @@ drawMeta<-function(metaResult=doMetaMultiple(),whichMeta="Single",showType="n-k"
         if (whichMeta==bestD)  colM=braw.env$plotColours$metaAnalysis else colM="grey"
         lb<-worldLabel(metaResult,whichMeta)
         g<-addG(g,dataLegend(data.frame(names=strsplit(lb,"\n")[[1]],colours=c(colM,NA)),title="",shape=braw.env$plotShapes$meta))
-      }     
+      }
+      }
     }
     return(g)
 

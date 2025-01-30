@@ -3075,6 +3075,9 @@ children:
         style: inline
         margin: none
         children:
+          - type: Label
+            label: ' '
+            minWidth: 100
           - type: ActionButton
             name: goBack
             margin: none

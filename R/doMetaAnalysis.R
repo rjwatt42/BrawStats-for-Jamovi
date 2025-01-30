@@ -18,8 +18,15 @@ doMetaAnalysis<-function(metaResult=braw.res$metaSingle,metaAnalysis=braw.def$me
   if (is.null(metaAnalysis)) metaAnalysis<-makeMetaAnalysis()
   evidence$sigOnly<-metaAnalysis$sigOnlySource
   
+  localHypothesis<-hypothesis
+  if (hypothesis$effect$world$worldOn && is.element(metaAnalysis$analysisType,c("fixed","random")))
+  {
+    localHypothesis$effect$rIV<-getWorldEffect(localHypothesis$effect)
+    localHypothesis$effect$world$worldOn<-FALSE
+  }
+
   if (is.null(metaResult) || !keepStudies)
-    studies<-multipleAnalysis(metaAnalysis$nstudies,hypothesis,design,evidence)
+    studies<-multipleAnalysis(metaAnalysis$nstudies,localHypothesis,design,evidence)
   else
     studies<-metaResult$result
   metaResult<-runMetaAnalysis(metaAnalysis,studies,NULL)
@@ -38,7 +45,13 @@ doMetaMultiple<-function(nsims=100,metaResult=braw.res$metaMultiple,metaAnalysis
   evidence$sigOnly<-metaAnalysis$sigOnlySource
   
   for (i in 1:nsims) {
-    studies<-multipleAnalysis(metaAnalysis$nstudies,hypothesis,design,evidence)
+    localHypothesis<-hypothesis
+    if (hypothesis$effect$world$worldOn && is.element(metaAnalysis$analysisType,c("fixed","random")))
+    {
+      localHypothesis$effect$rIV<-getWorldEffect(localHypothesis$effect)
+      localHypothesis$effect$world$worldOn<-FALSE
+    }
+    studies<-multipleAnalysis(metaAnalysis$nstudies,localHypothesis,design,evidence)
     metaResult<-runMetaAnalysis(metaAnalysis,studies,metaResult)
   }
   metaResult$hypothesis<-hypothesis
@@ -64,18 +77,18 @@ getMaxLikelihood<-function(zs,ns,df1,dist,metaAnalysis) {
     param2<-0
   }
   if (dist=="Single") {
-    param1<-seq(-1,1,length.out=np1points)*0.95
+    param1<-seq(-1,1,length.out=np1points)*1.5
   } else {
     param1<-seq(0.01,1,length.out=np1points)
   }
   
   if (dist=="fixed") {
-    param1<-seq(-1,1,length.out=np1points)*0.95
+    param1<-seq(-1,1,length.out=np1points)*1.5
     param0<-0
   }
   if (dist=="random") {
-    param1<-seq(-1,1,length.out=np1points)*0.95
-    param2<-seq(0,0.5,length.out=np2points)*0.95
+    param1<-seq(-1,1,length.out=np1points)*1.5
+    param2<-seq(0,0.5,length.out=np2points)
   }
   
   remove_nonsig<-metaAnalysis$includeBias
@@ -147,16 +160,18 @@ runMetaAnalysis<-function(metaAnalysis,studies,metaResult){
          })
 if (is.element(metaAnalysis$analysisType,c("fixed","random"))) {
   if (metaAnalysis$analysisType=="fixed") {
-    fixed$param1Max<-c(metaResult$fixed$param1Max,fixed$param1Max)
+    fixed$param1Max<-c(metaResult$fixed$param1Max,tanh(fixed$param1Max))
     fixed$Smax<-c(metaResult$fixed$Smax,fixed$Smax)
     if (metaAnalysis$includeNulls)
       fixed$param2Max<-c(metaResult$fixed$param2Max,fixed$param2Max)
     else fixed$param2Max<-NULL
+    fixed$rpIV<-c(metaResult$fixed$rpIV,studies$rpIV[1])
     count<-length(fixed$Smax)
   } else {
-    random$param1Max<-c(metaResult$random$param1Max,random$param1Max)
+    random$param1Max<-c(metaResult$random$param1Max,tanh(random$param1Max))
     random$Smax<-c(metaResult$random$Smax,random$Smax)
-    random$param2Max<-c(metaResult$random$param2Max,random$param2Max)
+    random$param2Max<-c(metaResult$random$param2Max,tanh(random$param2Max))
+    random$rpIV<-c(metaResult$random$rpIV,studies$rpIV[1])
     count<-length(random$Smax)
   }  
   bestDist<-NA
@@ -187,7 +202,6 @@ if (is.element(metaAnalysis$analysisType,c("fixed","random"))) {
     exp$Smax<-c(metaResult$exp$Smax,exp$Smax)
     exp$param2Max<-c(metaResult$exp$param2Max,exp$param2Max)
   }
-  
 }
   
   metaResult<-list(fixed=fixed,

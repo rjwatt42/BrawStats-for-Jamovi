@@ -401,13 +401,17 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         braw.res$explore<<-NULL
       }
 
-      if (changedM && statusStore$lastOutput=="MetaSingle") {
+      if (changedM) {
         braw.res$metaMultiple<<-NULL
-        if (oldM$nstudies==metaAnalysis$nstudies && oldM$sigOnlySource==metaAnalysis$sigOnlySource) {
+        if (oldM$nstudies!=metaAnalysis$nstudies 
+            || oldM$sigOnlySource!=metaAnalysis$sigOnlySource) {
+          braw.res$metaSingle<<-NULL
+        }
+        if (statusStore$lastOutput=="MetaSingle" 
+             && oldM$nstudies==metaAnalysis$nstudies 
+             && oldM$sigOnlySource==metaAnalysis$sigOnlySource) {
           braw.res$metaSingle<-doMetaAnalysis(braw.res$metaSingle,keepStudies=TRUE)
           outputNow<-"MetaSingle"
-        } else {
-          braw.res$metaSingle<<-NULL
         }
       }
 

@@ -431,7 +431,7 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ylim<-c(-0.01,0.5)
             ytick<-seq(0,0.5,0.1)
             ymins<-seq(0,0.5,0.05)
-            ylabel<-"σ(r)[est]"
+            ylabel<-"sd(r)[est]"
             use_cols<-braw.env$plotColours$metaAnalysis
           },
           "k"={
