@@ -1435,7 +1435,7 @@ children:
                                 minWidth: 5
                               - type: CollapseBox
                                 collapsed: true
-                                label: a. choosing sample size
+                                label: a. Choosing sample size
                                 margin: none
                                 minWidth: 400
                                 maxWidth: 400
@@ -1578,7 +1578,7 @@ children:
                                 minWidth: 5
                               - type: CollapseBox
                                 collapsed: true
-                                label: b. population effect size and n80
+                                label: b. Population effect size and n80
                                 margin: none
                                 minWidth: 400
                                 maxWidth: 400
@@ -1735,7 +1735,7 @@ children:
                               - type: CollapseBox
                                 collapsed: true
                                 label: >-
-                                  c. within-designs, making best use of
+                                  c. Within-designs, making best use of
                                   participants
                                 margin: none
                                 minWidth: 400
