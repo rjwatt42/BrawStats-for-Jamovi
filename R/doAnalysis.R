@@ -585,7 +585,7 @@ doAnalysis<-function(sample=doSample(autoShow=FALSE),evidence=braw.def$evidence,
   no_ivs<-ncol(allData)-2
   n<-nrow(allData)
 
-  withins<-c(design$sIV1Use=="Within",design$sIV2Use=="Within")
+  withins<-c(design$sIV1Use=="Within" && IV$type=="Categorical",design$sIV2Use=="Within" && IV2$type=="Categorical")
 
   anResult<-generalAnalysis(allData,evidence$rInteractionOn,withins,evidence$ssqType,evidence$caseOrder)
   

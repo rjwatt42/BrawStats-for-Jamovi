@@ -51,81 +51,138 @@ children:
                             minWidth: 38
                             verticalAlignment: top
                             children:
+                              - type: Label
+                                label: 'IV:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell: 
+                                  row: 0
+                                  column: 1
                               - name: doProject1sLst
                                 type: ComboBox
                                 cell:
                                   row: 0
-                                  column: 1
+                                  column: 2
                                 margin: none
                                 events:
                                   change: ./BrawSim.events::onChange_Project1sH
+                              - type: Label
+                                label: 'DV:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell: 
+                                  row: 0
+                                  column: 3
+                              - name: doProject1sLstA
+                                type: ComboBox
+                                margin: none
+                                cell:
+                                  row: 0
+                                  column: 4
+                                events:
+                                  change: ./BrawSim.events::onChange_Project1sH
+                              - type: Label
+                                label: 'effect size:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 1
+                                  column: 1
                               - name: doProject1sLstB
                                 type: TextBox
                                 format: number
                                 margin: none
                                 cell:
                                   row: 1
-                                  column: 1
+                                  column: 2
                                 events:
                                   change: ./BrawSim.events::onChange_Project1sH
+                              - type: Label
+                                label: 'sampling:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 2
+                                  column: 1
                               - name: doProject1sLstD
                                 type: ComboBox
                                 margin: none
                                 cell:
                                   row: 2
-                                  column: 1
-                                events:
-                                  change: ./BrawSim.events::onChange_Project1sD
-                              - name: doProject1sLstA
-                                type: ComboBox
-                                margin: none
-                                cell:
-                                  row: 0
                                   column: 2
                                 events:
-                                  change: ./BrawSim.events::onChange_Project1sH
+                                  change: ./BrawSim.events::onChange_Project1sD
+                              - type: Label
+                                label: 'size:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 2
+                                  column: 3
                               - name: doProject1sLstE
                                 type: TextBox
                                 format: number
                                 margin: none
                                 cell:
                                   row: 2
-                                  column: 2
+                                  column: 4
                                 events:
                                   change: ./BrawSim.events::onChange_Project1sH
-                              - name: doProject1sBtn
-                                type: ActionButton
+                              - type: Label
+                                label: ''
                                 margin: none
-                                minWidth: 85
-                                maxHeight: 24
-                                cell:
-                                  row: 0
-                                  column: 0
-                                events:
-                                  change: ./BrawSim.events::onChange_Project1sH
+                                minWidth: 100
+                                minHeight: 25
+                                cell: 
+                                  row: 3
+                                  column: 1
+                              # - name: doProject1sBtn
+                              #   type: ActionButton
+                              #   margin: none
+                              #   minWidth: 85
+                              #   maxHeight: 24
+                              #   cell:
+                              #     row: 0
+                              #     column: 0
+                              #   events:
+                              #     change: ./BrawSim.events::onChange_Project1sH
                           - type: Label
-                            label: ' '
+                            label: 'View:'
                             style: inline
-                            margin: none
+                            margin: large
                             minWidth: 38
                             verticalAlignment: top
                             children:
+                              - type: Label
+                                label: 'sample:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 0
+                                  column: 1
                               - name: doProject1sLstC
                                 type: ComboBox
                                 margin: none
                                 cell:
                                   row: 0
-                                  column: 1
-                              - name: doProject1AsBtn
-                                type: ActionButton
+                                  column: 2
+                              - type: Label
+                                label: ''
                                 margin: none
-                                minWidth: 85
-                                maxHeight: 24
-                                cell:
-                                  row: 0
-                                  column: 0
-                                events:
-                                  change: ./BrawSim.events::onChange_Project1As
+                                minWidth: 100
+                                cell: 
+                                  row: 1
+                                  column: 1
+                              # - name: doProject1AsBtn
+                              #   type: ActionButton
+                              #   margin: none
+                              #   minWidth: 85
+                              #   maxHeight: 24
+                              #   cell:
+                              #     row: 0
+                              #     column: 0
+                              #   events:
+                              #     change: ./BrawSim.events::onChange_Project1As
                           - type: LayoutBox
                             style: inline
                             children:
@@ -139,9 +196,19 @@ children:
                                 minWidth: 400
                                 maxWidth: 400
                                 children:
+                                - type: LayoutBox
+                                  style: inline
+                                  margin: none
+                                  children:
                                   - type: Label
-                                    label: Steps
+                                    label: ' '
+                                    minWidth: 10
+                                  - type: LayoutBox
+                                    style: list
                                     children:
+                                  # - type: Label
+                                  #   label: Steps
+                                  #   children:
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -194,13 +261,13 @@ children:
                                             children:
                                               - type: Label
                                                 label: 'Suggestion: try some other variables'
-                                      - type: LayoutBox
-                                        style: inline
-                                        children:
-                                          - type: Label
-                                            label: ' '
-                                            minWidth: 301
-                                            minHeight: 24
+                                      # - type: LayoutBox
+                                      #   style: inline
+                                      #   children:
+                                      #     - type: Label
+                                      #       label: ' '
+                                      #       minWidth: 301
+                                      #       minHeight: 24
                               - type: ActionButton
                                 name: doProject1AhBtn
                                 margin: none
@@ -220,9 +287,19 @@ children:
                                 minWidth: 400
                                 maxWidth: 400
                                 children:
+                                - type: LayoutBox
+                                  style: inline
+                                  margin: none
+                                  children:
                                   - type: Label
-                                    label: Steps
+                                    label: ' '
+                                    minWidth: 10
+                                  - type: LayoutBox
+                                    style: list
                                     children:
+                                  # - type: Label
+                                  #   label: Steps
+                                  #   children:
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -330,9 +407,19 @@ children:
                                 minWidth: 400
                                 maxWidth: 400
                                 children:
+                                - type: LayoutBox
+                                  style: inline
+                                  margin: none
+                                  children:
                                   - type: Label
-                                    label: Steps
+                                    label: ' '
+                                    minWidth: 10
+                                  - type: LayoutBox
+                                    style: list
                                     children:
+                                  # - type: Label
+                                  #   label: Steps
+                                  #   children:
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -489,105 +576,174 @@ children:
                             minWidth: 38
                             verticalAlignment: top
                             children:
+                              - type: Label
+                                label: 'IV:'
+                                horizontalAlignment: right
+                                margin: none
+                                cell: 
+                                  row: 0
+                                  column: 1
                               - name: doProject2sLst
                                 type: ComboBox
                                 cell:
                                   row: 0
-                                  column: 1
+                                  column: 2
                                 margin: none
                                 events:
                                   change: ./BrawSim.events::onChange_Project2sH
+                              - type: Label
+                                label: 'DV:'
+                                horizontalAlignment: right
+                                margin: none
+                                cell: 
+                                  row: 0
+                                  column: 3
+                              - name: doProject2sLstA
+                                type: ComboBox
+                                margin: none
+                                cell:
+                                  row: 0
+                                  column: 4
+                              - type: Label
+                                label: 'effect size:'
+                                horizontalAlignment: right
+                                margin: none
+                                cell: 
+                                  row: 1
+                                  column: 1
                               - name: doProject2sLstB
                                 type: TextBox
                                 format: number
                                 margin: none
                                 cell:
                                   row: 1
-                                  column: 1
-                                events:
-                                  change: ./BrawSim.events::onChange_Project2sH
-                              - name: doProject2sLstD
-                                type: ComboBox
-                                margin: none
-                                cell:
-                                  row: 2
-                                  column: 1
-                                events:
-                                  change: ./BrawSim.events::onChange_Project2sD
-                              - name: doProject2sLstA
-                                type: ComboBox
-                                margin: none
-                                cell:
-                                  row: 0
                                   column: 2
                                 events:
                                   change: ./BrawSim.events::onChange_Project2sH
+                              - type: Label
+                                label: 'world:'
+                                horizontalAlignment: right
+                                margin: none
+                                cell: 
+                                  row: 1
+                                  column: 3
                               - name: doProject2sLstG
                                 type: ComboBox
                                 margin: none
                                 cell:
                                   row: 1
+                                  column: 4
+                                events:
+                                  change: ./BrawSim.events::onChange_Project2sH
+                              - type: Label
+                                label: 'sampling:'
+                                horizontalAlignment: right
+                                margin: none
+                                cell: 
+                                  row: 2
+                                  column: 1
+                              - name: doProject2sLstD
+                                type: ComboBox
+                                margin: none
+                                cell:
+                                  row: 2
                                   column: 2
                                 events:
                                   change: ./BrawSim.events::onChange_Project2sH
+                              - type: Label
+                                label: 'size:'
+                                horizontalAlignment: right
+                                margin: none
+                                cell: 
+                                  row: 2
+                                  column: 3
                               - name: doProject2sLstE
                                 type: TextBox
                                 format: number
                                 margin: none
                                 cell:
                                   row: 2
-                                  column: 2
+                                  column: 4
                                 events:
                                   change: ./BrawSim.events::onChange_Project2sH
-                              - name: doProject2sBtn
-                                type: ActionButton
+                              - type: Label
+                                label: ''
                                 margin: none
-                                minWidth: 85
-                                maxHeight: 24
-                                cell:
-                                  row: 0
-                                  column: 0
-                                events:
-                                  change: ./BrawSim.events::onChange_Project2sH
+                                minWidth: 100
+                                minHeight: 25
+                                cell: 
+                                  row: 3
+                                  column: 1
+                              # - name: doProject2sBtn
+                              #   type: ActionButton
+                              #   margin: none
+                              #   minWidth: 85
+                              #   maxHeight: 24
+                              #   cell:
+                              #     row: 0
+                              #     column: 0
+                              #   events:
+                              #     change: ./BrawSim.events::onChange_Project2sH
                           - type: Label
-                            label: ' '
+                            label: 'View:'
                             style: inline
                             margin: none
                             minWidth: 38
                             verticalAlignment: top
                             children:
+                              - type: Label
+                                label: 'sample:'
+                                horizontalAlignment: right
+                                margin: none
+                                cell: 
+                                  row: 0
+                                  column: 1
                               - name: doProject2sLstC
                                 type: ComboBox
                                 margin: none
                                 cell:
                                   row: 0
-                                  column: 1
+                                  column: 2
+                              - type: Label
+                                label: 'multiple:'
+                                horizontalAlignment: right
+                                margin: none
+                                cell: 
+                                  row: 0
+                                  column: 3
                               - name: doProject2sLstF
                                 type: ComboBox
                                 margin: none
                                 cell:
-                                  row: 1
-                                  column: 1
-                              - name: doProject2AsBtn
-                                type: ActionButton
-                                margin: none
-                                minWidth: 85
-                                maxHeight: 24
-                                cell:
                                   row: 0
-                                  column: 0
-                                events:
-                                  change: ./BrawSim.events::onChange_Project1As
-                              - name: doProject2BsBtn
-                                type: ActionButton
+                                  column: 4
+                              - type: Label
+                                label: ''
                                 margin: none
-                                minWidth: 85
-                                maxHeight: 24
-                                cell:
-                                  row: 1
-                                  column: 0
-                                events:
-                                  change: ./BrawSim.events::onChange_Project1As
+                                minWidth: 100
+                                cell: 
+                                  row: 2
+                                  column: 1
+                              # - name: doProject2AsBtn
+                              #   type: ActionButton
+                              #   margin: none
+                              #   minWidth: 85
+                              #   maxHeight: 24
+                              #   cell:
+                              #     row: 0
+                              #     column: 0
+                              #   events:
+                              #     change: ./BrawSim.events::onChange_Project1As
+                              # - name: doProject2BsBtn
+                              #   type: ActionButton
+                              #   margin: none
+                              #   minWidth: 85
+                              #   maxHeight: 24
+                              #   cell:
+                              #     row: 1
+                              #     column: 0
+                              #   events:
+                              #     change: ./BrawSim.events::onChange_Project1As
                           - type: LayoutBox
                             style: inline
                             children:
@@ -601,9 +757,19 @@ children:
                                 minWidth: 400
                                 maxWidth: 400
                                 children:
+                                - type: LayoutBox
+                                  style: inline
+                                  margin: none
+                                  children:
                                   - type: Label
-                                    label: Steps
+                                    label: ' '
+                                    minWidth: 10
+                                  - type: LayoutBox
+                                    style: list
                                     children:
+                                  # - type: Label
+                                  #   label: Steps
+                                  #   children:
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -729,9 +895,19 @@ children:
                                 minWidth: 400
                                 maxWidth: 400
                                 children:
+                                - type: LayoutBox
+                                  style: inline
+                                  margin: none
+                                  children:
                                   - type: Label
-                                    label: Steps
+                                    label: ' '
+                                    minWidth: 10
+                                  - type: LayoutBox
+                                    style: list
                                     children:
+                                  # - type: Label
+                                  #   label: Steps
+                                  #   children:
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -878,9 +1054,19 @@ children:
                                 minWidth: 400
                                 maxWidth: 400
                                 children:
+                                - type: LayoutBox
+                                  style: inline
+                                  margin: none
+                                  children:
                                   - type: Label
-                                    label: Steps
+                                    label: ' '
+                                    minWidth: 10
+                                  - type: LayoutBox
+                                    style: list
                                     children:
+                                  # - type: Label
+                                  #   label: Steps
+                                  #   children:
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -1023,131 +1209,224 @@ children:
                             minWidth: 38
                             verticalAlignment: top
                             children:
+                              - type: Label
+                                label: 'IV:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 0
+                                  column: 1
                               - name: doProject3sLst
                                 type: ComboBox
                                 cell:
                                   row: 0
-                                  column: 1
+                                  column: 2
                                 margin: none
                                 events:
                                   change: ./BrawSim.events::onChange_Project3sH
+                              - type: Label
+                                label: 'DV:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 0
+                                  column: 3
+                              - name: doProject3sLstA
+                                type: ComboBox
+                                margin: none
+                                cell:
+                                  row: 0
+                                  column: 4
+                                events:
+                                  change: ./BrawSim.events::onChange_Project3sH
+                              - type: Label
+                                label: 'effect size:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 1
+                                  column: 1
                               - name: doProject3sLstB
                                 type: TextBox
                                 format: number
                                 margin: none
                                 cell:
                                   row: 1
-                                  column: 1
-                                events:
-                                  change: ./BrawSim.events::onChange_Project3sH
-                              - name: doProject3sLstD
-                                type: ComboBox
-                                margin: none
-                                cell:
-                                  row: 2
-                                  column: 1
-                                events:
-                                  change: ./BrawSim.events::onChange_Project3sD
-                              - name: doProject3sLstA
-                                type: ComboBox
-                                margin: none
-                                cell:
-                                  row: 0
                                   column: 2
                                 events:
                                   change: ./BrawSim.events::onChange_Project3sH
+                              - type: Label
+                                label: 'world:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 1
+                                  column: 3
                               - name: doProject3sLstG
                                 type: ComboBox
                                 margin: none
+                                verticalAlignment: top
                                 cell:
                                   row: 1
+                                  column: 4
+                              - type: Label
+                                label: 'sampling:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 2
+                                  column: 1
+                              - name: doProject3sLstD
+                                type: ComboBox
+                                margin: none
+                                verticalAlignment: top
+                                cell:
+                                  row: 2
                                   column: 2
+                                events:
+                                  change: ./BrawSim.events::onChange_Project3sD
+                              - type: Label
+                                label: 'size:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 2
+                                  column: 3
                               - name: doProject3sLstE
                                 type: TextBox
                                 format: number
                                 margin: none
                                 cell:
                                   row: 2
-                                  column: 2
+                                  column: 4
                                 events:
                                   change: ./BrawSim.events::onChange_Project3sH
+                              # - type: Label
+                              #   label: 'usage:'
+                              #   margin: none
+                              #   horizontalAlignment: right
+                              #   cell:
+                              #     row: 3
+                              #     column: 3
                               - name: doProject3sLstJ
                                 type: ComboBox
                                 margin: none
                                 cell:
-                                  row: 3
-                                  column: 2
-                              - name: doProject3sBtn
-                                type: ActionButton
-                                margin: none
-                                minWidth: 85
-                                maxHeight: 24
-                                cell:
-                                  row: 0
-                                  column: 0
-                                events:
-                                  change: ./BrawSim.events::onChange_Project3sH
+                                  row: 2
+                                  column: 5
+                              - type: Label
+                                label: ''
+                                minWidth: 100
+                                minHeight: 25
+                                cell: 
+                                  row: 4
+                                  column: 1
+                              # - name: doProject3sBtn
+                              #   type: ActionButton
+                              #   margin: none
+                              #   minWidth: 85
+                              #   maxHeight: 24
+                              #   cell:
+                              #     row: 0
+                              #     column: 0
+                              #   events:
+                              #     change: ./BrawSim.events::onChange_Project3sH
                           - type: Label
-                            label: ' '
+                            label: 'View:'
                             style: inline
                             margin: none
                             minWidth: 38
                             verticalAlignment: top
                             children:
+                              - type: Label
+                                label: 'sample:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 0
+                                  column: 1
                               - name: doProject3sLstC
                                 type: ComboBox
                                 margin: none
                                 cell:
                                   row: 0
-                                  column: 1
+                                  column: 2
+                              - type: Label
+                                label: 'multiple:'
+                                margin: none
+                                horizontalAlignment: right
+                                cell:
+                                  row: 0
+                                  column: 3
                               - name: doProject3sLstF
                                 type: ComboBox
                                 margin: none
                                 cell:
-                                  row: 1
-                                  column: 1
-                              - type: ComboBox
-                                name: doProject3sLstH
+                                  row: 0
+                                  column: 4
+                              - type: Label
+                                label: 'explore:'
                                 margin: none
+                                horizontalAlignment: right
                                 cell:
                                   row: 2
-                                  column: 2
+                                  column: 1
                               - type: ComboBox
                                 name: doProject3sLstI
                                 margin: none
                                 cell:
                                   row: 2
-                                  column: 1
-                              - name: doProject3AsBtn
-                                type: ActionButton
+                                  column: 2
+                              - type: Label
+                                label: 'vary:'
                                 margin: none
-                                minWidth: 85
-                                maxHeight: 24
-                                cell:
-                                  row: 0
-                                  column: 0
-                                events:
-                                  change: ./BrawSim.events::onChange_Project1As
-                              - name: doProject3BsBtn
-                                type: ActionButton
-                                margin: none
-                                minWidth: 85
-                                maxHeight: 24
-                                cell:
-                                  row: 1
-                                  column: 0
-                                events:
-                                  change: ./BrawSim.events::onChange_Project1As
-                              - name: doProject3CsBtn
-                                type: ActionButton
-                                margin: none
-                                minWidth: 85
-                                maxHeight: 24
+                                horizontalAlignment: right
                                 cell:
                                   row: 2
-                                  column: 0
-                                events:
-                                  change: ./BrawSim.events::onChange_Project1As
+                                  column: 3
+                              - type: ComboBox
+                                name: doProject3sLstH
+                                margin: none
+                                cell:
+                                  row: 2
+                                  column: 4
+                              - type: Label
+                                label: ' '
+                                margin: none
+                                minWidth: 100
+                                cell: 
+                                  row: 3
+                                  column: 1
+                              # - name: doProject3AsBtn
+                              #   type: ActionButton
+                              #   margin: none
+                              #   minWidth: 85
+                              #   maxHeight: 24
+                              #   cell:
+                              #     row: 0
+                              #     column: 0
+                              #   events:
+                              #     change: ./BrawSim.events::onChange_Project1As
+                              # - name: doProject3BsBtn
+                              #   type: ActionButton
+                              #   margin: none
+                              #   minWidth: 85
+                              #   maxHeight: 24
+                              #   cell:
+                              #     row: 1
+                              #     column: 0
+                              #   events:
+                              #     change: ./BrawSim.events::onChange_Project1As
+                              # - name: doProject3CsBtn
+                              #   type: ActionButton
+                              #   margin: none
+                              #   minWidth: 85
+                              #   maxHeight: 24
+                              #   cell:
+                              #     row: 2
+                              #     column: 0
+                              #   events:
+                              #     change: ./BrawSim.events::onChange_Project1As
                           - type: LayoutBox
                             style: inline
                             children:
@@ -1161,9 +1440,19 @@ children:
                                 minWidth: 400
                                 maxWidth: 400
                                 children:
+                                - type: LayoutBox
+                                  style: inline
+                                  margin: none
+                                  children:
                                   - type: Label
-                                    label: Steps
+                                    label: ' '
+                                    minWidth: 10
+                                  - type: LayoutBox
+                                    style: list
                                     children:
+                                  # - type: Label
+                                  #   label: Steps
+                                  #   children:
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -1294,9 +1583,19 @@ children:
                                 minWidth: 400
                                 maxWidth: 400
                                 children:
+                                - type: LayoutBox
+                                  style: inline
+                                  margin: none
+                                  children:
                                   - type: Label
-                                    label: Steps
+                                    label: ' '
+                                    minWidth: 10
+                                  - type: LayoutBox
+                                    style: list
                                     children:
+                                  # - type: Label
+                                  #   label: Steps
+                                  #   children:
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -1442,9 +1741,19 @@ children:
                                 minWidth: 400
                                 maxWidth: 400
                                 children:
+                                - type: LayoutBox
+                                  style: inline
+                                  margin: none
+                                  children:
                                   - type: Label
-                                    label: Steps
+                                    label: ' '
+                                    minWidth: 10
+                                  - type: LayoutBox
+                                    style: list
                                     children:
+                                  # - type: Label
+                                  #   label: Steps
+                                  #   children:
                                       - type: LayoutBox
                                         style: inline
                                         children:

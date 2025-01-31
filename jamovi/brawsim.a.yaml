@@ -1446,17 +1446,17 @@ options:
       title: 'do'
       type: Action
 
-      
-    - name: doProject1AsBtn
-      title: 'sample'
-      type: Action
-      
-    - name: doProject1sBtn
-      title: 'show'
-      type: Action
+    #   
+    # - name: doProject1AsBtn
+    #   title: 'sample'
+    #   type: Action
+    #   
+    # - name: doProject1sBtn
+    #   title: 'show'
+    #   type: Action
       
     - name: doProject1sLst
-      title: 'IV:'
+      title: ''
       type: List
       options:
       - name: IQ
@@ -1488,7 +1488,7 @@ options:
       default: Perfectionism
 
     - name: doProject1sLstA
-      title: 'DV:'
+      title: ''
       type: List
       options:
       - name: ExamGrade
@@ -1498,14 +1498,14 @@ options:
       default: ExamGrade
 
     - name: doProject1sLstB
-      title: 'effect size:'
+      title: ''
       type: Number
       default: 0.3
       min: -0.95
       max: 0.95
 
     - name: doProject1sLstC
-      title: 'view:'
+      title: ''
       type: List
       options:
       - name: Compact
@@ -1519,7 +1519,7 @@ options:
       default: Compact
 
     - name: doProject1sLstD
-      title: 'sampling:'
+      title: ''
       type: List
       options:
       - name: Random
@@ -1533,7 +1533,7 @@ options:
       default: Random
 
     - name: doProject1sLstE
-      title: 'size:'
+      title: ''
       type: Number
       default: 42
       min: 10
@@ -1624,20 +1624,20 @@ options:
     #   type: Action
 
       
-    - name: doProject2sBtn
-      title: 'show'
-      type: Action
-
-    - name: doProject2AsBtn
-      title: 'sample'
-      type: Action
-
-    - name: doProject2BsBtn
-      title: 'multiple'
-      type: Action
-      
+    # - name: doProject2sBtn
+    #   title: 'show'
+    #   type: Action
+    # 
+    # - name: doProject2AsBtn
+    #   title: 'sample'
+    #   type: Action
+    # 
+    # - name: doProject2BsBtn
+    #   title: 'multiple'
+    #   type: Action
+    #   
     - name: doProject2sLst
-      title: 'IV:'
+      title: ''
       type: List
       options:
       - name: IQ
@@ -1669,7 +1669,7 @@ options:
       default: Perfectionism
 
     - name: doProject2sLstA
-      title: 'DV:'
+      title: ''
       type: List
       options:
       - name: ExamGrade
@@ -1679,14 +1679,14 @@ options:
       default: ExamGrade
 
     - name: doProject2sLstB
-      title: 'effect size:'
+      title: ''
       type: Number
       default: 0.3
       min: -0.95
       max: 0.95
 
     - name: doProject2sLstC
-      title: 'view:'
+      title: ''
       type: List
       options:
       - name: Compact
@@ -1702,7 +1702,7 @@ options:
       default: Infer
 
     - name: doProject2sLstD
-      title: 'sampling:'
+      title: ''
       type: List
       options:
       - name: Random
@@ -1716,14 +1716,14 @@ options:
       default: Random
 
     - name: doProject2sLstE
-      title: 'size:'
+      title: ''
       type: Number
       default: 42
       min: 10
       max: 5000
 
     - name: doProject2sLstF
-      title: 'view:'
+      title: ''
       type: List
       options:
       - name: Basic
@@ -1735,7 +1735,7 @@ options:
       default: Basic
 
     - name: doProject2sLstG
-      title: 'world:'
+      title: ''
       type: List
       options:
       - name: off
@@ -1744,25 +1744,25 @@ options:
         title: '0 & 0.3'
       default: off
 
-      
-    - name: doProject3sBtn
-      title: 'show'
-      type: Action
-      
-    - name: doProject3AsBtn
-      title: 'sample'
-      type: Action
-      
-    - name: doProject3BsBtn
-      title: 'multiple'
-      type: Action
-
-    - name: doProject3CsBtn
-      title: 'explore'
-      type: Action
+    #   
+    # - name: doProject3sBtn
+    #   title: 'show'
+    #   type: Action
+    #   
+    # - name: doProject3AsBtn
+    #   title: 'sample'
+    #   type: Action
+    #   
+    # - name: doProject3BsBtn
+    #   title: 'multiple'
+    #   type: Action
+    # 
+    # - name: doProject3CsBtn
+    #   title: 'explore'
+    #   type: Action
       
     - name: doProject3sLst
-      title: 'IV:'
+      title: ''
       type: List
       options:
       - name: Interval
@@ -1772,7 +1772,7 @@ options:
       default: Interval
 
     - name: doProject3sLstA
-      title: 'DV:'
+      title: ''
       type: List
       options:
       - name: Interval
@@ -1782,14 +1782,14 @@ options:
       default: Interval
 
     - name: doProject3sLstB
-      title: 'effect size:'
+      title: ''
       type: Number
       default: 0.3
       min: -0.95
       max: 0.95
 
     - name: doProject3sLstC
-      title: 'view:'
+      title: ''
       type: List
       options:
       - name: Compact
@@ -1805,7 +1805,7 @@ options:
       default: Infer
 
     - name: doProject3sLstD
-      title: 'sampling:'
+      title: ''
       type: List
       options:
       - name: Random
@@ -1819,14 +1819,14 @@ options:
       default: Random
 
     - name: doProject3sLstE
-      title: 'size:'
+      title: ''
       type: Number
       default: 42
       min: 10
       max: 5000
 
     - name: doProject3sLstF
-      title: 'view:'
+      title: ''
       type: List
       options:
       - name: Basic
@@ -1838,7 +1838,7 @@ options:
       default: Basic
 
     - name: doProject3sLstG
-      title: 'world:'
+      title: ''
       type: List
       options:
       - name: off
@@ -1848,7 +1848,7 @@ options:
       default: off
 
     - name: doProject3sLstH
-      title: 'explore:'
+      title: ''
       type: List
       options:
       - name: n
@@ -1858,7 +1858,7 @@ options:
       default: n
 
     - name: doProject3sLstI
-      title: 'view:'
+      title: ''
       type: List
       options:
       - name: Basic
@@ -1870,7 +1870,7 @@ options:
       default: Basic
 
     - name: doProject3sLstJ
-      title: 'usage:'
+      title: ''
       type: List
       options:
       - name: Between

@@ -822,13 +822,16 @@ let demo1SetUp = function(ui,show) {
           variable3 = -0.95
         }
         ui.EffectSize1.setValue(variable3);
+        ui.WorldOn.setValue(false)
+        ui.SampleSpreadOn.setValue(false)
         let variable4 = ui.doProject1sLstC.value();
         ui.showSampleType.setValue(variable4)
         let variable5 = ui.doProject1sLstD.value()
         ui.SampleMethod.setValue(variable5)
         let variable6 = ui.doProject1sLstE.value()
         ui.SampleSize.setValue(variable6);
-        
+        ui.SampleUsage1.setValue('Between');
+
         if (show=="h") {
             let as = ui.autoShowHypothesis.value()
             if (as) {ui.showHypothesisBtn.setValue(true)}
@@ -857,6 +860,7 @@ let demo2SetUp = function(ui,show) {
         ui.SampleMethod.setValue(variable5)
         let variable6 = ui.doProject2sLstE.value()
         ui.SampleSize.setValue(variable6);
+        ui.SampleUsage1.setValue('Between');
        let variable7 = ui.doProject2sLstF.value()
         ui.showMultipleParam.setValue(variable7)
        let variable8 = ui.doProject2sLstG.value()
