@@ -415,7 +415,7 @@ expected_plot<-function(g,pts,showType=NULL,analysis=NULL,IV=NULL,DV=NULL,
     
     xr<-makeFiddle(pts$y1,2/40/braw.env$plotArea[4],orientation)
     if (max(abs(xr))>0) xr<-xr*0.35/max(abs(xr))
-    pts$x<-pts$x+xr*sum(width)*0.5/0.35
+    pts$x<-pts$x+xr*sum(width)*0.3/0.35
     gain<-7/max(7,sqrt(length(xr)))
     colgain<-1-min(1,sqrt(max(0,(length(xr)-50))/200))
     

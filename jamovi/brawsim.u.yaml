@@ -824,7 +824,7 @@ children:
                                             verticalAlignment: center
                                             children:
                                               - type: Label
-                                                label: 2. make Multiple samples
+                                                label: 2. make Multiple samples, viewed as "Basic"
                                           - type: LayoutBox
                                             style: list
                                             children:
@@ -970,7 +970,7 @@ children:
                                             children:
                                               - type: Label
                                                 label: >-
-                                                  2. make Multiple samples, view as
+                                                  2. make Multiple samples, viewed as
                                                   "Basic"
                                               - type: LayoutBox
                                                 style: inline
@@ -1463,7 +1463,7 @@ children:
                                             children:
                                               - type: Label
                                                 label: >-
-                                                  1. make Multiple samples, view as
+                                                  1. make Multiple samples, viewed as
                                                   "p(sig)"
                                               - type: LayoutBox
                                                 style: inline
@@ -1534,7 +1534,7 @@ children:
                                             minWidth: 301
                                             children:
                                               - type: Label
-                                                label: 3. Explore "n", view as "p(sig)"
+                                                label: 3. Explore "n", viewed as "p(sig)"
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1604,7 +1604,7 @@ children:
                                             minWidth: 301
                                             children:
                                               - type: Label
-                                                label: 1. Explore r&#x209a;, viewed as "p(sig)"
+                                                label: '1. Explore "r&#x209a;", viewed as "p(sig)"'
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1776,7 +1776,7 @@ children:
                                                             label: ' '
                                                             minWidth: 13
                                                           - type: Label
-                                                            label: '- and run Multiple, view "p(sig)"'
+                                                            label: '- and run Multiple, viewed as "p(sig)"'
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1832,7 +1832,7 @@ children:
                                             minWidth: 301
                                             children:
                                               - type: Label
-                                                label: 3. Explore r&#x209a;, viewed as "p(sig)"
+                                                label: '3. Explore "r&#x209a;", viewed as "p(sig)"'
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
