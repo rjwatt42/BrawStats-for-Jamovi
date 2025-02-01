@@ -77,17 +77,17 @@ getMaxLikelihood<-function(zs,ns,df1,dist,metaAnalysis) {
     param2<-0
   }
   if (dist=="Single") {
-    param1<-seq(-1,1,length.out=np1points)*1.5
+    param1<-seq(-1,1,length.out=np1points)*2.5
   } else {
     param1<-seq(0.01,1,length.out=np1points)
   }
   
   if (dist=="fixed") {
-    param1<-seq(-1,1,length.out=np1points)*1.5
+    param1<-seq(-1,1,length.out=np1points)*2.5
     param0<-0
   }
   if (dist=="random") {
-    param1<-seq(-1,1,length.out=np1points)*1.5
+    param1<-seq(-1,1,length.out=np1points)*2.5
     param2<-seq(0,0.5,length.out=np2points)
   }
   

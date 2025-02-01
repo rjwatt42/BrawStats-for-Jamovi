@@ -65,7 +65,7 @@ children:
                                   column: 2
                                 margin: none
                                 events:
-                                  change: ./BrawSim.events::onChange_Project1sH
+                                  change: ./brawsim.events::onChange_Project1sH
                               - type: Label
                                 label: 'DV:'
                                 margin: none
@@ -80,7 +80,7 @@ children:
                                   row: 0
                                   column: 4
                                 events:
-                                  change: ./BrawSim.events::onChange_Project1sH
+                                  change: ./brawsim.events::onChange_Project1sH
                               - type: Label
                                 label: 'effect size:'
                                 margin: none
@@ -96,7 +96,7 @@ children:
                                   row: 1
                                   column: 2
                                 events:
-                                  change: ./BrawSim.events::onChange_Project1sH
+                                  change: ./brawsim.events::onChange_Project1sH
                               - type: Label
                                 label: 'sampling:'
                                 margin: none
@@ -111,7 +111,7 @@ children:
                                   row: 2
                                   column: 2
                                 events:
-                                  change: ./BrawSim.events::onChange_Project1sD
+                                  change: ./brawsim.events::onChange_Project1sD
                               - type: Label
                                 label: 'size:'
                                 margin: none
@@ -127,7 +127,7 @@ children:
                                   row: 2
                                   column: 4
                                 events:
-                                  change: ./BrawSim.events::onChange_Project1sH
+                                  change: ./brawsim.events::onChange_Project1sH
                               - type: Label
                                 label: ''
                                 margin: none
@@ -145,7 +145,7 @@ children:
                               #     row: 0
                               #     column: 0
                               #   events:
-                              #     change: ./BrawSim.events::onChange_Project1sH
+                              #     change: ./brawsim.events::onChange_Project1sH
                           - type: Label
                             label: 'View:'
                             style: inline
@@ -182,7 +182,7 @@ children:
                               #     row: 0
                               #     column: 0
                               #   events:
-                              #     change: ./BrawSim.events::onChange_Project1As
+                              #     change: ./brawsim.events::onChange_Project1As
                           - type: LayoutBox
                             style: inline
                             children:
@@ -225,7 +225,7 @@ children:
                                             maxWidth: 79
                                             maxHeight: 24
                                             events:
-                                              change: ./BrawSim.events::onChange_project1A1
+                                              change: ./brawsim.events::onChange_project1A1
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -333,7 +333,7 @@ children:
                                             maxHeight: 24
                                             verticalAlignment: center
                                             events:
-                                              change: ./BrawSim.events::onChange_project1B1
+                                              change: ./brawsim.events::onChange_project1B1
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -350,7 +350,7 @@ children:
                                             maxWidth: 79
                                             maxHeight: 24
                                             events:
-                                              change: ./BrawSim.events::onChange_project1B2
+                                              change: ./brawsim.events::onChange_project1B2
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -463,7 +463,7 @@ children:
                                             maxWidth: 79
                                             maxHeight: 24
                                             events:
-                                              change: ./BrawSim.events::onChange_project1C1
+                                              change: ./brawsim.events::onChange_project1C1
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -590,7 +590,7 @@ children:
                                   column: 2
                                 margin: none
                                 events:
-                                  change: ./BrawSim.events::onChange_Project2sH
+                                  change: ./brawsim.events::onChange_Project2sH
                               - type: Label
                                 label: 'DV:'
                                 horizontalAlignment: right
@@ -619,7 +619,7 @@ children:
                                   row: 1
                                   column: 2
                                 events:
-                                  change: ./BrawSim.events::onChange_Project2sH
+                                  change: ./brawsim.events::onChange_Project2sH
                               - type: Label
                                 label: 'world:'
                                 horizontalAlignment: right
@@ -634,7 +634,7 @@ children:
                                   row: 1
                                   column: 4
                                 events:
-                                  change: ./BrawSim.events::onChange_Project2sH
+                                  change: ./brawsim.events::onChange_Project2sH
                               - type: Label
                                 label: 'sampling:'
                                 horizontalAlignment: right
@@ -649,7 +649,7 @@ children:
                                   row: 2
                                   column: 2
                                 events:
-                                  change: ./BrawSim.events::onChange_Project2sH
+                                  change: ./brawsim.events::onChange_Project2sH
                               - type: Label
                                 label: 'size:'
                                 horizontalAlignment: right
@@ -665,7 +665,7 @@ children:
                                   row: 2
                                   column: 4
                                 events:
-                                  change: ./BrawSim.events::onChange_Project2sH
+                                  change: ./brawsim.events::onChange_Project2sH
                               - type: Label
                                 label: ''
                                 margin: none
@@ -683,7 +683,7 @@ children:
                               #     row: 0
                               #     column: 0
                               #   events:
-                              #     change: ./BrawSim.events::onChange_Project2sH
+                              #     change: ./brawsim.events::onChange_Project2sH
                           - type: Label
                             label: 'View:'
                             style: inline
@@ -733,7 +733,7 @@ children:
                               #     row: 0
                               #     column: 0
                               #   events:
-                              #     change: ./BrawSim.events::onChange_Project1As
+                              #     change: ./brawsim.events::onChange_Project1As
                               # - name: doProject2BsBtn
                               #   type: ActionButton
                               #   margin: none
@@ -743,7 +743,7 @@ children:
                               #     row: 1
                               #     column: 0
                               #   events:
-                              #     change: ./BrawSim.events::onChange_Project1As
+                              #     change: ./brawsim.events::onChange_Project1As
                           - type: LayoutBox
                             style: inline
                             children:
@@ -814,7 +814,7 @@ children:
                                             maxHeight: 24
                                             verticalAlignment: center
                                             events:
-                                              change: ./BrawSim.events::onChange_project2A1
+                                              change: ./brawsim.events::onChange_project2A1
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -834,7 +834,7 @@ children:
                                                 maxWidth: 79
                                                 maxHeight: 24
                                                 events:
-                                                  change: ./BrawSim.events::onChange_project2A2
+                                                  change: ./brawsim.events::onChange_project2A2
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -960,7 +960,7 @@ children:
                                             maxHeight: 24
                                             verticalAlignment: center
                                             events:
-                                              change: ./BrawSim.events::onChange_Project2B1
+                                              change: ./brawsim.events::onChange_Project2B1
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -993,7 +993,7 @@ children:
                                             maxHeight: 24
                                             verticalAlignment: center
                                             events:
-                                              change: ./BrawSim.events::onChange_Project2B2
+                                              change: ./brawsim.events::onChange_Project2B2
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -1105,7 +1105,7 @@ children:
                                             maxWidth: 79
                                             maxHeight: 24
                                             events:
-                                              change: ./BrawSim.events::onChange_project2C1
+                                              change: ./brawsim.events::onChange_project2C1
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -1223,7 +1223,7 @@ children:
                                   column: 2
                                 margin: none
                                 events:
-                                  change: ./BrawSim.events::onChange_Project3sH
+                                  change: ./brawsim.events::onChange_Project3sH
                               - type: Label
                                 label: 'DV:'
                                 margin: none
@@ -1238,7 +1238,7 @@ children:
                                   row: 0
                                   column: 4
                                 events:
-                                  change: ./BrawSim.events::onChange_Project3sH
+                                  change: ./brawsim.events::onChange_Project3sH
                               - type: Label
                                 label: 'effect size:'
                                 margin: none
@@ -1254,7 +1254,7 @@ children:
                                   row: 1
                                   column: 2
                                 events:
-                                  change: ./BrawSim.events::onChange_Project3sH
+                                  change: ./brawsim.events::onChange_Project3sH
                               - type: Label
                                 label: 'world:'
                                 margin: none
@@ -1284,7 +1284,7 @@ children:
                                   row: 2
                                   column: 2
                                 events:
-                                  change: ./BrawSim.events::onChange_Project3sD
+                                  change: ./brawsim.events::onChange_Project3sD
                               - type: Label
                                 label: 'size:'
                                 margin: none
@@ -1300,7 +1300,7 @@ children:
                                   row: 2
                                   column: 4
                                 events:
-                                  change: ./BrawSim.events::onChange_Project3sH
+                                  change: ./brawsim.events::onChange_Project3sH
                               # - type: Label
                               #   label: 'usage:'
                               #   margin: none
@@ -1330,7 +1330,7 @@ children:
                               #     row: 0
                               #     column: 0
                               #   events:
-                              #     change: ./BrawSim.events::onChange_Project3sH
+                              #     change: ./brawsim.events::onChange_Project3sH
                           - type: Label
                             label: 'View:'
                             style: inline
@@ -1406,7 +1406,7 @@ children:
                               #     row: 0
                               #     column: 0
                               #   events:
-                              #     change: ./BrawSim.events::onChange_Project1As
+                              #     change: ./brawsim.events::onChange_Project1As
                               # - name: doProject3BsBtn
                               #   type: ActionButton
                               #   margin: none
@@ -1416,7 +1416,7 @@ children:
                               #     row: 1
                               #     column: 0
                               #   events:
-                              #     change: ./BrawSim.events::onChange_Project1As
+                              #     change: ./brawsim.events::onChange_Project1As
                               # - name: doProject3CsBtn
                               #   type: ActionButton
                               #   margin: none
@@ -1426,7 +1426,7 @@ children:
                               #     row: 2
                               #     column: 0
                               #   events:
-                              #     change: ./BrawSim.events::onChange_Project1As
+                              #     change: ./brawsim.events::onChange_Project1As
                           - type: LayoutBox
                             style: inline
                             children:
@@ -1477,7 +1477,7 @@ children:
                                             maxWidth: 79
                                             maxHeight: 24
                                             events:
-                                              change: ./BrawSim.events::onChange_project3A1
+                                              change: ./brawsim.events::onChange_project3A1
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -1563,7 +1563,7 @@ children:
                                             maxWidth: 79
                                             maxHeight: 24
                                             events:
-                                              change: ./BrawSim.events::onChange_project3A3
+                                              change: ./brawsim.events::onChange_project3A3
                               - type: ActionButton
                                 name: doProject3AhBtn
                                 margin: none
@@ -1639,7 +1639,7 @@ children:
                                             maxWidth: 79
                                             maxHeight: 24
                                             events:
-                                              change: ./BrawSim.events::onChange_project3B1
+                                              change: ./brawsim.events::onChange_project3B1
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -1789,7 +1789,7 @@ children:
                                             maxWidth: 79
                                             maxHeight: 24
                                             events:
-                                              change: ./BrawSim.events::onChange_project3C1
+                                              change: ./brawsim.events::onChange_project3C1
                                       - type: LayoutBox
                                         style: inline
                                         children:
@@ -1867,7 +1867,7 @@ children:
                                             maxWidth: 79
                                             maxHeight: 24
                                             events:
-                                              change: ./BrawSim.events::onChange_project3C3
+                                              change: ./brawsim.events::onChange_project3C3
                               - type: ActionButton
                                 name: doProject3ChBtn
                                 margin: none
@@ -1968,7 +1968,7 @@ children:
                                                       - type: ComboBox
                                                         name: presetDV
                                                         events:
-                                                          change: ./BrawSim.events::onChange_presetDV
+                                                          change: ./brawsim.events::onChange_presetDV
                                                   - type: CollapseBox
                                                     collapsed: true
                                                     label: Edit
@@ -2078,7 +2078,7 @@ children:
                                                       - type: ComboBox
                                                         name: presetIV
                                                         events:
-                                                          change: ./BrawSim.events::onChange_presetIV
+                                                          change: ./brawsim.events::onChange_presetIV
                                                   - type: CollapseBox
                                                     collapsed: true
                                                     label: Edit
@@ -2188,7 +2188,7 @@ children:
                                                       - type: ComboBox
                                                         name: presetIV2
                                                         events:
-                                                          change: ./BrawSim.events::onChange_presetIV2
+                                                          change: ./brawsim.events::onChange_presetIV2
                                                   - type: CollapseBox
                                                     collapsed: true
                                                     label: Edit
@@ -2711,7 +2711,7 @@ children:
                                                       - type: ComboBox
                                                         name: presetWorld
                                                         events:
-                                                          change: ./BrawSim.events::onChange_presetWorld
+                                                          change: ./brawsim.events::onChange_presetWorld
                                                   - type: LayoutBox
                                                     style: inline
                                                     margin: none
@@ -3055,7 +3055,7 @@ children:
                                 margin: none
                                 verticalAlignment: bottom
                                 events:
-                                  change: ./BrawSim.events::onChange_exploreMode
+                                  change: ./brawsim.events::onChange_exploreMode
                                 children:
                                   - type: Content
                                     name: hypothesisExplore
@@ -3068,7 +3068,7 @@ children:
                                             name: hypothesisExploreList
                                             events:
                                               change: >-
-                                                ./BrawSim.events::onChange_hypothesisExploreList
+                                                ./brawsim.events::onChange_hypothesisExploreList
                                           - type: TextBox
                                             name: exploreNPointsH
                                             margin: none
@@ -3135,7 +3135,7 @@ children:
                                             name: designExploreList
                                             events:
                                               change: >-
-                                                ./BrawSim.events::onChange_designExploreList
+                                                ./brawsim.events::onChange_designExploreList
                                           - type: TextBox
                                             name: exploreNPointsD
                                             margin: none
@@ -3202,7 +3202,7 @@ children:
                                             name: analysisExploreList
                                             events:
                                               change: >-
-                                                ./BrawSim.events::onChange_analysisExploreList
+                                                ./brawsim.events::onChange_analysisExploreList
                                           - type: TextBox
                                             name: exploreNPointsA
                                             margin: none
@@ -3269,7 +3269,7 @@ children:
                                             name: moreExploreList
                                             events:
                                               change: >-
-                                                ./BrawSim.events::onChange_moreExploreList
+                                                ./brawsim.events::onChange_moreExploreList
                                           - type: TextBox
                                             name: exploreNPointsM
                                             margin: none

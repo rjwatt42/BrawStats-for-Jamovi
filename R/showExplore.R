@@ -894,8 +894,13 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
         w<-y50
         r<-exploreResult$vals
         minrw<-function(r,w,n){sum(abs(w-rn2w(r,n)),na.rm=TRUE)}
-        n_est<-optimize(minrw,c(0,100),w=w,r=r)
+        maxN<-50
+        n_est<-50
+        while (n_est>(maxN/2)) {
+          maxN<-maxN*2
+          n_est<-optimize(minrw,c(0,maxN),w=w,r=r)
         n_est<-n_est$minimum
+        }
         rvals<-seq(min(r),max(r),length.out=101)
         yvals<-rn2w(rvals,n_est)
         ptsn<-data.frame(x=rvals,y=yvals)

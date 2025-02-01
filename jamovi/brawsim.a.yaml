@@ -859,7 +859,7 @@ options:
         title: all
       - name: sigOnly
         title: sigOnly
-      default: sigOnly
+      default: all
       
     - name: showHypothesisBtn
       title: 'show'
