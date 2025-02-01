@@ -219,6 +219,7 @@ const events =  {
     onChange_project1A1: function(ui) {
       let BtnOn = ui.doProject1A1Btn.value();
       if (BtnOn==true) {
+        demo1Defaults(ui,"1a")
         ui.doProject1sLstC.setValue("Compact")
         demo1SetUp(ui,"n")
         ui.makeSampleBtn.setValue(true)
@@ -228,6 +229,7 @@ const events =  {
     onChange_project1B1: function(ui) {
       let BtnOn = ui.doProject1B1Btn.value();
       if (BtnOn==true) {
+        demo1Defaults(ui,"1b")
         ui.doProject1sLstC.setValue("Variables")
         demo1SetUp(ui,"n")
         ui.makeSampleBtn.setValue(true)
@@ -237,46 +239,27 @@ const events =  {
     onChange_project1B2: function(ui) {
       let BtnOn = ui.doProject1B2Btn.value();
       if (BtnOn==true) {
+        demo1Defaults(ui,"1b")
         ui.doProject1sLstC.setValue("Sample")
         demo1SetUp(ui,"n")
         ui.makeSampleBtn.setValue(true)
-      }
-    },
-    
-    onChange_project1B3: function(ui) {
-      let BtnOn = ui.doProject1B3Btn.value();
-      if (BtnOn==true) {
-        ui.doProject1sLstD.setValue("Convenience")
       }
     },
 
     onChange_project1C1: function(ui) {
       let BtnOn = ui.doProject1C1Btn.value();
       if (BtnOn==true) {
+        demo1Defaults(ui,"1c")
         ui.doProject1sLstC.setValue("Describe")
         demo1SetUp(ui,"n")
       ui.makeSampleBtn.setValue(true)
-      }
-    },
-    
-    onChange_project1C2: function(ui) {
-      let BtnOn = ui.doProject1C2Btn.value();
-      if (BtnOn==true) {
-        ui.doProject1sLstE.setValue(500)
-      }
-    },
-    
-    onChange_project1C3: function(ui) {
-      let BtnOn = ui.doProject1C3Btn.value();
-      if (BtnOn==true) {
-        ui.doProject1sLstE.setValue(42)
-        ui.doProject1sLstD.setValue("Convenience")
       }
     },
 
     onChange_project2A1: function(ui) {
       let BtnOn = ui.doProject2A1Btn.value();
       if (BtnOn==true) {
+        demo2Defaults(ui,"2a")
         ui.doProject2sLstC.setValue("Infer")
         demo2SetUp(ui,"n")
         ui.makeSampleBtn.setValue(true)
@@ -286,21 +269,17 @@ const events =  {
     onChange_project2A2: function(ui) {
       let BtnOn = ui.doProject2A2Btn.value();
       if (BtnOn==true) {
+        demo2Defaults(ui,"2a")
         demo2SetUp(ui,"n")
+        ui.doProject2sLstF.setValue("Basic")
         ui.makeMultipleBtn.setValue(true)
       }
     },
-    
-    onChange_project2A3: function(ui) {
-      let BtnOn = ui.doProject2A3Btn.value();
-      if (BtnOn==true) {
-        ui.doProject2sLstD.setValue("Convenience")
-      }
-    },
-    
+
     onChange_Project2B1: function(ui) {
       let BtnOn = ui.doProject2B1Btn.value();
       if (BtnOn==true) {
+        demo2Defaults(ui,"2b")
         ui.doProject2sLstG.setValue("eq")
         ui.doProject2sLstC.setValue("Infer")
         ui.doProject2sLstD.setValue("Random")
@@ -312,6 +291,7 @@ const events =  {
     onChange_Project2B2: function(ui) {
       let BtnOn = ui.doProject2B2Btn.value();
       if (BtnOn==true) {
+        demo2Defaults(ui,"2b")
         ui.doProject2sLstG.setValue("eq")
         ui.doProject2sLstF.setValue("Basic")
         ui.doProject2sLstD.setValue("Random")
@@ -319,44 +299,22 @@ const events =  {
         ui.makeMultipleBtn.setValue(true)
       }
     },
-    
-    onChange_Project2B3: function(ui) {
-      let BtnOn = ui.doProject2B3Btn.value();
-      if (BtnOn==true) {
-        ui.doProject2sLstG.setValue("eq")
-        ui.doProject2sLstE.setValue("n320")
-      }
-    },
 
     onChange_project2C1: function(ui) {
       let BtnOn = ui.doProject2C1Btn.value();
       if (BtnOn==true) {
+        demo2Defaults(ui,"2c")
         ui.doProject2sLstG.setValue("eq")
         ui.doProject2sLstF.setValue("NHST")
         demo2SetUp(ui,"n")
         ui.makeMultipleBtn.setValue(true)
       }
     },
-    
-    onChange_project2C2: function(ui) {
-      let BtnOn = ui.doProject2C2Btn.value();
-      if (BtnOn==true) {
-        ui.doProject2sLstB.setValue("r05")
-      }
-    },
-    
-    onChange_project2C3: function(ui) {
-      let BtnOn = ui.doProject2C3Btn.value();
-      if (BtnOn==true) {
-        ui.doProject2sLstB.setValue("r03")
-        ui.doProject2sLstD.setValue("Convenience")
-        demo2SetUp(ui,"n")
-      }
-    },
-    
+
     onChange_project3A1: function(ui) {
       let BtnOn = ui.doProject3A1Btn.value();
       if (BtnOn==true) {
+        demo3Defaults(ui,"3a")
         ui.doProject3sLstF.setValue("p(sig)")
         demo3SetUp(ui,"n")
         ui.makeMultipleBtn.setValue(true)
@@ -366,6 +324,7 @@ const events =  {
     onChange_project3A3: function(ui) {
       let BtnOn = ui.doProject3A3Btn.value();
       if (BtnOn==true) {
+        demo3Defaults(ui,"3a")
         ui.doProject3sLstH.setValue("n")
         ui.doProject3sLstI.setValue("p(sig)")
         demo3SetUp(ui,"n")
@@ -376,6 +335,7 @@ const events =  {
     onChange_project3B1: function(ui) {
       let BtnOn = ui.doProject3B1Btn.value();
       if (BtnOn==true) {
+        demo3Defaults(ui,"3b")
         ui.doProject3sLstH.setValue("rIV")
         ui.doProject3sLstI.setValue("p(sig)")
         demo3SetUp(ui,"n")
@@ -386,18 +346,8 @@ const events =  {
     onChange_project3C1: function(ui) {
       let BtnOn = ui.doProject3C1Btn.value();
       if (BtnOn==true) {
+        demo3Defaults(ui,"3c")
         ui.doProject3sLst.setValue("Categorical")
-        ui.doProject3sLstF.setValue("p(sig)")
-        demo3SetUp(ui,"n")
-        ui.makeMultipleBtn.setValue(true)
-      }
-    },
-
-    onChange_project3C2: function(ui) {
-      let BtnOn = ui.doProject3C1Btn.value();
-      if (BtnOn==true) {
-        ui.doProject3sLst.setValue("Categorical")
-        ui.doProject3sLstJ.setValue("Within")
         ui.doProject3sLstF.setValue("p(sig)")
         demo3SetUp(ui,"n")
         ui.makeMultipleBtn.setValue(true)
@@ -405,8 +355,10 @@ const events =  {
     },
 
     onChange_project3C3: function(ui) {
-      let BtnOn = ui.doProject3C1Btn.value();
+      let BtnOn = ui.doProject3C3Btn.value();
       if (BtnOn==true) {
+        demo3Defaults(ui,"3c")
+        ui.doProject3sLst.setValue("Categorical")
         ui.doProject3sLstH.setValue("rIV")
         ui.doProject3sLstI.setValue("p(sig)")
         demo3SetUp(ui,"n")
@@ -807,6 +759,18 @@ let defaultSetUp = function(ui) {
         ui.showMultipleDimension.setValue("1D")
 }
 
+let demo1Defaults = function(ui,thisDemo) {
+  let variable1 = ui.lastDemo.value();
+  if (variable1!=thisDemo) {
+        ui.doProject1sLst.setValue("Perfectionism")
+        ui.doProject1sLstA.setValue("ExamGrade")
+        ui.doProject1sLstB.setValue(0.3);
+        ui.doProject1sLstD.setValue("Random")
+        ui.doProject1sLstE.setValue(42);
+  }
+  ui.lastDemo.setValue(thisDemo)
+}
+
     
 let demo1SetUp = function(ui,show) {
 //        defaultSetUp(ui)    
@@ -840,6 +804,20 @@ let demo1SetUp = function(ui,show) {
         }
     }
     
+    
+let demo2Defaults = function(ui,thisDemo) {
+  let variable1 = ui.lastDemo.value();
+  if (variable1!=thisDemo) {
+        ui.doProject2sLst.setValue("Perfectionism")
+        ui.doProject2sLstA.setValue("ExamGrade")
+        ui.doProject2sLstB.setValue(0.3);
+        ui.doProject2sLstD.setValue("Random")
+        ui.doProject2sLstE.setValue(42);
+        ui.doProject2sLstG.setValue('off');
+  }
+  ui.lastDemo.setValue(thisDemo)
+}
+
 let demo2SetUp = function(ui,show) {
 //        defaultSetUp(ui)    
         let variable1 = ui.doProject2sLst.value();
@@ -886,6 +864,22 @@ let demo2SetUp = function(ui,show) {
         }
 
     }
+
+    
+let demo3Defaults = function(ui,thisDemo) {
+  let variable1 = ui.lastDemo.value();
+  if (variable1!=thisDemo) {
+        ui.doProject3sLst.setValue("Interval")
+        ui.doProject3sLstA.setValue("Interval")
+        ui.doProject3sLstB.setValue(0.3);
+        ui.doProject3sLstD.setValue("Random")
+        ui.doProject3sLstE.setValue(42);
+        ui.doProject3sLstG.setValue('off');
+        ui.doProject3sLstH.setValue("n")
+        ui.doProject3sLstJ.setValue("Between")
+  }
+  ui.lastDemo.setValue(thisDemo)
+}
 
 let demo3SetUp = function(ui,show) {
 //        defaultSetUp(ui)    
@@ -955,7 +949,7 @@ let demo3SetUp = function(ui,show) {
        }
        let variable10 = ui.doProject3sLstI.value()
       ui.showExploreParam.setValue(variable10)
-      ui.numberExplores.setValue(100)
+      ui.numberExplores.setValue(20)
       let variable11 = ui.doProject3sLstJ.value()
       ui.SampleUsage1.setValue(variable11)
       

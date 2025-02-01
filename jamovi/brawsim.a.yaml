@@ -1906,6 +1906,10 @@ options:
     - name: doProject3C1Btn
       title: do
       type: Action
+
+    - name: doProject3C3Btn
+      title: do
+      type: Action
     #   
     # - name: doProject3B2Btn
     #   title: do
@@ -2152,5 +2156,32 @@ options:
 #     - name: doProject5A3Btn
 #       title: '⏵'
 #       type: Action
+
+
+    - name: lastDemo
+      title: ''
+      type: List
+      options:
+      - name: none
+        title: none
+      - name: 1a
+        title: 1a
+      - name: 1b
+        title: 1b
+      - name: 1c
+        title: 1c
+      - name: 2a
+        title: 2a
+      - name: 2b
+        title: 2b
+      - name: 2c
+        title: 2c
+      - name: 3a
+        title: 3a
+      - name: 3b
+        title: 3b
+      - name: 3c
+        title: 3c
+      default: none
 
 ...

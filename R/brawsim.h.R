@@ -202,7 +202,9 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             doProject3BhBtn = NULL,
             doProject3B1Btn = NULL,
             doProject3ChBtn = NULL,
-            doProject3C1Btn = NULL, ...) {
+            doProject3C1Btn = NULL,
+            doProject3C3Btn = NULL,
+            lastDemo = "none", ...) {
 
             super$initialize(
                 package="BrawStats",
@@ -1393,6 +1395,24 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..doProject3C1Btn <- jmvcore::OptionAction$new(
                 "doProject3C1Btn",
                 doProject3C1Btn)
+            private$..doProject3C3Btn <- jmvcore::OptionAction$new(
+                "doProject3C3Btn",
+                doProject3C3Btn)
+            private$..lastDemo <- jmvcore::OptionList$new(
+                "lastDemo",
+                lastDemo,
+                options=list(
+                    "none",
+                    "1a",
+                    "1b",
+                    "1c",
+                    "2a",
+                    "2b",
+                    "2c",
+                    "3a",
+                    "3b",
+                    "3c"),
+                default="none")
 
             self$.addOption(private$..demosHelp)
             self$.addOption(private$..demo1Help)
@@ -1594,6 +1614,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..doProject3B1Btn)
             self$.addOption(private$..doProject3ChBtn)
             self$.addOption(private$..doProject3C1Btn)
+            self$.addOption(private$..doProject3C3Btn)
+            self$.addOption(private$..lastDemo)
         }),
     active = list(
         demosHelp = function() private$..demosHelp$value,
@@ -1795,7 +1817,9 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         doProject3BhBtn = function() private$..doProject3BhBtn$value,
         doProject3B1Btn = function() private$..doProject3B1Btn$value,
         doProject3ChBtn = function() private$..doProject3ChBtn$value,
-        doProject3C1Btn = function() private$..doProject3C1Btn$value),
+        doProject3C1Btn = function() private$..doProject3C1Btn$value,
+        doProject3C3Btn = function() private$..doProject3C3Btn$value,
+        lastDemo = function() private$..lastDemo$value),
     private = list(
         ..demosHelp = NA,
         ..demo1Help = NA,
@@ -1996,7 +2020,9 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..doProject3BhBtn = NA,
         ..doProject3B1Btn = NA,
         ..doProject3ChBtn = NA,
-        ..doProject3C1Btn = NA)
+        ..doProject3C1Btn = NA,
+        ..doProject3C3Btn = NA,
+        ..lastDemo = NA)
 )
 
 BrawSimResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -2336,6 +2362,8 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param doProject3B1Btn .
 #' @param doProject3ChBtn .
 #' @param doProject3C1Btn .
+#' @param doProject3C3Btn .
+#' @param lastDemo .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$BrawStatsInstructions} \tab \tab \tab \tab \tab a html \cr
@@ -2547,7 +2575,9 @@ BrawSim <- function(
     doProject3BhBtn,
     doProject3B1Btn,
     doProject3ChBtn,
-    doProject3C1Btn) {
+    doProject3C1Btn,
+    doProject3C3Btn,
+    lastDemo = "none") {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("BrawSim requires jmvcore to be installed (restart may be required)")
@@ -2750,7 +2780,9 @@ BrawSim <- function(
         doProject3BhBtn = doProject3BhBtn,
         doProject3B1Btn = doProject3B1Btn,
         doProject3ChBtn = doProject3ChBtn,
-        doProject3C1Btn = doProject3C1Btn)
+        doProject3C1Btn = doProject3C1Btn,
+        doProject3C3Btn = doProject3C3Btn,
+        lastDemo = lastDemo)
 
     analysis <- BrawSimClass$new(
         options = options,

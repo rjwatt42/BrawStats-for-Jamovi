@@ -1156,7 +1156,7 @@ children:
                                             verticalAlignment: center
                                             children:
                                               - type: Label
-                                                label: 3. change the sampling method
+                                                label: '3. change the sample size & sampling method'
                                               - type: LayoutBox
                                                 style: inline
                                                 children:
@@ -1861,17 +1861,13 @@ children:
                                                   - type: Label
                                                     label: ' '
                                                     minWidth: 26
-                                          - type: LayoutBox
-                                            style: list
-                                            children:
-                                              - type: Label
-                                                label: ' '
-                                                margin: none
-                                                maxWidth: 79
-                                              - type: Label
-                                                label: ' '
-                                                margin: none
-                                                maxWidth: 79
+                                          - name: doProject3C3Btn
+                                            type: ActionButton
+                                            margin: none
+                                            maxWidth: 79
+                                            maxHeight: 24
+                                            events:
+                                              change: ./BrawSim.events::onChange_project3C3
                               - type: ActionButton
                                 name: doProject3ChBtn
                                 margin: none
@@ -3512,3 +3508,15 @@ children:
                   - type: CheckBox
                     name: autoShowHypothesis
                     minWidth: 100
+              - type: LayoutBox
+                style: inline
+                margin: none
+                children:
+                  - type: Label
+                    label: ' '
+                    minWidth: 13
+                  - type: Label
+                    label: ' '
+                    minWidth: 13
+                  - type: ComboBox
+                    name: lastDemo
