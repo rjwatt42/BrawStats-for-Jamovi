@@ -303,6 +303,7 @@ const events =  {
       if (BtnOn==true) {
         ui.doProject2sLstG.setValue("eq")
         ui.doProject2sLstC.setValue("Infer")
+        ui.doProject1sLstD.setValue("Random")
         demo2SetUp(ui,"n")
         ui.makeSampleBtn.setValue(true)
       }
@@ -313,6 +314,7 @@ const events =  {
       if (BtnOn==true) {
         ui.doProject2sLstG.setValue("eq")
         ui.doProject2sLstF.setValue("Basic")
+        ui.doProject1sLstD.setValue("Random")
         demo2SetUp(ui,"n")
         ui.makeMultipleBtn.setValue(true)
       }
