@@ -1735,7 +1735,7 @@ children:
                               - type: CollapseBox
                                 collapsed: true
                                 label: >-
-                                  c. Within-designs, making best use of
+                                  c. Within designs, making best use of
                                   participants
                                 margin: none
                                 minWidth: 400
