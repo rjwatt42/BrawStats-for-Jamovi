@@ -754,11 +754,13 @@ let demo3SetUp = function(ui,show) {
           ui.hypothesisExploreList.setValue("rIV")
           break;
        }
+       
        let variable10 = ui.doProject3sLstI.value()
-      ui.showExploreParam.setValue(variable10)
-      ui.numberExplores.setValue(20)
-      let variable11 = ui.doProject3sLstJ.value()
-      ui.SampleUsage1.setValue(variable11)
+        ui.showExploreParam.setValue(variable10)
+       let variable11 = ui.doProject3sLstK.value()
+        ui.numberExplores.setValue(variable11)
+       let variable12 = ui.doProject3sLstJ.value()
+        ui.SampleUsage1.setValue(variable12)
       
         if (show=="h") {
           ui.showHypothesisLst.setValue("Hypothesis")
@@ -854,6 +856,9 @@ let demo4SetUp = function(ui,show) {
           ui.hypothesisExploreList.setValue("rIVIV2")
           break;
        }
+
+       let variable10 = ui.doProject4sLstL.value()
+        ui.numberExplores.setValue(variable10)
 
         if (show=="h") {
           ui.showHypothesisLst.setValue("Hypothesis")

@@ -1277,6 +1277,20 @@ children:
                                 row: 3
                                 column: 2
                             - type: Label
+                              label: 'nsims:'
+                              margin: none
+                              horizontalAlignment: right
+                              cell:
+                                row: 3
+                                column: 3
+                            - type: TextBox
+                              name: doProject3sLstK
+                              format: number
+                              margin: none
+                              cell: 
+                                row: 3
+                                column: 4
+                            - type: Label
                               label: ''
                               minWidth: 100
                               minHeight: 25
@@ -1967,6 +1981,20 @@ children:
                               cell:
                                 row: 6
                                 column: 2
+                            - type: Label
+                              label: 'nsims:'
+                              margin: none
+                              horizontalAlignment: right
+                              cell:
+                                row: 6
+                                column: 3
+                            - type: TextBox
+                              name: doProject4sLstL
+                              format: number
+                              margin: none
+                              cell: 
+                                row: 6
+                                column: 4
                             - type: Label
                               label: ''
                               margin: none

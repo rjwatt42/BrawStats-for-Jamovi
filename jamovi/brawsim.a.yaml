@@ -1830,6 +1830,13 @@ options:
         title: 'r&#x209a;'
       default: n
 
+    - name: doProject3sLstK
+      title: ''
+      type: Number
+      default: 20
+      min: 10
+      max: 5000
+      
     - name: doProject3sLstI
       title: ''
       type: List
@@ -2034,6 +2041,13 @@ options:
       - name: Interaction
         title: 'rIV*IV2→DV'
       default: Covariation
+      
+    - name: doProject4sLstL
+      title: ''
+      type: Number
+      default: 20
+      min: 10
+      max: 5000
       
     - name: doProject4sLstK
       title: ''
