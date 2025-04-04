@@ -161,6 +161,8 @@ children:
                               cell:
                                 row: 0
                                 column: 2
+                              events:
+                                change: ./brawsim.events::onChange_Project1sH
                             - type: Label
                               label: ''
                               margin: none
@@ -677,6 +679,8 @@ children:
                               cell:
                                 row: 0
                                 column: 2
+                              events:
+                                change: ./brawsim.events::onChange_Project2sH
                             - type: Label
                               label: 'multiple:'
                               horizontalAlignment: right
@@ -690,6 +694,8 @@ children:
                               cell:
                                 row: 0
                                 column: 4
+                              events:
+                                change: ./brawsim.events::onChange_Project2sH
                             - type: Label
                               label: ''
                               margin: none
@@ -1263,6 +1269,8 @@ children:
                               cell:
                                 row: 2
                                 column: 5
+                              events:
+                                change: ./brawsim.events::onChange_Project3sH
                             - type: Label
                               label: 'explore:'
                               margin: none
@@ -1276,6 +1284,8 @@ children:
                               cell:
                                 row: 3
                                 column: 2
+                              events:
+                                change: ./brawsim.events::onChange_Project3sH
                             - type: Label
                               label: 'nsims:'
                               margin: none
@@ -1290,6 +1300,8 @@ children:
                               cell: 
                                 row: 3
                                 column: 4
+                              events:
+                                change: ./brawsim.events::onChange_Project3sH
                             - type: Label
                               label: ''
                               minWidth: 100
@@ -1317,6 +1329,8 @@ children:
                               cell:
                                 row: 0
                                 column: 2
+                              events:
+                                change: ./brawsim.events::onChange_Project3sH
                             - type: Label
                               label: 'multiple:'
                               margin: none
@@ -1330,6 +1344,8 @@ children:
                               cell:
                                 row: 0
                                 column: 4
+                              events:
+                                change: ./brawsim.events::onChange_Project3sH
                             - type: Label
                               label: 'explore:'
                               margin: none
@@ -1343,6 +1359,8 @@ children:
                               cell:
                                 row: 2
                                 column: 2
+                              events:
+                                change: ./brawsim.events::onChange_Project3sH
                             - type: Label
                               label: ' '
                               margin: none
@@ -2038,6 +2056,8 @@ children:
                               cell:
                                 row: 2
                                 column: 2
+                              events:
+                                change: ./brawsim.events::onChange_Project4sH
                             - type: Label
                               label: ' '
                               margin: none
