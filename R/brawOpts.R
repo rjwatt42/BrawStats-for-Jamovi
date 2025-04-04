@@ -5,6 +5,7 @@
 #   BrawOpts()
 # }
 
+#' @export
 newBrawDev<-function(fontScale=1,height=1000,aspect=1) {
   while (dev.cur()!=1) dev.off()
   if (Sys.info()[['sysname']]=="Darwin")
@@ -13,10 +14,11 @@ newBrawDev<-function(fontScale=1,height=1000,aspect=1) {
     dev.new(width=height*aspect/144, height=height/144, noRStudioGD = TRUE)
   fontScale<-min(dev.size(units="px"))/200/1.75
   assign("labelSize",3.2*fontScale,braw.env)
-  setBrawEnv("plotRect",coord_cartesian(xlim=c(0,1),ylim=c(-0.25,1.5)))
+  setBrawEnv("plotRect",ggplot2::coord_cartesian(xlim=c(0,1),ylim=c(-0.25,1.5)))
   print(startPlot(box="none",backC=braw.env$plotColours$graphC))
 }
 
+#' @export
 BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16,10),
                    reportHTML=FALSE, graphHTML=FALSE,
                    newDev=FALSE,height=400,aspect=1.3,autoShow=FALSE,timeLimit=Inf,fullGraphSize=1,
@@ -55,12 +57,13 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
                     designC="#CC4422",replicationC="#FF7755",
                     descriptionC1="#FF5533",descriptionC2="#CCBB33",
                     descriptionTotal=darken(desat("#DD8844",0.1),0.7),descriptionsUnique=darken(desat("#DD8844",0.1),1.3),
-                    metaAnalysis="#FFEE00",
+                    metaAnalysis="#FFEE00",metaMultiple="#FF8800",metaAnalysisTheory="#FFFFFF",
                     infer_sigC="#11CC00",infer_nsigC="#FF4400",infer_none="#AAAAAA",infer_miss=NULL,
                     infer_sigNonNull="#11CC00",infer_nsigNonNull="#AA6633",infer_isigNonNull="#881100",infer_nsdNonNull="#DDCCCC",
                     infer_sigNull="#88AA66",infer_nsigNull="#FF4400",infer_isigNull="#FF4400",infer_nsdNull="#CCDDCC",
                     psig="#FFAA00",alpha="#44FF22",
-                    fdr="#227700",fmr="#BB5555")
+                    fdr="#227700",fmr="#BB5555",
+                    powerPopulation="#0049FF",powerSample="#88BDFF")
 
   if (BW) {
     plotColours<-list(graphC="#FFFFFF",graphBack="#999999",
@@ -68,8 +71,8 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
                       populationC="#FFFFFF",sampleC="#FFFFFF",descriptionC="#FFFFFF",
                       designC="#444444",replicationC="#777777",
                       descriptionC1="#888888",descriptionC2="#111111",
-                      descriptionTotal=darken(desat("#DD8844",0.1),0.7),descriptionsUnique=darken(desat("#DD8844",0.1),1.3),
-                      metaAnalysis="#FFCC00",
+                      descriptionTotal=darken(desat("#FFFFFF",0.1),0.7),descriptionsUnique=darken(desat("#DD8844",0.1),1.3),
+                      metaAnalysis="#FFFFFF",metaAnalysisTheory="#FFFFFF",
                       infer_sigC="#FFFFFF",infer_nsigC="#111111",infer_none="#AAAAAA",
                       infer_sigNonNull="#FFFFFF",infer_isigNonNull="#555555",infer_nsigNonNull="#555555",infer_nsdNonNull="#333333",
                       infer_sigNull="#BBBBBB",infer_isigNull="#111111",infer_nsigNull="#FFFFFF",infer_nsdNull="#DDDDDD",
@@ -77,13 +80,13 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
                       fdr="#BBBBBB",fmr="#555555")
   }
   
-  mainTheme<-theme(panel.background = element_rect(fill=plotColours$graphBack, colour=plotColours$graphBack),
-                   panel.grid.major = element_line(linetype="blank"),panel.grid.minor = element_line(linetype="blank"),
-                   plot.background = element_rect(fill=plotColours$graphC, colour=plotColours$graphC))
-  SMplotTheme<-theme(plot.title=element_text(size=14,face="bold"),axis.title=element_text(size=16,face="bold"),
-                     axis.text.x=element_text(size=12),axis.text.y=element_text(size=12))
-  LGplotTheme<-theme(plot.title=element_text(size=21,face="bold"),axis.title=element_text(size=24,face="bold"),
-                     axis.text.x=element_text(size=18),axis.text.y=element_text(size=18))
+  mainTheme<-ggplot2::theme(panel.background = ggplot2::element_rect(fill=plotColours$graphBack, colour=plotColours$graphBack),
+                   panel.grid.major = ggplot2::element_line(linetype="blank"),panel.grid.minor = ggplot2::element_line(linetype="blank"),
+                   plot.background = ggplot2::element_rect(fill=plotColours$graphC, colour=plotColours$graphC))
+  SMplotTheme<-ggplot2::theme(plot.title=ggplot2::element_text(size=14,face="bold"),axis.title=ggplot2::element_text(size=16,face="bold"),
+                     axis.text.x=ggplot2::element_text(size=12),axis.text.y=ggplot2::element_text(size=12))
+  LGplotTheme<-ggplot2::theme(plot.title=ggplot2::element_text(size=21,face="bold"),axis.title=ggplot2::element_text(size=24,face="bold"),
+                     axis.text.x=ggplot2::element_text(size=18),axis.text.y=ggplot2::element_text(size=18))
   
   
   alphaSig<-0.05
@@ -94,16 +97,16 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
           braw.env$plotShapes<-list(data=21,study=22,parameter=21,meta=24)
           
           # braw.env$plotTheme<-mainTheme+SMplotTheme+theme(plot.margin=margin(1.0,1.5,0.5,0.5,"cm"))
-          # braw.env$diagramTheme<-mainTheme+SMplotTheme+theme(panel.background = element_rect(fill=plotColours$graphBack, colour=plotColours$graphBack),
+          # braw.env$diagramTheme<-mainTheme+SMplotTheme+theme(panel.background = ggplot2::element_rect(fill=plotColours$graphBack, colour=plotColours$graphBack),
           #                                                    panel.spacing=margin(0,0,0,0),plot.margin=margin(0.5,0.5,0.3,0.3,"cm"))
-          # braw.env$plainDiagramTheme<-mainTheme+SMplotTheme+theme(panel.background = element_rect(fill=plotColours$graphBack, colour=plotColours$graphBack),
+          # braw.env$plainDiagramTheme<-mainTheme+SMplotTheme+theme(panel.background = ggplot2::element_rect(fill=plotColours$graphBack, colour=plotColours$graphBack),
           #                                                         panel.spacing=margin(0,0,0,0),plot.margin=margin(0.5,0.5,0.3,-0.2,"cm"))
   braw.env$blankTheme<-function() {
-    theme(panel.background = element_rect(fill=plotColours$graphC, colour=plotColours$graphC),
+    ggplot2::theme(panel.background = ggplot2::element_rect(fill=plotColours$graphC, colour=plotColours$graphC),
           panel.spacing=margin(0,0,0,0,"cm"),plot.margin=margin(-0.2,-0.4,-0.2,-0.5,"cm"),
-          panel.grid.major = element_line(linetype="blank"),panel.grid.minor = element_line(linetype="blank"),
+          panel.grid.major = ggplot2::element_line(linetype="blank"),panel.grid.minor = ggplot2::element_line(linetype="blank"),
           legend.position = "none",
-                    plot.background = element_rect(fill=plotColours$graphC, colour=plotColours$graphC),
+                    plot.background = ggplot2::element_rect(fill=plotColours$graphC, colour=plotColours$graphC),
                          axis.title.x=element_blank(),
                          axis.text.x=element_blank(),
                          axis.ticks.x=element_blank(),
@@ -119,7 +122,10 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
           braw.env$dotSize<-braw.env$labelSize*1.25
           
           braw.env$autoShow<-autoShow
-          braw.env$plotRect<-coord_cartesian(xlim=c(0,1),ylim=c(0,1))
+          braw.env$plotRect<-ggplot2::coord_cartesian(xlim=c(0,1),ylim=c(0,1))
+          
+          braw.env$addHistory<-TRUE
+          braw.env$plotLimits<-c()
           
           ##########################
           # NHST constants
@@ -143,8 +149,9 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
           
           braw.env$RZ<-"r"
           
-          braw.env$z_range<-1.5
+          braw.env$z_range<-1.75
           braw.env$r_range<-0.99
+          braw.env$d_range<-5
           braw.env$w_range<-c(0.05,1)
           braw.env$fullRange<-3
           braw.env$nNpoints<-201
@@ -164,7 +171,7 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
           braw.env$allScatter<-TRUE
           braw.env$showMedians<-FALSE
           braw.env$minN<-10
-          braw.env$maxN<-250
+          braw.env$maxN<-2000
           braw.env$maxRandN<-5 # times mean sample size
           braw.env$reportGroupMeans<-TRUE
           braw.env$doLegendPoints<-FALSE
@@ -185,7 +192,7 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
           braw.env$showTheory<-TRUE
           
           braw.env$reducedOutput<-reducedOutput
-          
+
           ##################################
           # default variables
           
@@ -202,6 +209,8 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
           braw.env$rsLabel<-'r[s]'
           braw.env$zpLabel<-'z[p]'
           braw.env$zsLabel<-'z[s]'
+          braw.env$dpLabel<-'d[p]'
+          braw.env$dsLabel<-'d[s]'
           
           ###############################
           # notation for world

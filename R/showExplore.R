@@ -53,11 +53,12 @@ trimExploreResult<-function(result,nullresult) {
 #' @return ggplot2 object - and printed
 #' @examples
 #' showExplore(exploreResult=doExplore(),
-#'                        showType="Basic",
-#'                        effectType="unique",whichEffect="All")
+#'                        showType="Basic",dimension="1D",
+#'                        effectType="unique",whichEffect="All",
+#'                        quantileShow=0.5,autoYlim=TRUE,showHist=TRUE)
 #' @export
 showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension="1D",showTheory=FALSE,
-                      effectType="unique",whichEffect="All",quantileShow=0.5,autoYlim=TRUE){
+                      effectType="unique",whichEffect="All",quantileShow=0.5,autoYlim=TRUE,showHist=TRUE){
 
 # do we need more simulations  
   if (is.null(exploreResult)) exploreResult=doExplore()
@@ -82,15 +83,21 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
            "Power"=     {showType<-c("ws","wp")},
            "CILimits"=  {showType<-c("ci1","ci2")},
            "DV"= {showType<-c("dv.mn","dv.sd","dv.sk","dv.kt")},
-           "Residuals"= {showType<-c("rd.mn","rd.sd","rd.sk","rd.kt")},
+           "Residuals"= {showType<-c("er.mn","er.sd","er.sk","er.kt")},
            {}
     )
   }
   if (exploreResult$doingMetaAnalysis) 
     switch(exploreResult$metaAnalysis$analysisType,
-           "fixed"={showType<-c("LambdaF")},
-           "random"={showType<-c("LambdaF","LambdaR")},
-           {showType<-c("Lambda","pNull")}
+           "fixed"={
+             showType<-c("metaRiv")
+             if (exploreResult$metaAnalysis$analyseBias) showType<-c(showType,"metaBias")
+             },
+           "random"={
+             showType<-c("metaRiv","metaRsd")
+             if (exploreResult$metaAnalysis$analysisVar=="var") showType[2]<-"LambdaRn"
+               },
+           {showType<-c("Lambda")}
            )
     
   
@@ -106,13 +113,15 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
   showPower<-TRUE # show power calculations?
   
   oldAlpha<-braw.env$alphaSig
-  on.exit(braw.env$alphaSig<-oldAlpha)
-  
+  on.exit(setBrawEnv("alphaSig",oldAlpha),add=TRUE)
+
   vals<-exploreResult$vals
-  if (explore$exploreType=="rIV" && braw.env$RZ=="z") {
-    vals<-atanh(vals)
-  }
-  
+  if (explore$exploreType=="rIV")
+    switch(braw.env$RZ,
+           "r"={},
+           "z"={vals<-atanh(vals)}
+    )
+
   if (showType[1]=="SEM") whichEffect<-"Main 1"
   if (whichEffect=="All" && !evidence$rInteractionOn) whichEffect<-"Mains"
   if ((whichEffect=="All" || whichEffect=="Mains") && is.null(hypothesis$IV2)) whichEffect<-"Main 1"
@@ -212,6 +221,8 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
     xnames<-NULL
     doLine=TRUE
   }
+  if (showHist) doLine<-FALSE
+  if (!doLine)  quants<-0.95/2
   
   g<-NULL
   
@@ -464,15 +475,12 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
       switch (showType[si],
               "rs"={
                 showVals<-rVals
-                if (braw.env$RZ=="z") {showVals<-atanh(showVals)}
               },
               "rp"={
                 showVals<-rpVals
-                if (braw.env$RZ=="z") {showVals<-atanh(showVals)}
               },
               "re"={
                 showVals<-rVals-rpVals
-                if (braw.env$RZ=="z") {showVals<-atanh(showVals)}
               },
               "p"={
                 showVals<-pVals
@@ -554,10 +562,16 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
                 df1<-result$df1
                 showVals<-r2llr(rVals,ns,df1,"dLLR",evidence$llr,evidence$prior)
               },
-              "LambdaF"={
+              "metaBias"={
+                showVals<-result$param3
+              },
+              "metaRiv"={
                 showVals<-result$param1
               },
-              "LambdaR"={
+              "metaRsd"={
+                showVals<-result$param2
+              },
+              "LambdaRn"={
                 showVals<-result$param2
               },
               "Lambda"={
@@ -566,7 +580,7 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
               "pNull"={
                 showVals<-result$param2
               },
-              "S"={
+              "metaS"={
                 showVals<-result$S
               },
               
@@ -684,19 +698,25 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
               "dv.kt"={
                 showVals<-result$dv$kt
               },
-              "rd.mn"={
+              "er.mn"={
                 showVals<-result$rs$mn
               },
-              "rd.sd"={
+              "er.sd"={
                 showVals<-result$rs$sd
               },
-              "rd.sk"={
+              "er.sk"={
                 showVals<-result$rs$sk
               },
-              "rd.kt"={
+              "er.kt"={
                 showVals<-result$rs$kt
               }
       )
+      if (is.element(showType[si],c("rs","rp","re","ro","metaRiv","metaRsd"))) {
+        switch(braw.env$RZ,
+               "r"={},
+               "z"={showVals<-atanh(showVals)}
+               )
+      }
       if (!is.element(showType[si],c("NHST","SEM"))) {
         # draw the basic line and point data
         if (is.element(showType[si],c("p(sig)","Hits","Misses"))) {
@@ -713,13 +733,21 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
       }
       
       if (autoYlim) {
+        if (showHist) {
+          use_y<-c(showVals,theoryVals,theoryLower,theoryVals1,theoryVals0,theoryVals2)
+        } else {
+          use_y<-c(y25,y50,y75,theoryVals,theoryLower,theoryVals1,theoryVals0,theoryVals2)
+        }
+        use_y[is.infinite(use_y)]<-NA
         ylim<-c(
-          min(y25,y50,theoryVals,theoryLower,theoryVals1,theoryVals0,theoryVals2),
-          max(y75,y50,theoryVals,theoryUpper,theoryVals1,theoryVals0,theoryVals2)
+          min(use_y,na.rm=TRUE),
+          max(use_y,na.rm=TRUE)
               )
-        ylim<-ylim+c(-1,1)*diff(ylim)/4
+        if (diff(ylim)==0) ylim<-ylim+c(-1,1)*ylim/10
+        else               ylim<-ylim+c(-1,1)*diff(ylim)/10
       }
       # general start
+      if (effectType==effectTypes[1]) {
       g<-startPlot(xlim,ylim,
                    xticks=makeTicks(breaks=xbreaks,labels=xnames,logScale=explore$xlog),
                    xlabel=makeLabel(label=exploreTypeShow),
@@ -728,6 +756,8 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
                    ylabel=makeLabel(label=ylabel),
                    top=TRUE,g=g)
       if (nchar(useLabel)>0)    g<-addG(g,plotTitle(useLabel,size=1.5))
+      else g<-addG(g,plotTitle(paste0("n[sims]=",exploreResult$count),size=0.5,position = "right"))
+      }
       
       # theory plots
       if (!is.null(theoryVals)) {
@@ -927,8 +957,11 @@ showExplore<-function(exploreResult=braw.res$explore,showType="Basic",dimension=
     }
   }
     if (!is.null(hypothesis$IV2) && is.element(showType[si],c("rs","p"))) 
-      g<-addG(g,dataLegend(data.frame(names=c("direct","unique","total"),
-                                      colours=c(ycols[1],darken(desat(ycols[1],0.7),1.3),darken(desat(ycols[1],0.7),0.7))),
+      if (effectType=="all") use<-1:3
+      else use<-which(effectType==c("direct","unique","total"))
+      g<-addG(g,dataLegend(data.frame(names=c("direct","unique","total")[use],
+                                      colours=c(ycols[1],darken(desat(ycols[1],0.7),1.3),darken(desat(ycols[1],0.7),0.7))[use]
+                                      ),
                            title="",fontsize=1)
       )
   }
@@ -966,15 +999,12 @@ showExplore2D<-function(exploreResult=braw.res$explore,showType=c("rs","p"),show
   switch (showType[si],
           "rs"={
             showVals<-rVals
-            if (braw.env$RZ=="z") {showVals<-atanh(showVals)}
           },
           "rp"={
             showVals<-rpVals
-            if (braw.env$RZ=="z") {showVals<-atanh(showVals)}
           },
           "re"={
             showVals<-rVals-rpVals
-            if (braw.env$RZ=="z") {showVals<-atanh(showVals)}
           },
           "p"={
             showVals<-pVals
@@ -1007,6 +1037,13 @@ showExplore2D<-function(exploreResult=braw.res$explore,showType=c("rs","p"),show
             }
           }
   )
+    if (is.element(showType[si],c("rs","rp","re","ro","metaRiv","metaRsd"))) {
+      switch(braw.env$RZ,
+             "r"={},
+             "z"={showVals<-atanh(showVals)}
+      )
+    }
+    
     switch (si,
             xVals<-apply(showVals,2,median),
             yVals<-apply(showVals,2,median)

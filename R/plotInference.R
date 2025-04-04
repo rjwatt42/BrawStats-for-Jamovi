@@ -47,6 +47,11 @@ plotInference<-function(analysis,otheranalysis=NULL,disp="rs",orientation="vert"
           "ps"= {g<-ps_plot(analysis,disp,showTheory=showTheory,g=g)},
           "po"= {g<-p_plot(analysis,disp,orientation=orientation,whichEffect=whichEffect,effectType=effectType,showTheory=showTheory,g=g)},
           
+          "metaRiv"={g<-r_plot(analysis,disp,orientation=orientation,showTheory=showTheory,g=g)},
+          "metaRsd"={g<-r_plot(analysis,disp,orientation=orientation,showTheory=showTheory,g=g)},
+          "metaBias"={g<-r_plot(analysis,disp,orientation=orientation,showTheory=showTheory,g=g)},
+          "metaS"={g<-r_plot(analysis,disp,orientation=orientation,showTheory=showTheory,g=g)},
+          
           "llknull"={g<-r_plot(analysis,disp,orientation=orientation,showTheory=showTheory,g=g)},
           "AIC"={g<-aic_plot(analysis,disp,showTheory=showTheory,g=g)},
           "SEM"={g<-sem_plot(analysis,disp,showTheory=showTheory,g=g)},
@@ -64,6 +69,10 @@ plotInference<-function(analysis,otheranalysis=NULL,disp="rs",orientation="vert"
           "rss"= {g<-r_plot(analysis,disp,orientation=orientation,whichEffect=whichEffect,effectType=effectType,showTheory=showTheory,g=g)},
           "e1r"={g<-e1_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
           "e2r"={g<-e2_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
+          "e1+"={g<-e1_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
+          "e2+"={g<-e2_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
+          "e1-"={g<-e1_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
+          "e2-"={g<-e2_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
           "ps1"= {g<-ps_plot(analysis,disp,showTheory=showTheory,g=g)},
           "e1p"={g<-e1_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
           "e2p"={g<-e2_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
@@ -82,10 +91,10 @@ plotInference<-function(analysis,otheranalysis=NULL,disp="rs",orientation="vert"
           "dv.sk"={g<-var_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
           "dv.kt"={g<-var_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
           
-          "rd.mn"={g<-var_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
-          "rd.sd"={g<-var_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
-          "rd.sk"={g<-var_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
-          "rd.kt"={g<-var_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)}
+          "er.mn"={g<-var_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
+          "er.sd"={g<-var_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
+          "er.sk"={g<-var_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)},
+          "er.kt"={g<-var_plot(analysis,disp,otheranalysis,orientation=orientation,showTheory=showTheory,g=g)}
   )
   return(g)
 }
@@ -108,7 +117,6 @@ plot2Inference<-function(analysis,disp1,disp2,metaPlot=FALSE){
   switch (disp1,
           "rs"={
             d1<-analysis$rIV
-            if (braw.env$RZ=="z") d1<-atanh(d1)
           },
           "p"={
             d1<-analysis$pIV
@@ -116,15 +124,12 @@ plot2Inference<-function(analysis,disp1,disp2,metaPlot=FALSE){
             },
           "rp"={
             d1<-analysis$rpIV
-            if (braw.env$RZ=="z") d1<-atanh(d1)
           },
           "re"={
             d1<-analysis$rIV-analysis$rpIV
-            if (braw.env$RZ=="z") d1<-atanh(analysis$rIV)-atanh(analysis$rpIV)
           },
           "ro"={
             d1<-analysis$roIV
-            if (braw.env$RZ=="z") d1<-atanh(d1)
           },
           "po"={
             d1<-analysis$poIV
@@ -137,6 +142,18 @@ plot2Inference<-function(analysis,disp1,disp2,metaPlot=FALSE){
           "no"={
             d1<-analysis$noval
             if (braw.env$nPlotScale=="log10") d1<-log10(d1)
+          },
+          "metaRiv"={
+            d1<-analysis$bestParam1
+          },
+          "metaRsd"={
+            d1<-analysis$bestParam2
+          },
+          "metaBias"={
+            d1<-analysis$bestParam3
+          },
+          "metaS"={
+            d1<-analysis$bestS
           },
           "llknull"=d1<-(-0.5*(analysis$aic-analysis$aicNull)),
           "sLLR"=d1<-res2llr(analysis,"sLLR"),
@@ -155,10 +172,15 @@ plot2Inference<-function(analysis,disp1,disp2,metaPlot=FALSE){
             if (braw.env$wPlotScale=="log10") d1<-log10(d1)
           }
   )
+  if (is.element(disp1,c("rs","rp","re","ro","metaRiv","metaRsd")))
+    switch(braw.env$RZ,
+           "r"={},
+           "z"={d1<-atanh(d1)}
+           )
+
   switch (disp2,
           "rs"={
             d2<-analysis$rIV
-            if (braw.env$RZ=="z") d2<-atanh(d2)
           },
           "p"={
             d2<-analysis$pIV
@@ -166,15 +188,12 @@ plot2Inference<-function(analysis,disp1,disp2,metaPlot=FALSE){
           },
           "rp"={
             d2<-analysis$rpIV
-            if (braw.env$RZ=="z") d2<-atanh(d2)
           },
           "re"={
             d2<-analysis$rIV-analysis$rpIV
-            if (braw.env$RZ=="z") d2<-atanh(analysis$rIV)-atanh(analysis$rpIV)
           },
           "ro"={
             d2<-analysis$roIV
-            if (braw.env$RZ=="z") d2<-atanh(d2)
           },
           "po"={
             d2<-analysis$poIV
@@ -187,6 +206,18 @@ plot2Inference<-function(analysis,disp1,disp2,metaPlot=FALSE){
           "no"={
             d2<-analysis$noval
             if (braw.env$nPlotScale=="log10") d2<-log10(d2)
+          },
+          "metaRiv"={
+            d2<-analysis$bestParam1
+          },
+          "metaRsd"={
+            d2<-analysis$bestParam2
+          },
+          "metaBias"={
+            d2<-analysis$bestParam3
+          },
+          "metaS"={
+            d2<-analysis$bestS
           },
           "llknull"=d2<-(-0.5*(analysis$aic-analysis$aicNull)),
           "sLLR"=d2<-res2llr(analysis,"sLLR"),
@@ -205,6 +236,11 @@ plot2Inference<-function(analysis,disp1,disp2,metaPlot=FALSE){
             if (braw.env$wPlotScale=="log10") d2<-log10(d2)
           }
   )
+  if (is.element(disp2,c("rs","rp","re","ro","metaRiv","metaRsd")))
+    switch(braw.env$RZ,
+           "r"={},
+           "z"={d2<-atanh(d2)}
+    )
   
   pts<-data.frame(x=d1,y=d2)
   braw.env$plotArea<-c(0,0,1,1)
@@ -236,20 +272,19 @@ plot2Inference<-function(analysis,disp1,disp2,metaPlot=FALSE){
     c1=braw.env$plotColours$descriptionC
     c2=braw.env$plotColours$descriptionC
   }
-  if (length(d1)<=200) {
-    use<-!isSignificant(braw.env$STMethod,pvals,rvals,nvals,df1vals,analysis$evidence)
-    pts1=pts[use,]
-    g<-addG(g,dataPoint(data=pts1,shape=braw.env$plotShapes$study, colour = "black", fill = c2, size = dotSize))
-    pts2=pts[!use,]
-    g<-addG(g,dataPoint(data=pts2,shape=braw.env$plotShapes$study, colour = "black", fill = c1, size = dotSize))
-  } else {
-    gain<-(length(d1)-200)/500
-    dotSize<-dotSize/(1+gain)
-    use<-!isSignificant(braw.env$STMethod,pvals,rvals,nvals,df1vals,analysis$evidence)
-    pts1=pts[use,]
-    g<-addG(g,dataPoint(data=pts1,shape=braw.env$plotShapes$study, colour = darken(c2,off=-1+min(3,gain)/3), fill = c2, size = dotSize))
-    pts2=pts[!use,]
-    g<-addG(g,dataPoint(data=pts2,shape=braw.env$plotShapes$study, colour = darken(c1,off=-1+min(3,gain)/3), fill = c1, size = dotSize))
+  
+  shape<-braw.env$plotShapes$study
+  if (length(d1)<=200) gain<-0 else gain<-(length(d1)-200)/500
+  use<-!isSignificant(braw.env$STMethod,pvals,rvals,nvals,df1vals,analysis$evidence)
+  if (length(use)==0) { 
+    use<-rep(FALSE,length(d1))
+    shape<-braw.env$plotShapes$meta
   }
+  dotSize<-dotSize/(1+gain)
+  pts1=pts[use,]
+  g<-addG(g,dataPoint(data=pts1,shape=shape, colour = "black", fill = c2, size = dotSize))
+  pts2=pts[!use,]
+  g<-addG(g,dataPoint(data=pts2,shape=shape, colour = "black", fill = c1, size = dotSize))
+  
   return(g)
 }

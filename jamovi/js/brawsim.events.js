@@ -1,6 +1,28 @@
 const events =  {
-
     // in here is where the event functions go
+
+    onChange_effectSize: function() {
+      let rIV = ui.EffectSize1.value()
+      let rIV2 = ui.EffectSize2.value()
+      let rIVIV2 = ui.EffectSize3.value()
+      let rIVIV2DV = ui.EffectSize12.value()
+      // check effect sizes 
+      let fullES = rIV^2+rIV2^2+2*rIV*rIV2*rIVIV2+rIVIV2DV^2
+      if (fullES>=1) {
+        while (fullES>=1) {
+          rIV = rIV*0.9
+          rIV2 = rIV2*0.9
+          rIVIV2 = rIVIV2*0.9
+          rIVIV2DV = rIVIV2DV*0.9
+          fullES = rIV^2+rIV2^2+2*rIV*rIV2*rIVIV2+rIVIV2DV^2
+        }
+      ui.EffectSize1.setValue(rIV)
+      ui.EffectSize2.setValue(rIV2)
+      ui.EffectSize3.setValue(rIVIV2)
+      ui.EffectSize12.setValue(rIVIV2DV)
+      }
+    },
+    
     onChange_exploreMode: function(ui) {
       var newRange = {min:0.3,max:0.7,xlog:false,np:8};
       let mode = ui.exploreMode.value();
@@ -142,7 +164,14 @@ const events =  {
           ui.WorldNullP.setValue(0.75);
           ui.SampleSpreadOn.setValue(true);
           ui.SampleSizeM.setValue(52);
-          ui.SampleGamma.setValue(1.56);
+          ui.SampleSD.setValue(33.3);
+          break;
+        case "uniform":
+          ui.WorldOn.setValue(true);
+          ui.WorldPDF.setValue("Uniform");
+          ui.WorldRZ.setValue("r");
+          ui.WorldLambda.setValue(0.3);
+          ui.WorldNullP.setValue(0.0);
           break;
         case "simple":
           ui.WorldOn.setValue(true);
@@ -183,6 +212,11 @@ const events =  {
         demo3SetUp(ui,"h")
     },
     
+    onChange_Project4sH: function(ui) {
+        demo4SetUp(ui,"h")
+    },
+    
+
     onChange_Project1As: function(ui) {
       let BtnOn1 = ui.doProject1AsBtn.value();
       let BtnOn2A = ui.doProject2AsBtn.value();
@@ -220,7 +254,7 @@ const events =  {
       let BtnOn = ui.doProject1A1Btn.value();
       if (BtnOn==true) {
         demo1Defaults(ui,"1a")
-        ui.doProject1sLstC.setValue("Compact")
+        ui.doProject1sLstC.setValue("Basic")
         demo1SetUp(ui,"n")
         ui.makeSampleBtn.setValue(true)
       }
@@ -366,306 +400,82 @@ const events =  {
       }
     },
     
-    onChange_project4As: function(ui) {
-      let BtnOn = ui.doProject4AsBtn.value();
-      if (BtnOn==true) {
-      let hyp = ui.doProject4AsLst.value();
-      defaultSetUp(ui)
-      ui.presetIV2.setValue("IV2");
-      ui.interaction.setValue("yes");
-      switch(hyp) {
-        case "iii": 
-          ui.DVtype.setValue("Interval"); 
-          ui.IVtype.setValue("Interval"); 
-          ui.IV2type.setValue("Interval"); 
-        break;
-        case "ici": 
-          ui.DVtype.setValue("Interval"); 
-          ui.IVtype.setValue("Categorical"); 
-          ui.IV2type.setValue("Interval"); 
-        break;
-        case "iic": 
-          ui.DVtype.setValue("Interval"); 
-          ui.IVtype.setValue("Interval"); 
-          ui.IV2type.setValue("Categorical"); 
-        break;
-        case "icc": 
-          ui.DVtype.setValue("Interval"); 
-          ui.IVtype.setValue("Categorical"); 
-          ui.IV2type.setValue("Categorical"); 
-        break;
-      }
-      ui.EffectSize1.setValue(0.0)
-      ui.EffectSize2.setValue(0.0)
-      ui.EffectSize3.setValue(0.0)
-      ui.SampleSize.setValue(1000)
-      ui.showHypothesisBtn.setValue(true)
-      }
-    },
-    
     onChange_project4A1: function(ui) {
       let BtnOn = ui.doProject4A1Btn.value();
       if (BtnOn==true) {
-      let rVal = ui.doProject4A1Lst.value();
-      switch(rVal) {
-        case "r00": ui.EffectSize1.setValue(0.0); break;
-        case "r01": ui.EffectSize1.setValue(0.1); break;
-        case "r02": ui.EffectSize1.setValue(0.2); break;
-        case "r03": ui.EffectSize1.setValue(0.3); break;
-        case "r05": ui.EffectSize1.setValue(0.5); break;
-        case "r06": ui.EffectSize1.setValue(0.6); break;
-      }
-      ui.EffectSize2.setValue(0.0)
-      ui.EffectSize12.setValue(0.0)
-        ui.showSampleType.setValue("Describe")
-      ui.makeSampleBtn.setValue(true)
-      }
-    },
-    
-    onChange_project4A2: function(ui) {
-      let BtnOn = ui.doProject4A2Btn.value();
-      if (BtnOn==true) {
-      let rVal = ui.doProject4A2Lst.value();
-      switch(rVal) {
-        case "r00": ui.EffectSize2.setValue(0.0); break;
-        case "r01": ui.EffectSize2.setValue(0.1); break;
-        case "r02": ui.EffectSize2.setValue(0.2); break;
-        case "r03": ui.EffectSize2.setValue(0.3); break;
-        case "r05": ui.EffectSize2.setValue(0.5); break;
-        case "r06": ui.EffectSize2.setValue(0.6); break;
-      }
-      ui.EffectSize1.setValue(0.0)
-      ui.EffectSize12.setValue(0.0)
-        ui.showSampleType.setValue("Describe")
-      ui.makeSampleBtn.setValue(true)
-      }
-    },
-    
-    onChange_project4A3: function(ui) {
-      let BtnOn = ui.doProject4A3Btn.value();
-      if (BtnOn==true) {
-      let rVal = ui.doProject4A3Lst.value();
-      switch(rVal) {
-        case "r00": ui.EffectSize12.setValue(0.0); break;
-        case "r01": ui.EffectSize12.setValue(0.1); break;
-        case "r02": ui.EffectSize12.setValue(0.2); break;
-        case "r03": ui.EffectSize12.setValue(0.3); break;
-        case "r05": ui.EffectSize12.setValue(0.5); break;
-        case "r075": ui.EffectSize12.setValue(0.75); break;
-      }
-      ui.EffectSize1.setValue(0.0)
-      ui.EffectSize2.setValue(0.0)
-        ui.showSampleType.setValue("Describe")
-      ui.makeSampleBtn.setValue(true)
-      }
-    },
-    
-    onChange_project4A4: function(ui) {
-      let BtnOn = ui.doProject4A4Btn.value();
-      if (BtnOn==true) {
-      let rVal1 = ui.doProject4A1Lst.value();
-      switch(rVal1) {
-        case "r00": ui.EffectSize1.setValue(0.0); break;
-        case "r01": ui.EffectSize1.setValue(0.1); break;
-        case "r02": ui.EffectSize1.setValue(0.2); break;
-        case "r03": ui.EffectSize1.setValue(0.3); break;
-        case "r05": ui.EffectSize1.setValue(0.5); break;
-        case "r075": ui.EffectSize1.setValue(0.75); break;
-      }
-      let rVal2 = ui.doProject4A2Lst.value();
-      switch(rVal2) {
-        case "r00": ui.EffectSize2.setValue(0.0); break;
-        case "r01": ui.EffectSize2.setValue(0.1); break;
-        case "r02": ui.EffectSize2.setValue(0.2); break;
-        case "r03": ui.EffectSize2.setValue(0.3); break;
-        case "r05": ui.EffectSize2.setValue(0.5); break;
-        case "r075": ui.EffectSize2.setValue(0.75); break;
-      }
-      let rVal12 = ui.doProject4A3Lst.value();
-      switch(rVal12) {
-        case "r00": ui.EffectSize12.setValue(0.0); break;
-        case "r01": ui.EffectSize12.setValue(0.1); break;
-        case "r02": ui.EffectSize12.setValue(0.2); break;
-        case "r03": ui.EffectSize12.setValue(0.3); break;
-        case "r05": ui.EffectSize12.setValue(0.5); break;
-        case "r075": ui.EffectSize12.setValue(0.75); break;
-      }
-        ui.showSampleType.setValue("Describe")
-      ui.makeSampleBtn.setValue(true)
+        demo4Defaults(ui,"4a")
+        demo4SetUp(ui,"n")
+        ui.makeSampleBtn.setValue(true)
       }
     },
 
-    onChange_project4Bs: function(ui) {
-      let BtnOn = ui.doProject4BsBtn.value();
+    onChange_project4A2: function(ui) {
+      let BtnOn = ui.doProject4A2Btn.value();
       if (BtnOn==true) {
-      let hyp = ui.doProject4BsLst.value();
-      defaultSetUp(ui)
-      ui.presetIV2.setValue("IV2");
-      ui.EffectConfig.setValue("normal")
-      ui.interaction.setValue("yes");
-      switch(hyp) {
-        case "iii": 
-          ui.DVtype.setValue("Interval"); 
-          ui.IVtype.setValue("Interval"); 
-          ui.IV2type.setValue("Interval"); 
-        break;
-        case "ici": 
-          ui.DVtype.setValue("Interval"); 
-          ui.IVtype.setValue("Categorical"); 
-          ui.IV2type.setValue("Interval"); 
-        break;
-        case "iic": 
-          ui.DVtype.setValue("Interval"); 
-          ui.IVtype.setValue("Interval"); 
-          ui.IV2type.setValue("Categorical"); 
-        break;
-        case "icc": 
-          ui.DVtype.setValue("Interval"); 
-          ui.IVtype.setValue("Categorical"); 
-          ui.IV2type.setValue("Categorical"); 
-        break;
-      }
-      ui.EffectSize1.setValue(0.0)
-      ui.EffectSize2.setValue(0.0)
-      ui.EffectSize12.setValue(0.0)
-      ui.SampleSize.setValue(1000)
-      ui.showHypothesisBtn.setValue(true)
       }
     },
     
     onChange_project4B1: function(ui) {
       let BtnOn = ui.doProject4B1Btn.value();
       if (BtnOn==true) {
-      let rVal = ui.doProject4B1Lst.value();
-      switch(rVal) {
-        case "r00": 
-          ui.EffectSize1.setValue(0.0); 
-          ui.EffectSize12.setValue(0.0); 
-          break;
-        case "r01": 
-          ui.EffectSize1.setValue(0.1); 
-          ui.EffectSize12.setValue(0.1); 
-          break;
-        case "r02": 
-          ui.EffectSize1.setValue(0.2); 
-          ui.EffectSize12.setValue(0.2); 
-          break;
-        case "r03": 
-          ui.EffectSize1.setValue(0.3); 
-          ui.EffectSize12.setValue(0.3); 
-          break;
-        case "r05": 
-          ui.EffectSize1.setValue(0.5); 
-          ui.EffectSize12.setValue(0.5); 
-          break;
-        case "r075": 
-          ui.EffectSize1.setValue(0.75); 
-          ui.EffectSize12.setValue(0.75); 
-          break;
-      }
-      ui.EffectSize2.setValue(0.0)
-        ui.showSampleType.setValue("Describe")
-      ui.makeSampleBtn.setValue(true)
+        demo4Defaults(ui,"4b")
+        demo4SetUp(ui,"n")
+        ui.showSampleType.setValue("Basic")
+        ui.makeSampleBtn.setValue(true)
       }
     },
     
     onChange_project4B2: function(ui) {
       let BtnOn = ui.doProject4B2Btn.value();
       if (BtnOn==true) {
-      let rVal = ui.doProject4B2Lst.value();
-      switch(rVal) {
-        case "r00": 
-          ui.EffectSize12.setValue(0.0); 
-          break;
-        case "r01": 
-          ui.EffectSize12.setValue(0.1); 
-          break;
-        case "r02": 
-          ui.EffectSize12.setValue(0.2); 
-          break;
-        case "r03": 
-          ui.EffectSize12.setValue(0.3); 
-          break;
-        case "r05": 
-          ui.EffectSize12.setValue(0.5); 
-          break;
-        case "r075": 
-          ui.EffectSize12.setValue(0.75); 
-          break;
-      }
-          ui.EffectSize1.setValue(0.0); 
-      ui.EffectSize2.setValue(0.0)
-        ui.showSampleType.setValue("Describe")
-      ui.makeSampleBtn.setValue(true)
+        demo4Defaults(ui,"4b")
+        let val = ui.doProject4sLstF.value()
+        ui.doProject4sLstB.setValue(val);
+        ui.doProject4sLstC.setValue(val);
+        demo4SetUp(ui,"n")
+        ui.makeSampleBtn.setValue(true)
       }
     },
 
-    onChange_Project4Cs: function(ui) {
-      let BtnOn = ui.doProject4CsBtn.value();
+    onChange_project4B3: function(ui) {
+      let BtnOn = ui.doProject4B3Btn.value();
       if (BtnOn==true) {
-      defaultSetUp(ui)
-      ui.presetDV.setValue("ExamGrade");
-      ui.presetIV.setValue("Perfectionism");
-      ui.presetIV2.setValue("Anxiety");
-      ui.interaction.setValue("no");
-      ui.EffectSize1.setValue(0.3)
-      ui.EffectSize2.setValue(-0.5)
-      ui.EffectSize3.setValue(0.6)
-      ui.SampleSize.setValue(1000)
-      ui.showHypothesisBtn.setValue(true)
+        demo4Defaults(ui,"4b")
+        ui.doProject4sLstB.setValue(0.0);
+        ui.doProject4sLstC.setValue(0.0);
+        demo4SetUp(ui,"n")
+        ui.makeSampleBtn.setValue(true)
       }
     },
-    
+
     onChange_project4C1: function(ui) {
       let BtnOn = ui.doProject4C1Btn.value();
       if (BtnOn==true) {
-        ui.showSampleType.setValue("Describe")
-      ui.makeSampleBtn.setValue(true)
+        demo4Defaults(ui,"4c")
+        demo4SetUp(ui,"n")
+        ui.makeSampleBtn.setValue(true)
       }
     },
     
     onChange_project4C2: function(ui) {
       let BtnOn = ui.doProject4C2Btn.value();
       if (BtnOn==true) {
-      let rVal = ui.doProject4C2Lst.value();
-      switch(rVal) {
-        case "r00": 
-          ui.EffectSize3.setValue(0.0); 
-          break;
-        case "r01": 
-          ui.EffectSize3.setValue(0.1); 
-          break;
-        case "r02": 
-          ui.EffectSize3.setValue(0.2); 
-          break;
-        case "r03": 
-          ui.EffectSize3.setValue(0.3); 
-          break;
-        case "r05": 
-          ui.EffectSize3.setValue(0.5); 
-          break;
-        case "r075": 
-          ui.EffectSize3.setValue(0.75); 
-          break;
-      }
-        ui.showSampleType.setValue("Describe")
-      ui.makeSampleBtn.setValue(true)
+        demo4Defaults(ui,"4c")
+        demo4SetUp(ui,"n")
+        ui.makeMultipleBtn.setValue(true)
       }
     },
-    
+
     onChange_project4C3: function(ui) {
       let BtnOn = ui.doProject4C3Btn.value();
       if (BtnOn==true) {
-        ui.SampleSize.setValue(42)
-        ui.whichShowMultiple.setValue("all")
-        ui.exploreMode.setValue("hypothesisExplore")
-        ui.hypothesisExploreList.setValue("rIVIV2")
-        ui.showExploreParam.setValue("Single")
-      ui.makeExploreBtn.setValue(true)
+        demo4Defaults(ui,"4c")
+        demo4SetUp(ui,"n")
+        ui.makeExploreBtn.setValue(true)
       }
     },
-    
-    
+
+
     onChange_Project5As: function(ui) {
       let BtnOn = ui.doProject5AsBtn.value();
       if (BtnOn==true) {
@@ -679,7 +489,7 @@ const events =  {
       ui.EffectSize3.setValue(0.7)
       ui.interaction.setValue("no");
       ui.EffectConfig.setValue("path")
-      ui.showHypothesisBtn.setValue(true)
+      ui.showHypothesisLst.setValue("Hypothesis")
       }
     },
     
@@ -799,11 +609,9 @@ let demo1SetUp = function(ui,show) {
         ui.SampleUsage1.setValue('Between');
 
         if (show=="h") {
-            let as = ui.autoShowHypothesis.value()
-            if (as) {ui.showHypothesisBtn.setValue(true)}
+          ui.showHypothesisLst.setValue("Hypothesis")
         }
     }
-    
     
 let demo2Defaults = function(ui,thisDemo) {
   let variable1 = ui.lastDemo.value();
@@ -859,8 +667,7 @@ let demo2SetUp = function(ui,show) {
           break;
       }
         if (show=="h") {
-            let as = ui.autoShowHypothesis.value()
-            if (as) {ui.showHypothesisBtn.setValue(true)}
+            ui.showHypothesisLst.setValue("Hypothesis")
         }
 
     }
@@ -954,8 +761,102 @@ let demo3SetUp = function(ui,show) {
       ui.SampleUsage1.setValue(variable11)
       
         if (show=="h") {
-            let as = ui.autoShowHypothesis.value()
-            if (as) {ui.showHypothesisBtn.setValue(true)}
+          ui.showHypothesisLst.setValue("Hypothesis")
+        }
+    }
+
+
+let demo4Defaults = function(ui,thisDemo) {
+  let variable1 = ui.lastDemo.value();
+  if (variable1!=thisDemo) {
+        ui.doProject4sLst.setValue("ExamGrade")
+        ui.doProject4sLstB.setValue(0.1);
+        ui.doProject4sLstC.setValue(0.2);
+        ui.doProject4sLstD.setValue(0.0);
+        ui.doProject4sLstG.setValue("Basic")
+        ui.doProject4sLstK.setValue(200);
+        if (thisDemo=="4a") {
+              ui.doProject4sLstA1.setValue("Perfectionism")
+              ui.doProject4sLstA2.setValue("Anxiety")
+              ui.doProject4sLstE.setValue("no");
+        }
+        if (thisDemo=="4b") {
+              ui.doProject4sLstA1.setValue("RiskTaker")
+              ui.doProject4sLstA2.setValue("Smoker")
+              ui.doProject4sLstE.setValue("yes");
+              ui.doProject4sLstF.setValue(0.3);
+        }
+        if (thisDemo=="4c") {
+              ui.doProject4sLstA1.setValue("Perfectionism")
+              ui.doProject4sLstA2.setValue("Anxiety")
+              ui.doProject4sLstE.setValue("no");
+              ui.doProject4sLstD.setValue(0.8);
+        }
+  }
+  ui.lastDemo.setValue(thisDemo)
+}
+
+let demo4SetUp = function(ui,show) {
+//        defaultSetUp(ui)    
+        let variable1 = ui.doProject4sLstA1.value();
+        variable1 = variable1.replace("?","")
+        ui.presetIV.setValue(variable1)
+        let variable1a = ui.doProject4sLstA2.value();
+        variable1a = variable1a.replace("?","")
+        ui.presetIV2.setValue(variable1a)
+        let variable1b = ui.doProject4sLst.value();
+        variable1b = variable1b.replace("?","")
+        ui.presetDV.setValue(variable1b)
+        
+        let variable2 = ui.doProject4sLstB.value();
+        if (variable2>0.95) {variable2 = 0.95;}
+        if (variable2< -0.95) {variable2 = -0.95;}
+        ui.EffectSize1.setValue(variable2);
+        
+        let variable3 = ui.doProject4sLstC.value();
+        if (variable3>0.95) {variable3 = 0.95;}
+        if (variable3< -0.95) {variable3 = -0.95;}
+        ui.EffectSize2.setValue(variable3);
+        
+        let variable4 = ui.doProject4sLstD.value();
+        if (variable4>0.95) {variable4 = 0.95;}
+        if (variable4< -0.95) {variable4 = -0.95;}
+        ui.EffectSize3.setValue(variable4);
+        
+        let variable5 = ui.doProject4sLstE.value();
+        ui.interaction.setValue(variable5)
+        if (variable5=="yes") {
+        let variable6 = ui.doProject4sLstF.value();
+        ui.EffectSize12.setValue(variable6)
+        }
+        
+        let variable7 = ui.doProject4sLstK.value();
+        ui.SampleSize.setValue(variable7)
+
+        ui.showMultipleParam.setValue("Single")
+        ui.showExploreParam.setValue("Single")
+        
+        let variable8 = ui.doProject4sLstI.value();
+        ui.whichShowMultiple.setValue(variable8)
+
+       let variable9 = ui.doProject4sLstJ.value()
+       switch (variable9) {
+         case "EffectSize":
+          ui.exploreMode.setValue("hypothesisExplore")
+          ui.hypothesisExploreList.setValue("rIV")
+          break;
+         case "Interaction":
+          ui.exploreMode.setValue("hypothesisExplore")
+          ui.hypothesisExploreList.setValue("rIVIV2DV")
+          break;
+         case "Covariation":
+          ui.exploreMode.setValue("hypothesisExplore")
+          ui.hypothesisExploreList.setValue("rIVIV2")
+          break;
+       }
+
+        if (show=="h") {
+          ui.showHypothesisLst.setValue("Hypothesis")
         }
     }
 
@@ -1145,8 +1046,8 @@ let makeRange = function(min,max,xlog,np) {
         case "ClusterRad":
              var range={min:0,max:1,xlog:false,np:13};
           break;
-        case "SampleGamma":
-             var range={min:1,max:10,xlog:false,np:13};
+        case "SampleSD":
+             var range={min:1,max:100,xlog:true,np:13};
           break;
         case "IVType":
              var range={min:"",max:"",xlog:false,np:5};

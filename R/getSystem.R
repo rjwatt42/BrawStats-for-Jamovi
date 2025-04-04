@@ -3,7 +3,7 @@
 #' @param name  "Psych","PsychF"
 #' @returns world object
 #' @examples
-#' world<-getWorld(name
+#' world<-getWorld(name)
 #' @export
 getWorld<-function(name) {
   switch(name,         
@@ -13,6 +13,13 @@ getWorld<-function(name) {
                        populationRZ="z",
                        populationPDFk=0,
                        populationNullp=0)
+         },
+         "Uniform"={
+           world<-list(worldOn=TRUE,
+                       populationPDF="Uniform",
+                       populationRZ="r",
+                       populationPDFk=0.3,
+                       populationNullp=0.0)
          },
          "Single"={
            world<-list(worldOn=TRUE,
@@ -172,7 +179,7 @@ getDesign<-function(name,design=braw.def$design) {
          "Psych"={
            design$sN<-52
            design$sNRand<-TRUE
-           design$sNRandK<-1.56
+           design$sNRandSD<-33
          },
          "Within"={
            design$sIV1Use<-"Within"

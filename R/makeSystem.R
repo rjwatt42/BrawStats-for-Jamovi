@@ -15,8 +15,11 @@
 #' )
 #' @export
 makeWorld<-function(worldOn=FALSE,populationPDF="Single",populationRZ="r",
-                    populationPDFk=0.0,populationNullp=0,worldAbs=FALSE) {
- world<-list(worldOn=worldOn,populationPDF=populationPDF,populationPDFk=populationPDFk,populationRZ=populationRZ,populationNullp=populationNullp,worldAbs=worldAbs)
+                    populationPDFk=0.0,populationPDFmu=0.0,populationNullp=0,
+                    sigOnly=FALSE,worldAbs=FALSE) {
+ world<-list(worldOn=worldOn,
+             populationPDF=populationPDF,populationPDFk=populationPDFk,populationPDFmu=populationPDFmu,populationRZ=populationRZ,
+             populationNullp=populationNullp,sigOnly=sigOnly,worldAbs=worldAbs)
  world  
 }
 
@@ -26,13 +29,22 @@ makeWorld<-function(worldOn=FALSE,populationPDF="Single",populationRZ="r",
 #' @param ResidDistr   "normal","skewed","uniform","cauchy","t(3)"
 #' @returns an effect object
 #' @examples
-#' makeEffect(rIV=0.3,rIV2=0,rIVIV2=0,rIVIV2DV=0,Heteroscedasticity=0,
+#' makeEffect(rIV=0.3,rIV2=0,rIVIV2=0,rIVIV2DV=0,rSD=0,Heteroscedasticity=0,
 #'            ResidDistr="normal",world=makeWorld()
 #' )
 #' @export
 makeEffect<-function(rIV=0,rIV2=0,rIVIV2=0,rIVIV2DV=0,rSD=0,Heteroscedasticity=0,
                      ResidDistr="normal",world=braw.def$world){
 
+  # check effect sizes before going any further
+  fullES<-rIV^2+rIV2^2+2*rIV*rIV2*rIVIV2+rIVIV2DV^2
+  while (fullES>=1) {
+    rIV<-rIV*0.9
+    rIV2<-rIV2*0.9
+    rIVIV2<-rIVIV2*0.9
+    rIVIV2DV<-rIVIV2DV*0.9
+    fullES<-rIV^2+rIV2^2+2*rIV*rIV2*rIVIV2+rIVIV2DV^2
+  }
   effect<-list(rIV=rIV,rIV2=rIV2,rIVIV2=rIVIV2,rIVIV2DV=rIVIV2DV,rSD=rSD,
                Heteroscedasticity=Heteroscedasticity,ResidDistr=ResidDistr,
                world=world
@@ -129,9 +141,9 @@ makeSampling<-function(type="Random") {
 #' @param BudgetType "Fixed", "Unlimited"
 #' @returns a replication object
 #' @examples
-#' makeReplication(On=FALSE,Repeats=1,Keep="Cautious",RepAlpha=0.05,
+#' makeReplication(On=TRUE,Repeats=1,Keep="Cautious",RepAlpha=0.05,
 #'                 PowerOn=TRUE,Power=0.8,Tails=2,PowerPrior="None",
-#'                 forceSigOriginal="No",
+#'                 forceSigOriginal="No",forceSign=TRUE,
 #'                 BudgetType="Unlimited",Budget=1000
 #'                 )
 #' @export
@@ -157,7 +169,8 @@ makeReplication<-function(On=FALSE,Repeats=1,Keep="Cautious",RepAlpha=0.05,
 #' @returns a design object
 #' @seealso [showDesign()]
 #' @examples
-#' makeDesign(sN=42, sMethod=makeSampling("Random") ,sNRand=FALSE,sNRandK=2, 
+#' makeDesign(sN=42, sMethod=makeSampling("Random"),sMethodSeverity=0.1,
+#'            sNRand=FALSE,sNRandK=2,sNRandDist="Gamma",
 #'            sBudgetOn=FALSE,sNBudget=1000,
 #'            sIV1Use="Between",sIV2Use="Between",  sWithinCor=0.5,
 #'            
@@ -171,7 +184,7 @@ makeReplication<-function(On=FALSE,Repeats=1,Keep="Cautious",RepAlpha=0.05,
 #' )
 #' @export
 makeDesign<-function(sN=42, sMethod=makeSampling("Random"),sMethodSeverity=0.1,
-                     sNRand=FALSE,sNRandK=2, 
+                     sNRand=FALSE,sNRandSD=33.3, sNRandDist="Gamma",
                      sIV1Use="Between",sIV2Use="Between", 
                      sWithinCor=0.5,
                      sBudgetOn=FALSE,sNBudget=1000,
@@ -182,7 +195,7 @@ makeDesign<-function(sN=42, sMethod=makeSampling("Random"),sMethodSeverity=0.1,
 ) {
   
   design<-list(sN=sN, sMethod=sMethod, sMethodSeverity=sMethodSeverity,
-               sNRand=sNRand,sNRandK=sNRandK,
+               sNRand=sNRand,sNRandSD=sNRandSD,sNRandDist=sNRandDist,
                sIV1Use=sIV1Use,sIV2Use=sIV2Use, 
                sWithinCor=sWithinCor,
                sBudgetOn=sBudgetOn,sNBudget=sNBudget,
@@ -209,8 +222,12 @@ makeDesign<-function(sN=42, sMethod=makeSampling("Random"),sMethodSeverity=0.1,
 #'              rInteractionOn=TRUE,rInteractionOnly=TRUE,ssqType="Type3",
 #'              caseOrder="Alphabetic",
 #'              llr=list(e1=c(),e2=0),
+#'              useAIC="AIC",
+#'              doSEM=FALSE,
 #'              Welch=FALSE,Transform="None",
-#'              prior=makeWorld(TRUE,"Uniform","r"))
+#'              prior=makeWorld(TRUE,"Uniform","r")
+#'              metaAnalysis=makeMetaAnalysis()
+#'              )
 #' @export
 makeEvidence<-function(shortHand=FALSE,sigOnly=FALSE,
                        rInteractionOn=FALSE,rInteractionOnly=TRUE,ssqType="Type3",
@@ -220,14 +237,16 @@ makeEvidence<-function(shortHand=FALSE,sigOnly=FALSE,
                        doSEM=FALSE,
                        Welch=FALSE,Transform="None",
                        McFaddens=TRUE,
-                       prior=makeWorld(TRUE,"Uniform","r")
+                       prior=makeWorld(TRUE,"Uniform","r"),
+                       metaAnalysis=makeMetaAnalysis()
                        ){
   
   evidence<-list(rInteractionOn=rInteractionOn,rInteractionOnly=rInteractionOnly,ssqType=ssqType,
                  caseOrder=caseOrder,shortHand=shortHand,sigOnly=sigOnly,
                  llr=llr,useAIC=useAIC,doSEM=doSEM,
                  Welch=Welch,Transform=Transform,McFaddens=McFaddens,
-                 prior=prior
+                 prior=prior,
+                 metaAnalysis=metaAnalysis
   )
 
   # braw.def$evidence<<-evidence

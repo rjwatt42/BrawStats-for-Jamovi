@@ -1,11 +1,14 @@
 
-SingleSamplingPDF<-function(z,lambda,sigma,shape=0,remove_nonsig=FALSE,df1=1) {
+SingleSamplingPDF<-function(z,lambda,sigma,shape=0,bias=FALSE,df1=1) {
   # shape is additional normal error distribution
-  sigmad<-sqrt(sigma^2+shape^2)
+  sigmad<-sigma^2+shape
+  sigmad[sigmad<0]<-0
+  sigmad<-sqrt(sigmad)
   d1<-exp(-0.5*((z-lambda)^2/sigmad^2))/sqrt(2*pi*sigmad^2)
-  if (remove_nonsig) {
+  if (bias>0) {
     zcrit<-atanh(p2r(braw.env$alphaSig,1/sigma^2+3,df1))
-    d0<-1-(pnorm(zcrit,lambda,sigmad)-pnorm(-zcrit,lambda,sigmad))
+    d1[abs(z)<zcrit]<-d1[abs(z)<zcrit]*(1-bias)
+    d0<-1-(pnorm(zcrit,lambda,sigmad)-pnorm(-zcrit,lambda,sigmad))*bias
   } else {
     d0<-1
   }
@@ -13,13 +16,14 @@ SingleSamplingPDF<-function(z,lambda,sigma,shape=0,remove_nonsig=FALSE,df1=1) {
 }
 
 
-GaussSamplingPDF<-function(z,lambda,sigma,offset=0,shape=NA,remove_nonsig=FALSE,df1=1) {
+GaussSamplingPDF<-function(z,lambda,sigma,offset=0,shape=NA,bias=FALSE,df1=1) {
   sigma2<-sqrt(lambda^2+sigma^2)
   d1<-exp(-0.5*(z-offset)^2/sigma2^2)/sqrt(2*pi*sigma2^2)
   
-  if (remove_nonsig) {
+  if (bias>0) {
     zcrit<-atanh(p2r(braw.env$alphaSig,1/sigma^2+3,df1))
-    d0<-GaussSamplingCDF(zcrit,lambda,sigma)
+    d1[abs(z)<zcrit]<-d1[abs(z)<zcrit]*(1-bias)
+    d0<-GaussSamplingCDF(zcrit,lambda,sigma)*bias
   } else {
     d0<-1
   }
@@ -31,7 +35,8 @@ GaussSamplingCDF<-function(zcrit,lambda,sigma,offset=0) {
 }
 
 
-ExpSamplingPDF<-function(z,lambda,sigma,shape=NA,remove_nonsig=FALSE,df1=1) {
+ExpSamplingPDF<-function(z,lambda,sigma,shape=NA,bias=FALSE,df1=1) {
+  if (lambda==0) return(GaussSamplingPDF(z,lambda,sigma,offset=0,shape=NA,bias=FALSE,df1=1))
   lambda1<-1/lambda
   # d1a<-0.25*(lambda1*exp(-lambda1*(z-sigma^2*lambda1/2))*(1+erf((z-sigma^2*lambda1)/sqrt(2)/sigma)) +
   #             lambda1*exp(-lambda1*(-z-sigma^2*lambda1/2))*(1+erf((-z-sigma^2*lambda1)/sqrt(2)/sigma)))
@@ -55,10 +60,12 @@ ExpSamplingPDF<-function(z,lambda,sigma,shape=NA,remove_nonsig=FALSE,df1=1) {
   e2[e2==Inf]<-1
   d1<-e1*p1+e2*p2
   d1<-d1/lambda/2
+  d1[is.na(d1)]<-0.5
   
-  if (remove_nonsig) {
+  if (bias>0) {
     zcrit<-atanh(p2r(braw.env$alphaSig,1/sigma^2+3,df1))
-    d0<-ExpSamplingCDF(zcrit,lambda,sigma)
+    d1[abs(z)<zcrit]<-d1[abs(z)<zcrit]*(1-bias)
+    d0<-ExpSamplingCDF(zcrit,lambda,sigma)*bias
   } else {
     d0<-1
   }
@@ -113,7 +120,7 @@ removeNonSig<-function(zi,zpd,sigma,df1) {
 }
 
 
-GammaSamplingPDF<-function(z,lambda,sigma,gamma_shape=1,remove_nonsig=FALSE,df1=1) {
+GammaSamplingPDF<-function(z,lambda,sigma,gamma_shape=1,bias=FALSE,df1=1) {
   if (length(sigma)==1) {sigma<-rep(sigma,length(z))}
   
   zi<-seq(-braw.env$dist_range,braw.env$dist_range,braw.env$dist_zi)
@@ -122,7 +129,7 @@ GammaSamplingPDF<-function(z,lambda,sigma,gamma_shape=1,remove_nonsig=FALSE,df1=
   
   d1<-convolveWith(zi,zpd,z,sigma)
 
-  if (remove_nonsig) {
+  if (bias) {
     d2<-removeNonSig(zi,zpd,sigma,df1)
   } else {
     d2<-1
@@ -131,7 +138,7 @@ GammaSamplingPDF<-function(z,lambda,sigma,gamma_shape=1,remove_nonsig=FALSE,df1=
   
 }
 
-GenExpSamplingPDF<-function(z,lambda,sigma,genexp_shape=1,remove_nonsig=FALSE,df1=1) {
+GenExpSamplingPDF<-function(z,lambda,sigma,genexp_shape=1,bias=FALSE,df1=1) {
   
   if (all(sigma==0)) {
     zd<-1-(1-exp(-abs(z)/lambda))^genexp_shape
@@ -147,7 +154,7 @@ GenExpSamplingPDF<-function(z,lambda,sigma,genexp_shape=1,remove_nonsig=FALSE,df
 
   d1<-convolveWith(zi,zpd,z,sigma)
   
-  if (remove_nonsig) {
+  if (bias) {
     d2<-removeNonSig(zi,zpd,sigma,df1)
   } else {
     d2<-1
@@ -157,57 +164,59 @@ GenExpSamplingPDF<-function(z,lambda,sigma,genexp_shape=1,remove_nonsig=FALSE,df
 }
 
 
-getLogLikelihood<-function(z,n,df1,distribution,param1,param2=0,remove_nonsig=FALSE) {
+getLogLikelihood<-function(z,n,df1,distribution,location,spread=0,bias=FALSE,returnVals=FALSE) {
+  if (is.null(spread)) spread<-0
   sigma<-1/sqrt(n-3)
   lambda2<-0
   zcrit<-atanh(p2r(braw.env$alphaSig,n,df1))
 
   if (distribution=="fixed") {
     shape<-NA
-    res<-matrix(0,nrow=length(param1),ncol=length(param2))
-    lambda<-param1
+    res<-matrix(-Inf,nrow=length(location),ncol=length(spread))
+    lksHold<-c()
+    lambda<-location
     for (i in 1:length(lambda)) {
-        mainPDF<-SingleSamplingPDF(z,lambda[i],sigma,shape=0,remove_nonsig=remove_nonsig,df1=df1)
+      j<-1
+        mainPDF<-SingleSamplingPDF(z,lambda[i],sigma,shape=0,bias=bias,df1=df1)
         # now normalize for the non-sig
         likelihoods<-mainPDF$pdf/mainPDF$sig_pdf
-        # likelihoods[is.infinite(likelihoods)]<-NA
-        res[i,1]<-sum(log(likelihoods[likelihoods>1e-300]),na.rm=TRUE)
-        if (res[i,1]==Inf) {
-          a<-1
-      }
+        # likelihoods[(likelihoods<1e-300)]<- 1e-300
+        res[i,j]<-sum(log(likelihoods[likelihoods>=1e-300]),na.rm=TRUE)+(-1000*sum(likelihoods<1e-300))
+        if (res[i,j]==max(res,na.rm=TRUE)) lksHold<-likelihoods
     }
+    if (returnVals) return(lksHold)
     return(res)
   } 
   if (distribution=="random") {
-    shape<-NA
-    res<-matrix(0,nrow=length(param1),ncol=length(param2))
-    lambda1<-param1
-    lambda2<-param2
-    param2<-0
-    for (i in 1:length(lambda1)) {
-      for (j in 1:length(lambda2)) {
-        mainPDF<-SingleSamplingPDF(z,lambda1[i],sigma,shape=lambda2[j],remove_nonsig=remove_nonsig,df1=df1)
+    res<-matrix(-Inf,nrow=length(location),ncol=length(spread))
+    lksHold<-c()
+    lambda<-location
+    shape<-spread
+    spread<-0
+    for (i in 1:length(lambda)) {
+      for (j in 1:length(shape)) {
+        mainPDF<-SingleSamplingPDF(z,lambda[i],sigma,shape=shape[j],bias=bias,df1=df1)
         # now normalize for the non-sig
         likelihoods<-mainPDF$pdf/mainPDF$sig_pdf
-        # likelihoods[is.infinite(likelihoods)]<-NA
-        res[i,j]<-sum(log(likelihoods[likelihoods>1e-300]),na.rm=TRUE)
-        if (res[i,j]==Inf) {
-          a<-1
-        }
+        likelihoods[(likelihoods<1e-300)]<- 1e-300
+        res[i,j]<-sum(log(likelihoods),na.rm=TRUE)
+        if (res[i,j]==max(res,na.rm=TRUE)) lksHold<-likelihoods
       }
     }
+    if (returnVals) return(lksHold)
     return(res)
   } 
   
   # get nulls ready first
-  if (any(param2>0)) {
-    nullPDF<-SingleSamplingPDF(z,0,sigma,NA,remove_nonsig,df1)
+  nulls<-spread
+  if (any(nulls>0)) {
+    nullPDF<-SingleSamplingPDF(z,0,sigma,NA,bias,df1)
   } else {
     nullPDF<-list(pdf=0,sig_pdf=1)
     zcrit<-0
   } 
   shape<-NA
-  res<-matrix(0,nrow=length(param1),ncol=length(param2))
+  res<-matrix(-Inf,nrow=length(location),ncol=length(nulls))
   switch(distribution,
          "Single"={
            PDF<-SingleSamplingPDF
@@ -227,22 +236,21 @@ getLogLikelihood<-function(z,n,df1,distribution,param1,param2=0,remove_nonsig=FA
            shape<-metaAnal$shape
          }
   )
-  for (i in 1:length(param1)) {
-    lambda<-param1[i]
-    mainPDF<-PDF(z,lambda,sigma,shape=shape,remove_nonsig=remove_nonsig,df1=df1)
-    for (j in 1:length(param2)) {
-      nullP<-param2[j]
+  for (i in 1:length(location)) {
+    lambda<-location[i]
+    mainPDF<-PDF(z,lambda,sigma,shape=shape,bias=bias,df1=df1)
+    for (j in 1:length(nulls)) {
+      nullP<-nulls[j]
       # make the whole source first
       sourcePDF<-mainPDF$pdf*(1-nullP)+nullPDF$pdf*nullP
       # now normalize for the non-sig
       likelihoods<-sourcePDF/(mainPDF$sig_pdf*(1-nullP)+nullPDF$sig_pdf*nullP)
-      # likelihoods[is.infinite(likelihoods)]<-NA
+      likelihoods[(likelihoods<1e-300)]<- 1e-300
       res[i,j]<-sum(log(likelihoods[likelihoods>1e-300]),na.rm=TRUE)
-      if (res[i,j]==Inf) {
-        a<-1
-      }
+      if (res[i,j]==max(res,na.rm=TRUE)) lksHold<-likelihoods
     }
   }
-  res
+  if (returnVals) return(lksHold)
+  return(res)
 }
 

@@ -1,3 +1,3 @@
 
-options(jamovi_home="/Applications/jamovi_2_4_14.app")
+options(jamovi_home="/Applications/jamovi_2_6_23.app")
 

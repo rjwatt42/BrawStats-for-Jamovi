@@ -3,14 +3,23 @@
 #' 
 #' @returns result object
 #' @examples
-#' analysis<-doResult(hypothesis=makeHypothesis(),design=makeDesign(),evidence=makeEvidence(),autoShow=braw.env$autoShow)#' make a multiple samples
+#' analysis<-doSingle(hypothesis=makeHypothesis(),design=makeDesign(),evidence=makeEvidence(),autoShow=braw.env$autoShow)#' make a multiple samples
 #' @export
-doResult<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,evidence=braw.def$evidence,autoShow=braw.env$autoShow){
+doSingle<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,evidence=braw.def$evidence,autoShow=braw.env$autoShow){
   # sample<-doSample(hypothesis=hypothesis,design=design,autoShow=FALSE)
   # result<-doAnalysis(sample,evidence=evidence,autoShow=autoShow)
+  if (evidence$metaAnalysis$On) {
+    metaSingle<-doMetaAnalysis(metaSingle=NULL,metaAnalysis=evidence$metaAnalysis,keepStudies=FALSE,
+                             hypothesis=hypothesis,design=design,evidence=evidence)
+    if (autoShow) print(showMetaSingle(metaSingle))
+    return(metaSingle)
+  } 
+  
+  evidence$shortHand<-FALSE
   result<-runSimulation(hypothesis=hypothesis,design=design,evidence=evidence,autoShow=FALSE)
-  if (autoShow) print(showResult(result))
   setBrawRes("result",result)
+  if (autoShow) print(showSingle(result))
+  
   return(result)
 }
 
@@ -132,7 +141,7 @@ r2llr<-function(r,n,df1,method=braw.env$STMethod,llr=list(e1=c(),e2=0),world=NUL
       world$populationPDF<-"Single"
       world$populationNullp<-0.5
     }
-    lk<-getLogLikelihood(z,n,df1,world$populationPDF,world$populationPDFk,worldDistNullP=c(0,1),remove_nonsig=FALSE)
+    lk<-getLogLikelihood(z,n,df1,world$populationPDF,world$populationPDFk,spread=c(0,1),bias=FALSE)
     lk1<-lk[,,1]+log(1-world$populationNullp)
     lk2<-lk[,,2]+log(world$populationNullp)
     llk<-lk1-lk2
@@ -372,14 +381,14 @@ multipleAnalysis<-function(nsims=1,hypothesis,design,evidence,newResult=c()){
       newResult$dv.sd[j]<-res$dv.sd
       newResult$dv.sk[j]<-res$dv.sk
       newResult$dv.kt[j]<-res$dv.kt
-      newResult$rd.mn[j]<-res$rd.mn
-      newResult$rd.sd[j]<-res$rd.sd
-      newResult$rd.sk[j]<-res$rd.sk
-      newResult$rd.kt[j]<-res$rd.kt
+      newResult$er.mn[j]<-res$er.mn
+      newResult$er.sd[j]<-res$er.sd
+      newResult$er.sk[j]<-res$er.sk
+      newResult$er.kt[j]<-res$er.kt
     }
   }
   
-  newResult$effect<-hypothesis$effect
+  newResult$hypothesis<-hypothesis
   newResult$design<-design
   newResult$evidence<-evidence
   newResult
@@ -751,6 +760,7 @@ doAnalysis<-function(sample=doSample(autoShow=FALSE),evidence=braw.def$evidence,
   analysis$aic<-anResult$aic
   analysis$aicNull<-anResult$aicNull
   analysis$rFull<-anResult$r.full
+  analysis$pFull<-r2p(anResult$r.full,n,ncol(anResult$r.direct))
   analysis$rFullse<-r2se(analysis$rFull,n)
   analysis$rFullCI<-r2ci(analysis$rFull,n)
   analysis$wFull<-rn2w(analysis$rFull,n)
@@ -1046,7 +1056,7 @@ doAnalysis<-function(sample=doSample(autoShow=FALSE),evidence=braw.def$evidence,
   analysis$test_name<-t_name
   analysis$df<-df
   analysis$test_val<-tval
-  analysis$rCalc<-test2effectsize(t_name,tval,analysis$df1,analysis$df2)
+  # analysis$rCalc<-test2effectsize(t_name,tval,analysis$df1,analysis$df)
   
   if (IV$type=="Interval"){
     analysis$iv.mn<-mean(iv1,na.rm=TRUE)
@@ -1064,19 +1074,19 @@ doAnalysis<-function(sample=doSample(autoShow=FALSE),evidence=braw.def$evidence,
     analysis$dv.sd<-sd(dv,na.rm=TRUE)
     analysis$dv.sk<-skewness(dv,na.rm=TRUE)
     analysis$dv.kt<-kurtosis(dv,na.rm=TRUE)
-    analysis$rd.mn<-mean(residuals,na.rm=TRUE)
-    analysis$rd.sd<-sd(residuals,na.rm=TRUE)
-    analysis$rd.sk<-skewness(residuals,na.rm=TRUE)
-    analysis$rd.kt<-kurtosis(residuals,na.rm=TRUE)
+    analysis$er.mn<-mean(residuals,na.rm=TRUE)
+    analysis$er.sd<-sd(residuals,na.rm=TRUE)
+    analysis$er.sk<-skewness(residuals,na.rm=TRUE)
+    analysis$er.kt<-kurtosis(residuals,na.rm=TRUE)
   } else {
     analysis$dv.mn<-NA
     analysis$dv.sd<-NA
     analysis$dv.sk<-NA
     analysis$dv.kt<-NA
-    analysis$rd.mn<-NA
-    analysis$rd.sd<-NA
-    analysis$rd.sk<-NA
-    analysis$rd.kt<-NA
+    analysis$er.mn<-NA
+    analysis$er.sd<-NA
+    analysis$er.sk<-NA
+    analysis$er.kt<-NA
   }
   
   analysis$hypothesis<-hypothesis
@@ -1124,12 +1134,11 @@ runSimulation<-function(hypothesis,design,evidence,sigOnly=FALSE,onlyAnalysis=FA
   }
   
   # sig only
-  while (sigOnly && !isSignificant(braw.env$STMethod,res$pIV,res$rIV,res$nval,res$df1,evidence)) {
-    # if (!evidence$shortHand) {
+  # while ((sigOnly<=runif(1)) && !isSignificant(braw.env$STMethod,res$pIV,res$rIV,res$nval,res$df1,evidence)) {
+  while (TRUE) {
       res<-getSample(hypothesis,design,evidence)
-    # } else {
-    #   res<-sampleShortCut(hypothesis,design,evidence,1,FALSE)
-    # }
+      if (isSignificant(braw.env$STMethod,res$pIV,res$rIV,res$nval,res$df1,evidence)) break
+      if (runif(1)>sigOnly) break
   }
   # Replication?
   res<-replicateSample(hypothesis,design,evidence,sample,res)

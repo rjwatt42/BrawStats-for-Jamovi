@@ -8,6 +8,8 @@ mergeMultiple<-function(r1,r2) {
     rpIV=rbind(r1$rpIV,r2$rpIV),
     roIV=rbind(r1$roIV,r2$roIV),
     poIV=rbind(r1$poIV,r2$poIV),
+    rFull=rbind(r1$rFull,r2$rFull),
+    pFull=rbind(r1$pFull,r2$pFull),
     nval=rbind(r1$nval,r2$nval),
     noval=rbind(r1$noval,r2$noval),
     df1=rbind(r1$df1,r2$df1),
@@ -22,10 +24,10 @@ mergeMultiple<-function(r1,r2) {
     dv.sd=rbind(r1$dv.sd,r2$dv.sd),
     dv.sk=rbind(r1$dv.sk,r2$dv.sk),
     dv.kt=rbind(r1$dv.kt,r2$dv.ky),
-    rd.mn=rbind(r1$rd.mn,r2$rd.mn),
-    rd.sd=rbind(r1$rd.sd,r2$rd.sd),
-    rd.sk=rbind(r1$rd.sk,r2$rd.sk),
-    rd.kt=rbind(r1$rd.kt,r2$rd.ky)
+    er.mn=rbind(r1$er.mn,r2$er.mn),
+    er.sd=rbind(r1$er.sd,r2$er.sd),
+    er.sk=rbind(r1$er.sk,r2$er.sk),
+    er.kt=rbind(r1$er.kt,r2$er.ky)
   )
   colnames(newResult$sem)<-colnames(r2$sem)
   if (!is.null(r1$rIV2)) {
@@ -59,10 +61,11 @@ resetMultiple<-function(nsims=0,evidence,multipleResult=NULL){
   }
   newResult<-list(
     rIV=b,pIV=b,rpIV=b,roIV=b,poIV=b,nval=b,noval=b,df1=b,
+    rFull=b,pFull=b,
     aic=b,aicNull=b,sem=matrix(NA,nsims,8),
     iv.mn=b,iv.sd=b,iv.sk=b,iv.kt=b,
     dv.mn=b,dv.sd=b,dv.sk=b,dv.kt=b,
-    rd.mn=b,rd.sd=b,rd.sk=b,rd.kt=b
+    er.mn=b,er.sd=b,er.sk=b,er.kt=b
   )
   newResult<-c(newResult,list(
     rIV2=b,pIV2=b,rIVIV2DV=b,pIVIV2DV=b,
@@ -94,17 +97,31 @@ resetMultiple<-function(nsims=0,evidence,multipleResult=NULL){
 #' @returns multipleResult object
 #' @examples
 #' multipleResult<-doMultiple(nsims=100,multipleResult=NULL,hypothesis=makeHypothesis(),design=makeDesign(),evidence=makeEvidence(),
-#'                              doingNull=FALSE,autoShow=braw.env$autoShow,showType="Basic")
+#'                              doingNull=FALSE,inSteps=FALSE,autoShow=braw.env$autoShow,showType="Basic")
 #' @seealso showMultiple() and reportMultiple())
 #' @export
-doMultiple <- function(nsims=10,multipleResult=braw.res$multiple,hypothesis=braw.def$hypothesis,design=braw.def$design,evidence=braw.def$evidence,
+doMultiple <- function(nsims=10,multipleResult=NA,hypothesis=braw.def$hypothesis,design=braw.def$design,evidence=braw.def$evidence,
                          doingNull=FALSE,inSteps=FALSE,autoShow=braw.env$autoShow,showType="Basic") {
 
-  if (!is.null(multipleResult)) {
-    hypothesis<-multipleResult$hypothesis
-    design<-multipleResult$design
-    evidence<-multipleResult$evidence
+  if (length(multipleResult)==1 && is.na(multipleResult)) {
+      if (identical(hypothesis,braw.res$multiple$hypothesis) &&
+          identical(design,braw.res$multiple$design) &&
+          identical(evidence,braw.res$multiple$evidence) 
+      )   
+        multipleResult<-braw.res$multiple
+      else 
+        multipleResult<-NULL
+  } 
+  
+  if (evidence$metaAnalysis$On) {
+    if (!is.null(multipleResult$fixed)) metaMultiple<-multipleResult
+    else                                metaMultiple<-braw.res$metaMultiple
+    metaMultiple<-doMetaMultiple(nsims=nsims,metaMultiple=metaMultiple,metaAnalysis=evidence$metaAnalysis,keepStudies=FALSE,
+                             hypothesis=hypothesis,design=design,evidence=evidence)
+    if (autoShow) print(showMetaMultiple(metaMultiple))
+    return(metaMultiple)
   }
+  
   if (nsims>0)
     multipleResult<-c(resetMultiple(nsims,evidence,multipleResult),
                       list(hypothesis=hypothesis,

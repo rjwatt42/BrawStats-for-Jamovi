@@ -10,6 +10,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             demo1Help = NULL,
             demo2Help = NULL,
             demo3Help = NULL,
+            demo4Help = NULL,
             simHelp = NULL,
             simPlanHelp = NULL,
             simSingleHelp = NULL,
@@ -69,7 +70,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             SampleSize = 42,
             SampleSizeM = 42,
             SampleSpreadOn = FALSE,
-            SampleGamma = 1.56,
+            SampleSD = 33.3,
             SampleMethod = "Random",
             PoorSamplingAmount = 0.65,
             SampleUsage1 = "Between",
@@ -106,17 +107,21 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             useAIC = "AIC",
             MetaAnalysisOn = FALSE,
             MetaAnalysisType = "random",
+            MetaAnalysisRandVar = "sd",
+            MetaAnalysisPrior = "none",
             MetaAnalysisNulls = "no",
             MetaAnalysisBias = "no",
             MetaAnalysisNStudies = 20,
-            MetaAnalysisStudiesSig = "sigOnly",
-            showHypothesisBtn = NULL,
+            MetaAnalysisMethod = "MLE",
+            MetaAnalysisStudiesSig = 0,
+            metaVar1 = "metaRiv",
+            metaVar2 = "metaRsd",
             makeSampleBtn = FALSE,
             numberSamples = 100,
             makeMultipleBtn = NULL,
             inferVar1 = "rs",
             inferVar2 = "p",
-            showSampleType = "Compact",
+            showSampleType = "Basic",
             showInferDimension = "1D",
             reportInferStats = "Medians",
             showMultipleParam = "Basic",
@@ -145,13 +150,14 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             analysisExploreList = NULL,
             moreExploreList = NULL,
             showExploreParam = "Basic",
-            showExploreDimension = "1D",
+            showExploreStyle = "stats",
             whichShowMultiple = "all",
             brawHelp = TRUE,
             showHTML = FALSE,
             fixedAxes = FALSE,
             shorthandCalculations = FALSE,
-            autoShowHypothesis = FALSE,
+            showHypothesisLst = "Default",
+            dispRZ = "r",
             systemMag = 0.5,
             goBack = NULL,
             goForwards = NULL,
@@ -161,7 +167,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             doProject1sLst = "Perfectionism",
             doProject1sLstA = "ExamGrade",
             doProject1sLstB = 0.3,
-            doProject1sLstC = "Compact",
+            doProject1sLstC = "Basic",
             doProject1sLstD = "Random",
             doProject1sLstE = 42,
             doProject1BhBtn = NULL,
@@ -204,6 +210,29 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             doProject3ChBtn = NULL,
             doProject3C1Btn = NULL,
             doProject3C3Btn = NULL,
+            doProject4sLstA1 = "RiskTaker",
+            doProject4sLstA2 = "Smoker",
+            doProject4sLst = "ExamGrade",
+            doProject4sLstB = 0.5,
+            doProject4sLstC = -0.5,
+            doProject4sLstD = 0,
+            doProject4sLstE = "no",
+            doProject4sLstF = 0,
+            doProject4sLstG = "Basic",
+            doProject4sLstI = "direct",
+            doProject4sLstJ = "Covariation",
+            doProject4sLstK = 200,
+            doProject4AhBtn = NULL,
+            doProject4A1Btn = NULL,
+            doProject4A2Btn = NULL,
+            doProject4BhBtn = NULL,
+            doProject4B1Btn = NULL,
+            doProject4B2Btn = NULL,
+            doProject4B3Btn = NULL,
+            doProject4ChBtn = NULL,
+            doProject4C1Btn = NULL,
+            doProject4C2Btn = NULL,
+            doProject4C3Btn = NULL,
             lastDemo = "none", ...) {
 
             super$initialize(
@@ -224,6 +253,9 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..demo3Help <- jmvcore::OptionAction$new(
                 "demo3Help",
                 demo3Help)
+            private$..demo4Help <- jmvcore::OptionAction$new(
+                "demo4Help",
+                demo4Help)
             private$..simHelp <- jmvcore::OptionAction$new(
                 "simHelp",
                 simHelp)
@@ -322,8 +354,9 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "presetWorld",
                 presetWorld,
                 options=list(
-                    "psych",
-                    "simple"),
+                    "simple",
+                    "uniform",
+                    "psych"),
                 default="simple")
             private$..DVname <- jmvcore::OptionString$new(
                 "DVname",
@@ -551,10 +584,10 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "SampleSpreadOn",
                 SampleSpreadOn,
                 default=FALSE)
-            private$..SampleGamma <- jmvcore::OptionNumber$new(
-                "SampleGamma",
-                SampleGamma,
-                default=1.56)
+            private$..SampleSD <- jmvcore::OptionNumber$new(
+                "SampleSD",
+                SampleSD,
+                default=33.3)
             private$..SampleMethod <- jmvcore::OptionList$new(
                 "SampleMethod",
                 SampleMethod,
@@ -653,7 +686,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "FirstSuccess",
                     "Median",
                     "SmallP",
-                    "LargeN"),
+                    "LargeN",
+                    "metaAnalysis"),
                 default="Cautious")
             private$..ReplicationAlpha <- jmvcore::OptionNumber$new(
                 "ReplicationAlpha",
@@ -779,6 +813,21 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "random",
                     "world"),
                 default="random")
+            private$..MetaAnalysisRandVar <- jmvcore::OptionList$new(
+                "MetaAnalysisRandVar",
+                MetaAnalysisRandVar,
+                options=list(
+                    "sd",
+                    "var"),
+                default="sd")
+            private$..MetaAnalysisPrior <- jmvcore::OptionList$new(
+                "MetaAnalysisPrior",
+                MetaAnalysisPrior,
+                options=list(
+                    "none",
+                    "uniform",
+                    "world"),
+                default="none")
             private$..MetaAnalysisNulls <- jmvcore::OptionList$new(
                 "MetaAnalysisNulls",
                 MetaAnalysisNulls,
@@ -797,16 +846,35 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "MetaAnalysisNStudies",
                 MetaAnalysisNStudies,
                 default=20)
-            private$..MetaAnalysisStudiesSig <- jmvcore::OptionList$new(
+            private$..MetaAnalysisMethod <- jmvcore::OptionList$new(
+                "MetaAnalysisMethod",
+                MetaAnalysisMethod,
+                options=list(
+                    "MLE",
+                    "TF"),
+                default="MLE")
+            private$..MetaAnalysisStudiesSig <- jmvcore::OptionNumber$new(
                 "MetaAnalysisStudiesSig",
                 MetaAnalysisStudiesSig,
+                default=0)
+            private$..metaVar1 <- jmvcore::OptionList$new(
+                "metaVar1",
+                metaVar1,
                 options=list(
-                    "all",
-                    "sigOnly"),
-                default="sigOnly")
-            private$..showHypothesisBtn <- jmvcore::OptionAction$new(
-                "showHypothesisBtn",
-                showHypothesisBtn)
+                    "metaRiv",
+                    "metaRsd",
+                    "metaBias",
+                    "metaS"),
+                default="metaRiv")
+            private$..metaVar2 <- jmvcore::OptionList$new(
+                "metaVar2",
+                metaVar2,
+                options=list(
+                    "metaRiv",
+                    "metaRsd",
+                    "metaBias",
+                    "metaS"),
+                default="metaRsd")
             private$..makeSampleBtn <- jmvcore::OptionAction$new(
                 "makeSampleBtn",
                 makeSampleBtn,
@@ -866,13 +934,13 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "showSampleType",
                 showSampleType,
                 options=list(
-                    "Compact",
+                    "Basic",
                     "Variables",
                     "Sample",
                     "Describe",
                     "Infer",
                     "Likelihood"),
-                default="Compact")
+                default="Basic")
             private$..showInferDimension <- jmvcore::OptionList$new(
                 "showInferDimension",
                 showInferDimension,
@@ -891,6 +959,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "showMultipleParam",
                 showMultipleParam,
                 options=list(
+                    "Single",
                     "Basic",
                     "blank1",
                     "p(sig)",
@@ -1030,7 +1099,9 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "IVRangeE",
                     "blank1e",
                     "Cheating",
-                    "CheatingAmount"))
+                    "CheatingAmount",
+                    "blank1f",
+                    "SampleSD"))
             private$..analysisExploreList <- jmvcore::OptionList$new(
                 "analysisExploreList",
                 analysisExploreList,
@@ -1066,13 +1137,13 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "DV",
                     "Residuals"),
                 default="Basic")
-            private$..showExploreDimension <- jmvcore::OptionList$new(
-                "showExploreDimension",
-                showExploreDimension,
+            private$..showExploreStyle <- jmvcore::OptionList$new(
+                "showExploreStyle",
+                showExploreStyle,
                 options=list(
-                    "1D",
-                    "2D"),
-                default="1D")
+                    "stats",
+                    "hist"),
+                default="stats")
             private$..whichShowMultiple <- jmvcore::OptionList$new(
                 "whichShowMultiple",
                 whichShowMultiple,
@@ -1104,10 +1175,21 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "shorthandCalculations",
                 shorthandCalculations,
                 default=FALSE)
-            private$..autoShowHypothesis <- jmvcore::OptionBool$new(
-                "autoShowHypothesis",
-                autoShowHypothesis,
-                default=FALSE)
+            private$..showHypothesisLst <- jmvcore::OptionList$new(
+                "showHypothesisLst",
+                showHypothesisLst,
+                options=list(
+                    "Default",
+                    "Hypothesis",
+                    "Design"),
+                default="Default")
+            private$..dispRZ <- jmvcore::OptionList$new(
+                "dispRZ",
+                dispRZ,
+                options=list(
+                    "r",
+                    "z"),
+                default="r")
             private$..systemMag <- jmvcore::OptionNumber$new(
                 "systemMag",
                 systemMag,
@@ -1162,11 +1244,11 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "doProject1sLstC",
                 doProject1sLstC,
                 options=list(
-                    "Compact",
+                    "Basic",
                     "Variables",
                     "Sample",
                     "Describe"),
-                default="Compact")
+                default="Basic")
             private$..doProject1sLstD <- jmvcore::OptionList$new(
                 "doProject1sLstD",
                 doProject1sLstD,
@@ -1256,7 +1338,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "doProject2sLstC",
                 doProject2sLstC,
                 options=list(
-                    "Compact",
+                    "Basic",
                     "Variables",
                     "Sample",
                     "Describe",
@@ -1316,7 +1398,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "doProject3sLstC",
                 doProject3sLstC,
                 options=list(
-                    "Compact",
+                    "Basic",
                     "Variables",
                     "Sample",
                     "Describe",
@@ -1398,6 +1480,144 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..doProject3C3Btn <- jmvcore::OptionAction$new(
                 "doProject3C3Btn",
                 doProject3C3Btn)
+            private$..doProject4sLstA1 <- jmvcore::OptionList$new(
+                "doProject4sLstA1",
+                doProject4sLstA1,
+                options=list(
+                    "IQ",
+                    "Diligence",
+                    "Perfectionism",
+                    "Anxiety",
+                    "Happiness",
+                    "SelfConfidence",
+                    "RiskTaking",
+                    "Interesting",
+                    "Musician",
+                    "Smoker",
+                    "RiskTaker",
+                    "StudySubject",
+                    "BirthOrder"),
+                default="RiskTaker")
+            private$..doProject4sLstA2 <- jmvcore::OptionList$new(
+                "doProject4sLstA2",
+                doProject4sLstA2,
+                options=list(
+                    "IQ",
+                    "Diligence",
+                    "Perfectionism",
+                    "Anxiety",
+                    "Happiness",
+                    "SelfConfidence",
+                    "RiskTaking",
+                    "Interesting",
+                    "Musician",
+                    "Smoker",
+                    "RiskTaker",
+                    "StudySubject",
+                    "BirthOrder"),
+                default="Smoker")
+            private$..doProject4sLst <- jmvcore::OptionList$new(
+                "doProject4sLst",
+                doProject4sLst,
+                options=list(
+                    "ExamGrade",
+                    "ExamPass"),
+                default="ExamGrade")
+            private$..doProject4sLstB <- jmvcore::OptionNumber$new(
+                "doProject4sLstB",
+                doProject4sLstB,
+                default=0.5,
+                min=-0.95,
+                max=0.95)
+            private$..doProject4sLstC <- jmvcore::OptionNumber$new(
+                "doProject4sLstC",
+                doProject4sLstC,
+                default=-0.5,
+                min=-0.95,
+                max=0.95)
+            private$..doProject4sLstD <- jmvcore::OptionNumber$new(
+                "doProject4sLstD",
+                doProject4sLstD,
+                default=0,
+                min=-0.95,
+                max=0.95)
+            private$..doProject4sLstE <- jmvcore::OptionList$new(
+                "doProject4sLstE",
+                doProject4sLstE,
+                options=list(
+                    "no",
+                    "yes"),
+                default="no")
+            private$..doProject4sLstF <- jmvcore::OptionNumber$new(
+                "doProject4sLstF",
+                doProject4sLstF,
+                default=0,
+                min=-0.95,
+                max=0.95)
+            private$..doProject4sLstG <- jmvcore::OptionList$new(
+                "doProject4sLstG",
+                doProject4sLstG,
+                options=list(
+                    "Basic",
+                    "Sample",
+                    "Describe"),
+                default="Basic")
+            private$..doProject4sLstI <- jmvcore::OptionList$new(
+                "doProject4sLstI",
+                doProject4sLstI,
+                options=list(
+                    "direct",
+                    "unique",
+                    "total",
+                    "all"),
+                default="direct")
+            private$..doProject4sLstJ <- jmvcore::OptionList$new(
+                "doProject4sLstJ",
+                doProject4sLstJ,
+                options=list(
+                    "EffectSize",
+                    "Covariation",
+                    "Interaction"),
+                default="Covariation")
+            private$..doProject4sLstK <- jmvcore::OptionNumber$new(
+                "doProject4sLstK",
+                doProject4sLstK,
+                default=200,
+                min=10,
+                max=5000)
+            private$..doProject4AhBtn <- jmvcore::OptionAction$new(
+                "doProject4AhBtn",
+                doProject4AhBtn)
+            private$..doProject4A1Btn <- jmvcore::OptionAction$new(
+                "doProject4A1Btn",
+                doProject4A1Btn)
+            private$..doProject4A2Btn <- jmvcore::OptionAction$new(
+                "doProject4A2Btn",
+                doProject4A2Btn)
+            private$..doProject4BhBtn <- jmvcore::OptionAction$new(
+                "doProject4BhBtn",
+                doProject4BhBtn)
+            private$..doProject4B1Btn <- jmvcore::OptionAction$new(
+                "doProject4B1Btn",
+                doProject4B1Btn)
+            private$..doProject4B2Btn <- jmvcore::OptionAction$new(
+                "doProject4B2Btn",
+                doProject4B2Btn)
+            private$..doProject4B3Btn <- jmvcore::OptionAction$new(
+                "doProject4B3Btn",
+                doProject4B3Btn)
+            private$..doProject4ChBtn <- jmvcore::OptionAction$new(
+                "doProject4ChBtn",
+                doProject4ChBtn)
+            private$..doProject4C1Btn <- jmvcore::OptionAction$new(
+                "doProject4C1Btn",
+                doProject4C1Btn)
+            private$..doProject4C2Btn <- jmvcore::OptionAction$new(
+                "doProject4C2Btn",
+                doProject4C2Btn)
+            private$..doProject4C3Btn <- jmvcore::OptionAction$new(
+                "doProject4C3Btn",
+                doProject4C3Btn)
             private$..lastDemo <- jmvcore::OptionList$new(
                 "lastDemo",
                 lastDemo,
@@ -1411,13 +1631,17 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "2c",
                     "3a",
                     "3b",
-                    "3c"),
+                    "3c",
+                    "4a",
+                    "4b",
+                    "4c"),
                 default="none")
 
             self$.addOption(private$..demosHelp)
             self$.addOption(private$..demo1Help)
             self$.addOption(private$..demo2Help)
             self$.addOption(private$..demo3Help)
+            self$.addOption(private$..demo4Help)
             self$.addOption(private$..simHelp)
             self$.addOption(private$..simPlanHelp)
             self$.addOption(private$..simSingleHelp)
@@ -1477,7 +1701,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..SampleSize)
             self$.addOption(private$..SampleSizeM)
             self$.addOption(private$..SampleSpreadOn)
-            self$.addOption(private$..SampleGamma)
+            self$.addOption(private$..SampleSD)
             self$.addOption(private$..SampleMethod)
             self$.addOption(private$..PoorSamplingAmount)
             self$.addOption(private$..SampleUsage1)
@@ -1514,11 +1738,15 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..useAIC)
             self$.addOption(private$..MetaAnalysisOn)
             self$.addOption(private$..MetaAnalysisType)
+            self$.addOption(private$..MetaAnalysisRandVar)
+            self$.addOption(private$..MetaAnalysisPrior)
             self$.addOption(private$..MetaAnalysisNulls)
             self$.addOption(private$..MetaAnalysisBias)
             self$.addOption(private$..MetaAnalysisNStudies)
+            self$.addOption(private$..MetaAnalysisMethod)
             self$.addOption(private$..MetaAnalysisStudiesSig)
-            self$.addOption(private$..showHypothesisBtn)
+            self$.addOption(private$..metaVar1)
+            self$.addOption(private$..metaVar2)
             self$.addOption(private$..makeSampleBtn)
             self$.addOption(private$..numberSamples)
             self$.addOption(private$..makeMultipleBtn)
@@ -1553,7 +1781,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..analysisExploreList)
             self$.addOption(private$..moreExploreList)
             self$.addOption(private$..showExploreParam)
-            self$.addOption(private$..showExploreDimension)
+            self$.addOption(private$..showExploreStyle)
             self$.addOption(private$..whichShowMultiple)
             self$.addOption(private$..sendSample)
             self$.addOption(private$..sendMultiple)
@@ -1562,7 +1790,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..showHTML)
             self$.addOption(private$..fixedAxes)
             self$.addOption(private$..shorthandCalculations)
-            self$.addOption(private$..autoShowHypothesis)
+            self$.addOption(private$..showHypothesisLst)
+            self$.addOption(private$..dispRZ)
             self$.addOption(private$..systemMag)
             self$.addOption(private$..goBack)
             self$.addOption(private$..goForwards)
@@ -1615,6 +1844,29 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..doProject3ChBtn)
             self$.addOption(private$..doProject3C1Btn)
             self$.addOption(private$..doProject3C3Btn)
+            self$.addOption(private$..doProject4sLstA1)
+            self$.addOption(private$..doProject4sLstA2)
+            self$.addOption(private$..doProject4sLst)
+            self$.addOption(private$..doProject4sLstB)
+            self$.addOption(private$..doProject4sLstC)
+            self$.addOption(private$..doProject4sLstD)
+            self$.addOption(private$..doProject4sLstE)
+            self$.addOption(private$..doProject4sLstF)
+            self$.addOption(private$..doProject4sLstG)
+            self$.addOption(private$..doProject4sLstI)
+            self$.addOption(private$..doProject4sLstJ)
+            self$.addOption(private$..doProject4sLstK)
+            self$.addOption(private$..doProject4AhBtn)
+            self$.addOption(private$..doProject4A1Btn)
+            self$.addOption(private$..doProject4A2Btn)
+            self$.addOption(private$..doProject4BhBtn)
+            self$.addOption(private$..doProject4B1Btn)
+            self$.addOption(private$..doProject4B2Btn)
+            self$.addOption(private$..doProject4B3Btn)
+            self$.addOption(private$..doProject4ChBtn)
+            self$.addOption(private$..doProject4C1Btn)
+            self$.addOption(private$..doProject4C2Btn)
+            self$.addOption(private$..doProject4C3Btn)
             self$.addOption(private$..lastDemo)
         }),
     active = list(
@@ -1622,6 +1874,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         demo1Help = function() private$..demo1Help$value,
         demo2Help = function() private$..demo2Help$value,
         demo3Help = function() private$..demo3Help$value,
+        demo4Help = function() private$..demo4Help$value,
         simHelp = function() private$..simHelp$value,
         simPlanHelp = function() private$..simPlanHelp$value,
         simSingleHelp = function() private$..simSingleHelp$value,
@@ -1681,7 +1934,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         SampleSize = function() private$..SampleSize$value,
         SampleSizeM = function() private$..SampleSizeM$value,
         SampleSpreadOn = function() private$..SampleSpreadOn$value,
-        SampleGamma = function() private$..SampleGamma$value,
+        SampleSD = function() private$..SampleSD$value,
         SampleMethod = function() private$..SampleMethod$value,
         PoorSamplingAmount = function() private$..PoorSamplingAmount$value,
         SampleUsage1 = function() private$..SampleUsage1$value,
@@ -1718,11 +1971,15 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         useAIC = function() private$..useAIC$value,
         MetaAnalysisOn = function() private$..MetaAnalysisOn$value,
         MetaAnalysisType = function() private$..MetaAnalysisType$value,
+        MetaAnalysisRandVar = function() private$..MetaAnalysisRandVar$value,
+        MetaAnalysisPrior = function() private$..MetaAnalysisPrior$value,
         MetaAnalysisNulls = function() private$..MetaAnalysisNulls$value,
         MetaAnalysisBias = function() private$..MetaAnalysisBias$value,
         MetaAnalysisNStudies = function() private$..MetaAnalysisNStudies$value,
+        MetaAnalysisMethod = function() private$..MetaAnalysisMethod$value,
         MetaAnalysisStudiesSig = function() private$..MetaAnalysisStudiesSig$value,
-        showHypothesisBtn = function() private$..showHypothesisBtn$value,
+        metaVar1 = function() private$..metaVar1$value,
+        metaVar2 = function() private$..metaVar2$value,
         makeSampleBtn = function() private$..makeSampleBtn$value,
         numberSamples = function() private$..numberSamples$value,
         makeMultipleBtn = function() private$..makeMultipleBtn$value,
@@ -1757,7 +2014,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         analysisExploreList = function() private$..analysisExploreList$value,
         moreExploreList = function() private$..moreExploreList$value,
         showExploreParam = function() private$..showExploreParam$value,
-        showExploreDimension = function() private$..showExploreDimension$value,
+        showExploreStyle = function() private$..showExploreStyle$value,
         whichShowMultiple = function() private$..whichShowMultiple$value,
         sendSample = function() private$..sendSample$value,
         sendMultiple = function() private$..sendMultiple$value,
@@ -1766,7 +2023,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         showHTML = function() private$..showHTML$value,
         fixedAxes = function() private$..fixedAxes$value,
         shorthandCalculations = function() private$..shorthandCalculations$value,
-        autoShowHypothesis = function() private$..autoShowHypothesis$value,
+        showHypothesisLst = function() private$..showHypothesisLst$value,
+        dispRZ = function() private$..dispRZ$value,
         systemMag = function() private$..systemMag$value,
         goBack = function() private$..goBack$value,
         goForwards = function() private$..goForwards$value,
@@ -1819,12 +2077,36 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         doProject3ChBtn = function() private$..doProject3ChBtn$value,
         doProject3C1Btn = function() private$..doProject3C1Btn$value,
         doProject3C3Btn = function() private$..doProject3C3Btn$value,
+        doProject4sLstA1 = function() private$..doProject4sLstA1$value,
+        doProject4sLstA2 = function() private$..doProject4sLstA2$value,
+        doProject4sLst = function() private$..doProject4sLst$value,
+        doProject4sLstB = function() private$..doProject4sLstB$value,
+        doProject4sLstC = function() private$..doProject4sLstC$value,
+        doProject4sLstD = function() private$..doProject4sLstD$value,
+        doProject4sLstE = function() private$..doProject4sLstE$value,
+        doProject4sLstF = function() private$..doProject4sLstF$value,
+        doProject4sLstG = function() private$..doProject4sLstG$value,
+        doProject4sLstI = function() private$..doProject4sLstI$value,
+        doProject4sLstJ = function() private$..doProject4sLstJ$value,
+        doProject4sLstK = function() private$..doProject4sLstK$value,
+        doProject4AhBtn = function() private$..doProject4AhBtn$value,
+        doProject4A1Btn = function() private$..doProject4A1Btn$value,
+        doProject4A2Btn = function() private$..doProject4A2Btn$value,
+        doProject4BhBtn = function() private$..doProject4BhBtn$value,
+        doProject4B1Btn = function() private$..doProject4B1Btn$value,
+        doProject4B2Btn = function() private$..doProject4B2Btn$value,
+        doProject4B3Btn = function() private$..doProject4B3Btn$value,
+        doProject4ChBtn = function() private$..doProject4ChBtn$value,
+        doProject4C1Btn = function() private$..doProject4C1Btn$value,
+        doProject4C2Btn = function() private$..doProject4C2Btn$value,
+        doProject4C3Btn = function() private$..doProject4C3Btn$value,
         lastDemo = function() private$..lastDemo$value),
     private = list(
         ..demosHelp = NA,
         ..demo1Help = NA,
         ..demo2Help = NA,
         ..demo3Help = NA,
+        ..demo4Help = NA,
         ..simHelp = NA,
         ..simPlanHelp = NA,
         ..simSingleHelp = NA,
@@ -1884,7 +2166,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..SampleSize = NA,
         ..SampleSizeM = NA,
         ..SampleSpreadOn = NA,
-        ..SampleGamma = NA,
+        ..SampleSD = NA,
         ..SampleMethod = NA,
         ..PoorSamplingAmount = NA,
         ..SampleUsage1 = NA,
@@ -1921,11 +2203,15 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..useAIC = NA,
         ..MetaAnalysisOn = NA,
         ..MetaAnalysisType = NA,
+        ..MetaAnalysisRandVar = NA,
+        ..MetaAnalysisPrior = NA,
         ..MetaAnalysisNulls = NA,
         ..MetaAnalysisBias = NA,
         ..MetaAnalysisNStudies = NA,
+        ..MetaAnalysisMethod = NA,
         ..MetaAnalysisStudiesSig = NA,
-        ..showHypothesisBtn = NA,
+        ..metaVar1 = NA,
+        ..metaVar2 = NA,
         ..makeSampleBtn = NA,
         ..numberSamples = NA,
         ..makeMultipleBtn = NA,
@@ -1960,7 +2246,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..analysisExploreList = NA,
         ..moreExploreList = NA,
         ..showExploreParam = NA,
-        ..showExploreDimension = NA,
+        ..showExploreStyle = NA,
         ..whichShowMultiple = NA,
         ..sendSample = NA,
         ..sendMultiple = NA,
@@ -1969,7 +2255,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..showHTML = NA,
         ..fixedAxes = NA,
         ..shorthandCalculations = NA,
-        ..autoShowHypothesis = NA,
+        ..showHypothesisLst = NA,
+        ..dispRZ = NA,
         ..systemMag = NA,
         ..goBack = NA,
         ..goForwards = NA,
@@ -2022,6 +2309,29 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..doProject3ChBtn = NA,
         ..doProject3C1Btn = NA,
         ..doProject3C3Btn = NA,
+        ..doProject4sLstA1 = NA,
+        ..doProject4sLstA2 = NA,
+        ..doProject4sLst = NA,
+        ..doProject4sLstB = NA,
+        ..doProject4sLstC = NA,
+        ..doProject4sLstD = NA,
+        ..doProject4sLstE = NA,
+        ..doProject4sLstF = NA,
+        ..doProject4sLstG = NA,
+        ..doProject4sLstI = NA,
+        ..doProject4sLstJ = NA,
+        ..doProject4sLstK = NA,
+        ..doProject4AhBtn = NA,
+        ..doProject4A1Btn = NA,
+        ..doProject4A2Btn = NA,
+        ..doProject4BhBtn = NA,
+        ..doProject4B1Btn = NA,
+        ..doProject4B2Btn = NA,
+        ..doProject4B3Btn = NA,
+        ..doProject4ChBtn = NA,
+        ..doProject4C1Btn = NA,
+        ..doProject4C2Btn = NA,
+        ..doProject4C3Btn = NA,
         ..lastDemo = NA)
 )
 
@@ -2067,7 +2377,7 @@ BrawSimResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible=TRUE,
                 renderFun=".plotSimGraph",
                 clearWith=list(
-                    "showHypothesisBtn",
+                    "showHypothesisLst",
                     "makeSampleBtn",
                     "showSampleType",
                     "showInferParam",
@@ -2081,8 +2391,11 @@ BrawSimResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "makeExploreBtn",
                     "showExploreParam",
                     "showExploreDimension",
+                    "showExploreStyle",
                     "whichShowMultiple",
                     "MetaAnalysisType",
+                    "MetaAnalysisMethod",
+                    "MetaAnalysisPrior",
                     "MetaAnalysisBias",
                     "MetaAnalysisNulls",
                     "goBack",
@@ -2092,7 +2405,7 @@ BrawSimResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="simReport",
                 visible=TRUE,
                 clearWith=list(
-                    "showHypothesisBtn",
+                    "showHypothesisLst",
                     "makeSampleBtn",
                     "showSampleType",
                     "showInferParam",
@@ -2169,6 +2482,7 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param demo1Help .
 #' @param demo2Help .
 #' @param demo3Help .
+#' @param demo4Help .
 #' @param simHelp .
 #' @param simPlanHelp .
 #' @param simSingleHelp .
@@ -2228,7 +2542,7 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param SampleSize .
 #' @param SampleSizeM .
 #' @param SampleSpreadOn .
-#' @param SampleGamma .
+#' @param SampleSD .
 #' @param SampleMethod .
 #' @param PoorSamplingAmount .
 #' @param SampleUsage1 .
@@ -2265,11 +2579,15 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param useAIC .
 #' @param MetaAnalysisOn .
 #' @param MetaAnalysisType .
+#' @param MetaAnalysisRandVar .
+#' @param MetaAnalysisPrior .
 #' @param MetaAnalysisNulls .
 #' @param MetaAnalysisBias .
 #' @param MetaAnalysisNStudies .
+#' @param MetaAnalysisMethod .
 #' @param MetaAnalysisStudiesSig .
-#' @param showHypothesisBtn .
+#' @param metaVar1 .
+#' @param metaVar2 .
 #' @param makeSampleBtn .
 #' @param numberSamples .
 #' @param makeMultipleBtn .
@@ -2304,13 +2622,14 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param analysisExploreList .
 #' @param moreExploreList .
 #' @param showExploreParam .
-#' @param showExploreDimension .
+#' @param showExploreStyle .
 #' @param whichShowMultiple .
 #' @param brawHelp .
 #' @param showHTML .
 #' @param fixedAxes .
 #' @param shorthandCalculations .
-#' @param autoShowHypothesis .
+#' @param showHypothesisLst .
+#' @param dispRZ .
 #' @param systemMag .
 #' @param goBack .
 #' @param goForwards .
@@ -2363,6 +2682,29 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param doProject3ChBtn .
 #' @param doProject3C1Btn .
 #' @param doProject3C3Btn .
+#' @param doProject4sLstA1 .
+#' @param doProject4sLstA2 .
+#' @param doProject4sLst .
+#' @param doProject4sLstB .
+#' @param doProject4sLstC .
+#' @param doProject4sLstD .
+#' @param doProject4sLstE .
+#' @param doProject4sLstF .
+#' @param doProject4sLstG .
+#' @param doProject4sLstI .
+#' @param doProject4sLstJ .
+#' @param doProject4sLstK .
+#' @param doProject4AhBtn .
+#' @param doProject4A1Btn .
+#' @param doProject4A2Btn .
+#' @param doProject4BhBtn .
+#' @param doProject4B1Btn .
+#' @param doProject4B2Btn .
+#' @param doProject4B3Btn .
+#' @param doProject4ChBtn .
+#' @param doProject4C1Btn .
+#' @param doProject4C2Btn .
+#' @param doProject4C3Btn .
 #' @param lastDemo .
 #' @return A results object containing:
 #' \tabular{llllll}{
@@ -2383,6 +2725,7 @@ BrawSim <- function(
     demo1Help,
     demo2Help,
     demo3Help,
+    demo4Help,
     simHelp,
     simPlanHelp,
     simSingleHelp,
@@ -2442,7 +2785,7 @@ BrawSim <- function(
     SampleSize = 42,
     SampleSizeM = 42,
     SampleSpreadOn = FALSE,
-    SampleGamma = 1.56,
+    SampleSD = 33.3,
     SampleMethod = "Random",
     PoorSamplingAmount = 0.65,
     SampleUsage1 = "Between",
@@ -2479,17 +2822,21 @@ BrawSim <- function(
     useAIC = "AIC",
     MetaAnalysisOn = FALSE,
     MetaAnalysisType = "random",
+    MetaAnalysisRandVar = "sd",
+    MetaAnalysisPrior = "none",
     MetaAnalysisNulls = "no",
     MetaAnalysisBias = "no",
     MetaAnalysisNStudies = 20,
-    MetaAnalysisStudiesSig = "sigOnly",
-    showHypothesisBtn,
+    MetaAnalysisMethod = "MLE",
+    MetaAnalysisStudiesSig = 0,
+    metaVar1 = "metaRiv",
+    metaVar2 = "metaRsd",
     makeSampleBtn = FALSE,
     numberSamples = 100,
     makeMultipleBtn,
     inferVar1 = "rs",
     inferVar2 = "p",
-    showSampleType = "Compact",
+    showSampleType = "Basic",
     showInferDimension = "1D",
     reportInferStats = "Medians",
     showMultipleParam = "Basic",
@@ -2518,13 +2865,14 @@ BrawSim <- function(
     analysisExploreList,
     moreExploreList,
     showExploreParam = "Basic",
-    showExploreDimension = "1D",
+    showExploreStyle = "stats",
     whichShowMultiple = "all",
     brawHelp = TRUE,
     showHTML = FALSE,
     fixedAxes = FALSE,
     shorthandCalculations = FALSE,
-    autoShowHypothesis = FALSE,
+    showHypothesisLst = "Default",
+    dispRZ = "r",
     systemMag = 0.5,
     goBack,
     goForwards,
@@ -2534,7 +2882,7 @@ BrawSim <- function(
     doProject1sLst = "Perfectionism",
     doProject1sLstA = "ExamGrade",
     doProject1sLstB = 0.3,
-    doProject1sLstC = "Compact",
+    doProject1sLstC = "Basic",
     doProject1sLstD = "Random",
     doProject1sLstE = 42,
     doProject1BhBtn,
@@ -2577,6 +2925,29 @@ BrawSim <- function(
     doProject3ChBtn,
     doProject3C1Btn,
     doProject3C3Btn,
+    doProject4sLstA1 = "RiskTaker",
+    doProject4sLstA2 = "Smoker",
+    doProject4sLst = "ExamGrade",
+    doProject4sLstB = 0.5,
+    doProject4sLstC = -0.5,
+    doProject4sLstD = 0,
+    doProject4sLstE = "no",
+    doProject4sLstF = 0,
+    doProject4sLstG = "Basic",
+    doProject4sLstI = "direct",
+    doProject4sLstJ = "Covariation",
+    doProject4sLstK = 200,
+    doProject4AhBtn,
+    doProject4A1Btn,
+    doProject4A2Btn,
+    doProject4BhBtn,
+    doProject4B1Btn,
+    doProject4B2Btn,
+    doProject4B3Btn,
+    doProject4ChBtn,
+    doProject4C1Btn,
+    doProject4C2Btn,
+    doProject4C3Btn,
     lastDemo = "none") {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
@@ -2588,6 +2959,7 @@ BrawSim <- function(
         demo1Help = demo1Help,
         demo2Help = demo2Help,
         demo3Help = demo3Help,
+        demo4Help = demo4Help,
         simHelp = simHelp,
         simPlanHelp = simPlanHelp,
         simSingleHelp = simSingleHelp,
@@ -2647,7 +3019,7 @@ BrawSim <- function(
         SampleSize = SampleSize,
         SampleSizeM = SampleSizeM,
         SampleSpreadOn = SampleSpreadOn,
-        SampleGamma = SampleGamma,
+        SampleSD = SampleSD,
         SampleMethod = SampleMethod,
         PoorSamplingAmount = PoorSamplingAmount,
         SampleUsage1 = SampleUsage1,
@@ -2684,11 +3056,15 @@ BrawSim <- function(
         useAIC = useAIC,
         MetaAnalysisOn = MetaAnalysisOn,
         MetaAnalysisType = MetaAnalysisType,
+        MetaAnalysisRandVar = MetaAnalysisRandVar,
+        MetaAnalysisPrior = MetaAnalysisPrior,
         MetaAnalysisNulls = MetaAnalysisNulls,
         MetaAnalysisBias = MetaAnalysisBias,
         MetaAnalysisNStudies = MetaAnalysisNStudies,
+        MetaAnalysisMethod = MetaAnalysisMethod,
         MetaAnalysisStudiesSig = MetaAnalysisStudiesSig,
-        showHypothesisBtn = showHypothesisBtn,
+        metaVar1 = metaVar1,
+        metaVar2 = metaVar2,
         makeSampleBtn = makeSampleBtn,
         numberSamples = numberSamples,
         makeMultipleBtn = makeMultipleBtn,
@@ -2723,13 +3099,14 @@ BrawSim <- function(
         analysisExploreList = analysisExploreList,
         moreExploreList = moreExploreList,
         showExploreParam = showExploreParam,
-        showExploreDimension = showExploreDimension,
+        showExploreStyle = showExploreStyle,
         whichShowMultiple = whichShowMultiple,
         brawHelp = brawHelp,
         showHTML = showHTML,
         fixedAxes = fixedAxes,
         shorthandCalculations = shorthandCalculations,
-        autoShowHypothesis = autoShowHypothesis,
+        showHypothesisLst = showHypothesisLst,
+        dispRZ = dispRZ,
         systemMag = systemMag,
         goBack = goBack,
         goForwards = goForwards,
@@ -2782,6 +3159,29 @@ BrawSim <- function(
         doProject3ChBtn = doProject3ChBtn,
         doProject3C1Btn = doProject3C1Btn,
         doProject3C3Btn = doProject3C3Btn,
+        doProject4sLstA1 = doProject4sLstA1,
+        doProject4sLstA2 = doProject4sLstA2,
+        doProject4sLst = doProject4sLst,
+        doProject4sLstB = doProject4sLstB,
+        doProject4sLstC = doProject4sLstC,
+        doProject4sLstD = doProject4sLstD,
+        doProject4sLstE = doProject4sLstE,
+        doProject4sLstF = doProject4sLstF,
+        doProject4sLstG = doProject4sLstG,
+        doProject4sLstI = doProject4sLstI,
+        doProject4sLstJ = doProject4sLstJ,
+        doProject4sLstK = doProject4sLstK,
+        doProject4AhBtn = doProject4AhBtn,
+        doProject4A1Btn = doProject4A1Btn,
+        doProject4A2Btn = doProject4A2Btn,
+        doProject4BhBtn = doProject4BhBtn,
+        doProject4B1Btn = doProject4B1Btn,
+        doProject4B2Btn = doProject4B2Btn,
+        doProject4B3Btn = doProject4B3Btn,
+        doProject4ChBtn = doProject4ChBtn,
+        doProject4C1Btn = doProject4C1Btn,
+        doProject4C2Btn = doProject4C2Btn,
+        doProject4C3Btn = doProject4C3Btn,
         lastDemo = lastDemo)
 
     analysis <- BrawSimClass$new(

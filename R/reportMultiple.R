@@ -48,6 +48,7 @@ reportMultiple<-function(multipleResult=braw.res$multiple,showType="Basic",
     
     if (length(showType)==1) {
       switch(showType,
+             "Single"=     {pars<-c("rs")},
              "Basic"=     {pars<-c("rs","p")},
              "p(sig)"= {pars<-c("p")},
              "Power"=     {pars<-c("ws","wp")},
@@ -57,14 +58,14 @@ reportMultiple<-function(multipleResult=braw.res$multiple,showType="Basic",
              "Hits"=       {pars<-c("e1a","e2a")},
              "Misses"=       {pars<-c("e1b","e2b")},
              "DV"=     {pars<-c("dv.mn","dv.sd","dv.sk","dv.kt")},
-             "Residuals"=     {pars<-c("rd.mn","rd.sd","rd.sk","rd.kt")},
+             "Residuals"=     {pars<-c("er.mn","er.sd","er.sk","er.kt")},
              { pars<-strsplit(showType,";")[[1]]
              }
       )
     } else pars<-showType
     
     if (is.null(IV2) || effectType!="all") {nc=4+length(pars)}
-    else { nc=4+length(pars)*3 }
+    else { nc=4+length(pars)*9 }
     
     if (is.element(showType,c("NHST","SEM"))) {nc=6}
     if (is.element(showType,c("Hits","Misses"))) {nc=4}
@@ -126,21 +127,19 @@ reportMultiple<-function(multipleResult=braw.res$multiple,showType="Basic",
         if (showType=="SEM") outputText1[2]<-"!HModel"
       } else {
       if (!is.null(IV2)){
-        if (effectTypes==1) outputText<-c(outputText,"!H!C ","!C ",effectType,rep(" ",nc-3))
-        else outputText<-c(outputText,"!H!C ","!C ","direct"," "," ","unique"," "," ","total"," "," ")
-      }
+        
+        if (effectTypes==1) headerText<-c("!H!C ","!C ",effectType)
+        else headerText<-c("!H!C ","!C ","direct",rep(" ",length(pars)),"unique",rep(" ",length(pars)),"total",rep(" ",length(pars)))
+        outputText<-c(outputText,headerText,rep(" ",nc-length(headerText)))
+        }
       
       outputText1<-c()
       for (par in pars) {
-        if (braw.env$RZ=="z") {
-          switch(par,
-                 "rs"={par="zs"},
-                 "rp"={par="zp"},
-                 "ro"={par="zo"},
-                 "re"={par="ze"},
-                 {par=par}
-          )
-        }
+        if (is.element(par,c("rs","rp","re","ro","metaRiv","metaRsd")))
+          switch(braw.env$RZ,
+                 "r"={},
+                 "z"={par<-gsub("^r","z",par)}
+                 )
         par<-gsub("^([rz]{1})([spoe]{1})$","\\1\\[\\2\\]",par)
         if (par=="llknull") par<-"llr[+]"
         if (par=="AIC") par<-"diff(AIC)"
@@ -177,7 +176,7 @@ reportMultiple<-function(multipleResult=braw.res$multiple,showType="Basic",
           e2=paste0(brawFormat(sum(resSigW)/length(resSig)*100,digits=1),"%")
         }
         
-        if (result$effect$world$worldOn) {
+        if (effect$world$worldOn) {
           nr<-(length(nullresult$pIV)+length(result$pIV))
           if (braw.env$STMethod=="NHST") {
             e1a<-paste0("!j",brawFormat(sum(nullSig)/nr*100,digits=1),"%")
@@ -326,23 +325,11 @@ reportMultiple<-function(multipleResult=braw.res$multiple,showType="Basic",
               ot6<-c(ot6,"")
             }
             switch (pars[j],
-                    "rs"={
-                      a<-r
-                      if (braw.env$RZ=="z") a<-atanh(a)
-                    },
-                    "p"={a<-p},
-                    "rp"={
-                      a<-result$rpIV
-                      if (braw.env$RZ=="z") a<-atanh(a)
-                    },
-                    "ro"={
-                      a<-result$roIV
-                      if (braw.env$RZ=="z") a<-atanh(a)
-                    },
-                    "re"={
-                      a<-result$rIV-result$rpIV
-                      if (braw.env$RZ=="z") a<-atanh(a)
-                    },
+                    "rs"={ a<-r },
+                    "p"={ a<-p},
+                    "rp"={ a<-result$rpIV },
+                    "ro"={ a<-result$roIV },
+                    "re"={ a<-result$rIV-result$rpIV},
                     "po"={a<-result$poIV},
                     "llknull"={a<-(-0.5*(result$aic-result$aicNull))},
                     "AIC"={a<-result$aic-result$aicNull},
@@ -363,11 +350,16 @@ reportMultiple<-function(multipleResult=braw.res$multiple,showType="Basic",
                     "dv.sd"={a<-result$dv.sd},
                     "dv.sk"={a<-result$dv.sk},
                     "dv.kt"={a<-result$dv.kt},
-                    "rd.mn"={a<-result$rd.mn},
-                    "rd.sd"={a<-result$rd.sd},
-                    "rd.sk"={a<-result$rd.sk},
-                    "rd.kt"={a<-result$rd.kt}
+                    "er.mn"={a<-result$er.mn},
+                    "er.sd"={a<-result$er.sd},
+                    "er.sk"={a<-result$er.sk},
+                    "er.kt"={a<-result$er.kt}
             )
+            if (is.element(pars[j],c("rs","rp","re","ro","metaRiv","metaRsd")))
+              switch(braw.env$RZ,
+                     "r"={},
+                     "z"={a<-atan(a)}
+                     )
             ot1<-c(ot1,
                    paste0("!j",brawFormat(mean(a,na.rm=TRUE),digits=braw.env$report_precision))
             )
@@ -401,7 +393,7 @@ reportMultiple<-function(multipleResult=braw.res$multiple,showType="Basic",
           else              outputText<-c(outputText,ot4,rep(" ",nc-length(ot4)))
         }
         
-        if (pars[1]=="p" || pars[2]=="p") {
+        if (any(pars=="p")) {
           if (is.null(IV2)) {
             outputText<-c(outputText,rep("",nc),
                           paste0("!j\bp(sig) = ",brawFormat(sum(p<braw.env$alphaSig,na.rm=TRUE)/sum(!is.na(p))*100,digits=1),"%"),rep(" ",nc-1))

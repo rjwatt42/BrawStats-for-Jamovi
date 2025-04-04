@@ -6,7 +6,9 @@
 #' @examples
 #' showExplore(exploreResult=doExplore(),
 #'                        showType="rs",
-#'                        whichEffect="All",effectType="all")
+#'                        whichEffect="All",effectType="all",
+#'                        quantileShow=0.5,reportStats="Medians"
+#'                        )
 #' @export
 reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
                         whichEffect="All",effectType="all",
@@ -21,8 +23,11 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
   
   if (exploreResult$doingMetaAnalysis) 
     switch(exploreResult$metaAnalysis$analysisType,
-           "fixed"={showType<-"LambdaF"},
-           "random"={showType<-"LambdaF;LambdaR"},
+           "fixed"={
+             showType<-"metaRiv"
+             if (exploreResult$metaAnalysis$analyseBias) showType<-paste0(showType,";metaBias")
+           },
+           "random"={showType<-"metaRiv;metaRsd"},
            {showType<-"Lambda;pNull"})
   
   showType<-strsplit(showType,";")[[1]]
@@ -32,7 +37,7 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
            "Power"=     {showType<-c("ws","wp")},
            "CILimits"=  {showType<-c("ci1","ci2")},
            "DV"= {showType<-c("dv.mn","dv.sd","dv.sk","dv.kt")},
-           "Residuals"= {showType<-c("rd.mn","rd.sd","rd.sk","rd.kt")},
+           "Residuals"= {showType<-c("er.mn","er.sd","er.sk","er.kt")},
            {}
     )
   }
@@ -45,8 +50,8 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
   evidence<-exploreResult$evidence
   
   oldAlpha<-braw.env$alphaSig
-  on.exit(braw.env$alphaSig<-oldAlpha)
-  
+  on.exit(setBrawEnv("alphaSig",oldAlpha),add=TRUE)
+
   max_cols<-10
   
   vals<-exploreResult$vals
@@ -105,7 +110,11 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
       if (!tableHeader) {
         outputText<-c(outputText,"!T"," ",exploreTypeShow,rep(" ",nc-3))
         headerText<-c(paste0("!H"),"!D ")
-        if (explore$exploreType=="rIV" && braw.env$RZ=="z")  vals<-atanh(vals)
+        if (explore$exploreType=="rIV")
+          switch(braw.env$RZ,
+                 "r"={},
+                 "z"={vals<-atanh(vals)}
+          )
         for (i in 1:length(useVals)) {
           if (is.numeric(vals[useVals[i]]))
             headerText<-c(headerText,brawFormat(vals[useVals[i]],digits=precision))
@@ -161,8 +170,10 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
         yiqre<-c()
         switch (showType,
                 "rs"={
-                  showVals<-rVals
-                  if (braw.env$RZ=="z") showVals<-atanh(showVals)
+                  switch(braw.env$RZ,
+                         "r"={showVals<-rVals},
+                         "z"={showVals<-atanh(rVals)}
+                         )
                 },
                 "p"={
                   showVals<-pVals
@@ -378,10 +389,13 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
                   df1<-exploreResult$result$df1
                   showVals<-r2llr(rVals,ns,df1,"dLLR",exploreResult$evidence$llr,exploreResult$evidence$prior)
                 },
-                "LambdaF"={
+                "metaBias"={
+                  showVals<-exploreResult$result$param3
+                },
+                "metaRiv"={
                   showVals<-exploreResult$result$param1
                 },
-                "LambdaR"={
+                "metaRsd"={
                   showVals<-exploreResult$result$param2
                 },
                 "Lambda"={
@@ -401,7 +415,7 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
                     yiqr[i]<-p_se
                   }
                 },
-                "S"={
+                "metaS"={
                   showVals<-exploreResult$result$S
                 },
                 "iv.mn"={
@@ -428,23 +442,23 @@ reportExplore<-function(exploreResult=braw.res$explore,showType="rs",
                 "dv.kt"={
                   showVals<-exploreResult$result$dv$kt
                 },
-                "rd.mn"={
+                "er.mn"={
                   showVals<-exploreResult$result$rs$mn
                 },
-                "rd.sd"={
+                "er.sd"={
                   showVals<-exploreResult$result$rs$sd
                 },
-                "rd.sk"={
+                "er.sk"={
                   showVals<-exploreResult$result$rs$sk
                 },
-                "rd.kt"={
+                "er.kt"={
                   showVals<-exploreResult$result$rs$kt
                 }
         )
         if (is.element(showType,c("rs","p","ws","n","AIC","log(lrs)","log(lrd)",
-                                  "LambdaF","LambdaR","Lambda","pNull","S",
+                                  "metaBias","metaRiv","metaRsd","Lambda","pNull","metaS",
                                   "iv.mn","iv.sd","iv.sk","iv.kt","dv.mn","dv.sd","dv.sk","dv.kt",
-                                  "rd.mn","rd.sd","rd.sk","rd.kt"))) {
+                                  "er.mn","er.sd","er.sk","er.kt"))) {
           quants=(1-quantileShow)/2
           for (i in 1:length(exploreResult$vals)) {
             y75[i]<-quantile(showVals[,i],0.5+quants,na.rm=TRUE)

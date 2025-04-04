@@ -24,7 +24,7 @@ items:
       visible: TRUE
       renderFun: .plotSimGraph
       clearWith:
-      - showHypothesisBtn
+      - showHypothesisLst
       - makeSampleBtn
       - showSampleType
       - showInferParam
@@ -38,8 +38,11 @@ items:
       - makeExploreBtn
       - showExploreParam
       - showExploreDimension
+      - showExploreStyle
       - whichShowMultiple
       - MetaAnalysisType
+      - MetaAnalysisMethod
+      - MetaAnalysisPrior
       - MetaAnalysisBias
       - MetaAnalysisNulls
       - goBack
@@ -52,7 +55,7 @@ items:
       # height: 200
       visible: TRUE
       clearWith:
-      - showHypothesisBtn
+      - showHypothesisLst
       - makeSampleBtn
       - showSampleType
       - showInferParam

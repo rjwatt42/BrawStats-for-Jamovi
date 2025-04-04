@@ -21,7 +21,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                           showMultipleDimension="1D",
                           whichShowMultipleOut="all",
                           showExploreParam="Basic",
-                          showExploreDimension="1D",
+                          showExploreStyle="stats",
                           whichShowExploreOut="all",
                           exploreMode="Design",
                           basicHelpWhich=0,
@@ -52,13 +52,13 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       # self$results$debug$setVisible(TRUE)
       # return()
       
-      doDemos<-3 # set to 6 to include path demos
+      doDemos<-4 # set to 6 to include path demos
       systemAsHTML<-TRUE
       nestedHelp<-TRUE
       joinSystem<-TRUE
       
       if (joinSystem) self$results$SystemHTML$setVisible(FALSE)
-      else self$results$SystemHTML$setVisible(TRUE)
+      else            self$results$SystemHTML$setVisible(TRUE)
       
       history<-.history
 
@@ -98,8 +98,8 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (self$options$doProject3ChBtn) statusStore$demoHelpWhich<-c(4,4)
       if (doDemos>3) {
         if (self$options$doProject4AhBtn) statusStore$demoHelpWhich<-c(5,2)
-        if (self$options$doProject4BhBtn) statusStore$demoHelpWhich<-c(5,3)
-        if (self$options$doProject4ChBtn) statusStore$demoHelpWhich<-c(5,4)
+        # if (self$options$doProject4BhBtn) statusStore$demoHelpWhich<-c(5,3)
+        # if (self$options$doProject4ChBtn) statusStore$demoHelpWhich<-c(5,4)
       }
       if (doDemos>4) {
         if (self$options$doProject5AhBtn) statusStore$demoHelpWhich<-c(6,2)
@@ -108,6 +108,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       
       statusStore$openJamovi<-0
       if (self$options$doProject1A2Btn) statusStore$openJamovi<-1
+      if (self$options$doProject4A2Btn) statusStore$openJamovi<-1
       
       if (!self$options$goBack && !self$options$goForwards) {
       # get some display parameters for later
@@ -125,6 +126,9 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (is.element(showMultipleParam,c("Basic","Custom"))) {
         showMultipleParam<-paste0(self$options$inferVar1,";",self$options$inferVar2)
       } 
+      if (is.element(showMultipleParam,c("Single"))) {
+        showMultipleParam<-self$options$inferVar1
+      } 
       showMultipleDimension<-self$options$showMultipleDimension
       whichShowMultipleOut<-self$options$whichShowMultiple
       
@@ -137,8 +141,12 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (is.element(showExploreParam,c("Basic","Custom"))) {
         showExploreParam<-paste0(self$options$inferVar1,";",self$options$inferVar2)
       } 
-      showExploreDimension<-self$options$showExploreDimension
+      showExploreStyle<-self$options$showExploreStyle
       whichShowExploreOut<-self$options$whichShowMultiple
+      
+      # metaAnalysis 
+      showMetaParam<-paste0(self$options$metaVar1,";",self$options$metaVar2)
+      showMetaDimension<-self$options$showMultipleDimension
       
       # make all the standard things we need
       # the hypothesis has IV, DV and effect
@@ -183,7 +191,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       oldD<-braw.def$design
       #
       design<-makeDesign(sN=self$options$SampleSize,
-                         sNRand=self$options$SampleSpreadOn,sNRandK=self$options$SampleGamma,
+                         sNRand=self$options$SampleSpreadOn,sNRandSD=self$options$SampleSD,
                          sMethod=makeSampling(self$options$SampleMethod),
                          sMethodSeverity=self$options$PoorSamplingAmount,
                                 sIV1Use=self$options$SampleUsage1,
@@ -218,6 +226,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       )
       changedE<- !identical(oldE,evidence)
       braw.env$alphaSig<<-self$options$alphaSig
+      braw.env$RZ<<-self$options$dispRZ
       
       # set up the explore variable
       oldX<-braw.def$explore
@@ -262,11 +271,15 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       oldM<-braw.def$metaAnalysis
       #
       metaAnalysis<-makeMetaAnalysis(nstudies=self$options$MetaAnalysisNStudies,
-                                 analysisType=self$options$MetaAnalysisType,
-                                 modelPDF="All",
-                                 sigOnlySource=self$options$MetaAnalysisStudiesSig=="sigOnly",
-                                 includeNulls=self$options$MetaAnalysisNulls=="yes",
-                                 includeBias=self$options$MetaAnalysisBias=="yes")
+                                     method=self$options$MetaAnalysisMethod,
+                                     analysisType=self$options$MetaAnalysisType,
+                                     analysisVar=self$options$MetaAnalysisRandVar,
+                                     analysisPrior=self$options$MetaAnalysisPrior,
+                                     modelPDF="All",
+                                     sourceBias=self$options$MetaAnalysisStudiesSig,
+                                     includeNulls=self$options$MetaAnalysisNulls=="yes",
+                                     analyseBias=self$options$MetaAnalysisBias=="yes"
+                                     )
       changedM<- !identical(oldM,metaAnalysis)
       
       # store the option variables inside the braw package
@@ -276,9 +289,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       braw.def$explore<<-explore
       braw.def$metaAnalysis<<-metaAnalysis
 
-      # we pressed the "show" hypothesis button
       openSystem<-0
-      if (self$options$showHypothesisBtn) openSystem<-1
       # now deal with a request for help/instructions
       # after we have set up the hypothesis
       indent<-0
@@ -310,20 +321,27 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       } else help<-''
       
       if (systemAsHTML) {
-        if (changedD && design$sNRand) openSystem<-2
-        if (changedD && !design$sNRand) openSystem<-1
-        if (changedH) openSystem<-1
-        if (changedE) openSystem<-1
-        if (!self$options$autoShowHypothesis) openSystem<-0
+        switch(self$options$showHypothesisLst,
+               "Default"={
+                 openSystem<-0
+                 if (changedD && design$sNRand) openSystem<-2
+                 if (changedD && !design$sNRand) openSystem<-1
+                 if (changedH) openSystem<-1
+                 if (changedE) openSystem<-1
+               },
+               "Hypothesis"={openSystem<-1},
+               "Design"={openSystem<-2},
+               "Likelihood"={openSystem<-3}) 
+        
         assign("graphHTML",TRUE,braw.env)
         svgBox(400*self$options$systemMag)
-        h<-showHypothesis()
+        h<-showSystem("hypothesis")
         svgBox(360*self$options$systemMag)
-        sd<-showDesign()
+        sd<-showSystem("design")
         svgBox(180)
         rd<-reportDesign()
         svgBox(400*self$options$systemMag)
-        e<-showPrediction()
+        e<-showSystem("prediction")
         # l<-showPossible(NA,showType="Samples")
         systemHTML<-generate_tab(
           titleWidth=50,
@@ -358,7 +376,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       # are we asking for a different display of the current explore?
       if (!is.null(braw.res$explore) && statusStore$lastOutput=="Explore") {
         if (showExploreParam != statusStore$showExploreParam ||
-            showExploreDimension != statusStore$showInferDimension ||
+            showExploreStyle != statusStore$showExploreStyle ||
             whichShowExploreOut != statusStore$whichShowExploreOut)
           outputNow<-"Explore"
       }
@@ -370,7 +388,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           outputNow<-"Multiple"
       }
       # or result?
-      if (!is.null(braw.res$result) && is.element(statusStore$lastOutput,c("Compact","Sample","Describe","Infer","Variables","Likelihood"))) {
+      if (!is.null(braw.res$result) && is.element(statusStore$lastOutput,c("Basic","Sample","Describe","Infer","Variables","Likelihood"))) {
         if (showInferParam != statusStore$showInferParam ||
             showInferDimension != statusStore$showInferDimension)
           outputNow<-"Infer"
@@ -392,7 +410,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         braw.res$explore<<-NULL
         braw.res$metaSingle<<-NULL
         braw.res$metaMultiple<<-NULL
-        if (!is.null(braw.res$result) && is.element(statusStore$lastOutput,c("Compact","Sample","Describe","Infer","Variables","Likelihood"))) {
+        if (!is.null(braw.res$result) && is.element(statusStore$lastOutput,c("Basic","Sample","Describe","Infer","Variables","Likelihood"))) {
           braw.res$result<<-doAnalysis(sample=braw.res$result)
           outputNow<-showSampleType
         }
@@ -403,16 +421,17 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
       if (changedM) {
         braw.res$metaMultiple<<-NULL
-        if (oldM$nstudies!=metaAnalysis$nstudies 
-            || oldM$sigOnlySource!=metaAnalysis$sigOnlySource) {
+        changedMsource<-(oldM$nstudies!=metaAnalysis$nstudies 
+                         || oldM$sourceBias!=metaAnalysis$sourceBias)
+        if (changedMsource) {
           braw.res$metaSingle<<-NULL
         }
-        if (statusStore$lastOutput=="MetaSingle" 
-             && oldM$nstudies==metaAnalysis$nstudies 
-             && oldM$sigOnlySource==metaAnalysis$sigOnlySource) {
+        if (statusStore$lastOutput=="MetaSingle" && !changedMsource) {
           braw.res$metaSingle<-doMetaAnalysis(braw.res$metaSingle,keepStudies=TRUE)
           outputNow<-"MetaSingle"
         }
+        if (statusStore$lastOutput=="Explore" && self$options$MetaAnalysisOn)
+          braw.res$explore<<-NULL
       }
 
       if (systemAsHTML && !is.null(outputNow) && outputNow=="System") outputNow<-NULL
@@ -429,7 +448,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         } else {
           # do we need to do this, or are we just returning to the existing one?
           if (is.null(braw.res$result) || statusStore$lastOutput==showSampleType) 
-            doResult()
+            doSingle()
           outputNow<-showSampleType
         }
       }
@@ -471,7 +490,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         showMultipleDimension<-historyOptions$showMultipleDimension
         whichShowMultipleOut<-historyOptions$whichShowMultipleOut
         showExploreParam<-historyOptions$showExploreParam
-        showExploreDimension<-historyOptions$showExploreDimension
+        showExploreStyle<-historyOptions$showExploreStyle
         whichShowExploreOut<-historyOptions$whichShowExploreOut
         
         braw.res$result<<-history$historyData[[history$historyPlace]]$result
@@ -500,7 +519,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           if (self$options$showHTML) {
             svgBox(height=350,aspect=1.5)
             # if (outputNow=="System") svgBox(aspect=1.5)
-            # if (is.element(outputNow,c("Compact","Describe"))) svgBox(height=300)
+            # if (is.element(outputNow,c("Basic","Describe"))) svgBox(height=300)
             # if (outputNow=="Likelihood") svgBox(aspect=1.5)
             # if (is.element(outputNow,c("Infer","Multiple")) && is.element(showMultipleParam,c("Basic","Custom")) && showMultipleDimension=="2D") svgBox(height=250)
             # if (is.element(outputNow,c("Infer","Multiple")) && showMultipleDimension=="1D") svgBox(aspect=1.6)
@@ -511,29 +530,29 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             graphSystem<-paste0(showSystem(),reportSystem())
             if (!is.null(braw.res$result))
               switch(self$options$showSampleType,
-                     "Compact"= graphSingle<-paste0(showDescription(),reportInference()),
+                     "Basic"= graphSingle<-paste0(showDescription(),reportInference()),
                      "Variables" = graphSingle<-paste0(showMarginals(style="all"),reportSample()),
                      "Sample"= graphSingle<-paste0(showSample(),reportSample()),
                      "Describe"= graphSingle<-paste0(showDescription(),reportDescription()),
                      "Infer"= graphSingle<-paste0(showInference(showType=showInferParam,dimension=showInferDimension),reportInference()),
                      "Likelihood"=graphSingle<-paste0(showPossible(showType=self$options$likelihoodType,cutaway=likelihoodCutaway),reportLikelihood()),
                      "MetaSingle"  =graphSingle<-paste0(showMetaSingle(),reportMetaSingle()),
-                     "MetaMultiple"  =graphSingle<-paste0(showMetaMultiple(),reportMetaMultiple()),
+                     "MetaMultiple"  =graphSingle<-paste0(showMetaMultiple(showType=showMetaParam,dimension=showMetaDimension),reportMetaMultiple()),
               )
             else graphSingle<-nullPlot()
             if (!is.null(braw.res$multiple))
               graphMultiple<-paste0(showMultiple(showType=showMultipleParam,dimension=showMultipleDimension,effectType=whichShowMultipleOut),
-                                    reportMultiple(showType=showMultipleParam,reportStats=self$options$reportInferStats)
+                                    reportMultiple(showType=showMultipleParam,effectType=whichShowMultipleOut,reportStats=self$options$reportInferStats)
               )
             else graphMultiple<-nullPlot()
             if (!is.null(braw.res$explore))
-              graphExplore<-paste0(showExplore(showType=showExploreParam,dimension=showExploreDimension,effectType=whichShowExploreOut),
+              graphExplore<-paste0(showExplore(showType=showExploreParam,showHist=(showExploreStyle=="hist"),effectType=whichShowExploreOut),
                                    reportExplore(showType=showExploreParam,effectType=whichShowExploreOut,reportStats=self$options$reportInferStats)
                                    )
             else graphExplore<-nullPlot()
             switch(outputNow,
                    "System"= open<-0,
-                   "Compact"= open<-1,
+                   "Basic"= open<-1,
                    "Variables"= open<-1,
                    "Sample"= open<-1,
                    "Describe"= open<-1,
@@ -571,7 +590,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       self$results$simGraphHTML$setContent(brawResults)
             # switch(outputNow,
             #        "System"= self$results$graphHTML$setContent(showSystem()),
-            #        "Compact"= self$results$graphHTML$setContent(showDescription()),
+            #        "Basic"= self$results$graphHTML$setContent(showDescription()),
             #        "Sample"= self$results$graphHTML$setContent(showMarginals(style=self$options$showSample)),
             #        "Describe"= self$results$graphHTML$setContent(showDescription()),
             #        "Infer"= self$results$graphHTML$setContent(showInference(showType=showInferParam,dimension=showInferDimension)),
@@ -585,28 +604,28 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
           switch(outputNow,
                  "System"= self$results$simGraph$setState(outputNow),
-                 "Compact"= self$results$simGraph$setState("Describe"),
+                 "Basic"= self$results$simGraph$setState("Describe"),
                  "Variables"= self$results$simGraph$setState(c(outputNow,"all")),
                  "Sample"= self$results$simGraph$setState(outputNow),
                  "Describe"= self$results$simGraph$setState(outputNow),
                  "Infer"= self$results$simGraph$setState(c(outputNow,showInferParam,showInferDimension)),
                  "Likelihood"= self$results$simGraph$setState(c(outputNow,self$options$likelihoodType,likelihoodCutaway)),
                  "Multiple"= self$results$simGraph$setState(c(outputNow,showMultipleParam,showMultipleDimension,whichShowMultipleOut)),
-                 "Explore"= self$results$simGraph$setState(c(outputNow,showExploreParam,showExploreDimension,whichShowExploreOut,self$options$fixedAxes)),
+                 "Explore"= self$results$simGraph$setState(c(outputNow,showExploreParam,(showExploreStyle=="hist"),whichShowExploreOut,!self$options$fixedAxes)),
                  "MetaSingle"  =self$results$simGraph$setState(outputNow),
-                 "MetaMultiple"  =self$results$simGraph$setState(outputNow),
+                 "MetaMultiple"  =self$results$simGraph$setState(c(outputNow,showMetaParam,showMetaDimension)),
                  self$results$simGraph$setState(outputNow)
           )
             
             switch(outputNow,
                    "System"= self$results$simReport$setContent(reportPlot(NULL)),
-                   "Compact"= self$results$simReport$setContent(reportInference()),
+                   "Basic"= self$results$simReport$setContent(reportInference()),
                    "Variables"= self$results$simReport$setContent(reportSample()),
                    "Sample"= self$results$simReport$setContent(reportSample()),
                    "Describe"= self$results$simReport$setContent(reportDescription()),
                    "Infer"= self$results$simReport$setContent(reportInference()),
                    "Likelihood"=self$results$simReport$setContent(reportLikelihood()),
-                   "Multiple"= self$results$simReport$setContent(reportMultiple(showType=showMultipleParam,reportStats=self$options$reportInferStats)),
+                   "Multiple"= self$results$simReport$setContent(reportMultiple(showType=showMultipleParam,effectType=whichShowMultipleOut,reportStats=self$options$reportInferStats)),
                    "Explore"= self$results$simReport$setContent(reportExplore(showType=showExploreParam,reportStats=self$options$reportInferStats)),
                    "MetaSingle"  =self$results$simReport$setContent(reportMetaSingle()),
                    "MetaMultiple"  =self$results$simReport$setContent(reportMetaMultiple(reportStats=self$options$reportInferStats)),
@@ -628,7 +647,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       statusStore$showMultipleDimension<-showMultipleDimension
       statusStore$whichShowMultipleOut<-whichShowMultipleOut
       statusStore$showExploreParam<-showExploreParam
-      statusStore$showExploreDimension<-showExploreDimension
+      statusStore$showExploreStyle<-showExploreStyle
       statusStore$whichShowExploreOut<-whichShowExploreOut
       if (!is.null(outputNow))  statusStore$lastOutput<-outputNow
       braw.env$statusStore<<-statusStore
@@ -641,7 +660,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                               showMultipleDimension=showMultipleDimension,
                               whichShowMultipleOut=whichShowMultipleOut,
                               showExploreParam=showExploreParam,
-                              showExploreDimension=showExploreDimension,
+                              showExploreStyle=showExploreStyle,
                               whichShowExploreOut=whichShowExploreOut
         )
         if (is.null(history$history)) {
@@ -730,11 +749,11 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (!is.null(outputGraph)) {
         assign("graphHTML",FALSE,braw.env)
         switch(outputGraph,
-               "System"    =outputGraph<-showSystem(),
-               "Hypothesis"=outputGraph<-showHypothesis(),
-               "Design"    =outputGraph<-showDesign(),
-               "Population"=outputGraph<-showPopulation(),
-               "Prediction"=outputGraph<-showPrediction(),
+               "System"    =outputGraph<-showSystem("all"),
+               "Hypothesis"=outputGraph<-showSystem("hypothesis"),
+               "Design"    =outputGraph<-showSystem("design"),
+               "Population"=outputGraph<-showSystem("population"),
+               "Prediction"=outputGraph<-showSystem("prediction"),
                "Variables"    =outputGraph<-showMarginals(style=image$state[2]),
                "Sample"    =outputGraph<-showSample(),
                "Describe"  =outputGraph<-showDescription(),
@@ -742,9 +761,9 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                "Likelihood"=outputGraph<-showPossible(showType=image$state[2],cutaway=as.logical(image$state[3])),
                "Multiple"  =outputGraph<-showMultiple(showType=image$state[2],dimension=image$state[3],effectType=image$state[4]),
                "MetaSingle"  =outputGraph<-showMetaSingle(),
-               "MetaMultiple"  =outputGraph<-showMetaMultiple(),
+               "MetaMultiple"  =outputGraph<-showMetaMultiple(showType=image$state[2],dimension=image$state[3]),
                "Explore"   =outputGraph<-showExplore(showType=image$state[2],
-                                                     dimension=image$state[3],
+                                                     showHist=image$state[3],
                                                      effectType=image$state[4],
                                                      autoYlim=image$state[5])
         )
@@ -767,7 +786,7 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                "Infer"     =outputGraph<-reportInference(),
                "MetaSingle"  =outputGraph<-reportMetaSingle(),
                "MetaMultiple"  =outputGraph<-reportMetaMultiple(),
-               "Multiple"  =outputGraph<-reportMultiple(showType=image$state[2]),
+               "Multiple"  =outputGraph<-reportMultiple(showType=image$state[2],effectType=image$state[2]),
                "Explore"   =outputGraph<-reportExplore(showType=image$state[2])
         )
         print(outputGraph)

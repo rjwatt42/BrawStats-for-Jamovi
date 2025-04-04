@@ -25,8 +25,15 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
            rlims<-c(-1,1)*braw.env$z_range
            rslab<-braw.env$zsLabel
            rplab<-braw.env$zpLabel
-           rticks<-seq(-1.5,1.5,0.5)
-           rmins<-seq(-1.5,1.5,0.1)
+           rticks<-seq(-2.5,2.5,0.5)
+           rmins<-seq(-2.5,2.5,0.1)
+         },
+         "d"={    
+           rlims<-c(-1,1)*braw.env$d_range
+           rslab<-braw.env$dsLabel
+           rplab<-braw.env$dpLabel
+           rticks<-seq(-5,5,1)
+           rmins<-seq(-5,5,0.5)
          }
   )
   plabel<-"p"
@@ -372,6 +379,38 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             use_cols<-c(hsv(base_hue_r,1,1),hsv(base_hue_r+hue_diff,1,1),hsv(base_hue_r+hue_diff*2,1,1))
             ylines<-c(0,effect$rIV)
           },
+          "e1+"={
+            ylim<-rlims
+            yticks<-rticks
+            ymins<-rmins
+            ylabel<-rslab
+            use_cols<-c(hsv(base_hue_r,1,1),hsv(base_hue_r+hue_diff,1,1),hsv(base_hue_r+hue_diff*2,1,1))
+            ylines<-c(0,effect$rIV)
+          },
+          "e2+"={
+            ylim<-rlims
+            yticks<-rticks
+            ymins<-rmins
+            ylabel<-rslab
+            use_cols<-c(hsv(base_hue_r,1,1),hsv(base_hue_r+hue_diff,1,1),hsv(base_hue_r+hue_diff*2,1,1))
+            ylines<-c(0,effect$rIV)
+          },
+          "e1-"={
+            ylim<-rlims
+            yticks<-rticks
+            ymins<-rmins
+            ylabel<-rslab
+            use_cols<-c(hsv(base_hue_r,1,1),hsv(base_hue_r+hue_diff,1,1),hsv(base_hue_r+hue_diff*2,1,1))
+            ylines<-c(0,effect$rIV)
+          },
+          "e2-"={
+            ylim<-rlims
+            yticks<-rticks
+            ymins<-rmins
+            ylabel<-rslab
+            use_cols<-c(hsv(base_hue_r,1,1),hsv(base_hue_r+hue_diff,1,1),hsv(base_hue_r+hue_diff*2,1,1))
+            ylines<-c(0,effect$rIV)
+          },
           "e1p"={
             ylim<-plim
             yticks<-pticks
@@ -420,33 +459,55 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ylabel<-"False Miss"
             use_cols<-braw.env$plotColours$fmr
           },
-          "LambdaF"={
+          "metaRiv"={
             ylim<-c(-1.01,1.01)
             ytick<-seq(-1,1,0.2)
             ymins<-seq(-1,1,0.1)
-            ylabel<-"r[est]"
-            use_cols<-braw.env$plotColours$metaAnalysis
+            ylabel<-"r[m]"
+            use_cols<-braw.env$plotColours$metaMultiple
           },
-          "LambdaR"={
+          "metaRsd"={
             ylim<-c(-0.01,0.5)
             ytick<-seq(0,0.5,0.1)
             ymins<-seq(0,0.5,0.05)
-            ylabel<-"sd(r)[est]"
-            use_cols<-braw.env$plotColours$metaAnalysis
+            ylabel<-"sd(r)[m]"
+            use_cols<-braw.env$plotColours$metaMultiple
           },
-          "k"={
+          "metaRvar"={
+            ylim<-c(-0.05,0.2)
+            ytick<-seq(-0.05,0.2,0.05)
+            ymins<-seq(-0.05,0.2,0.01)
+            ylabel<-"var(r)[m]"
+            lines<-0
+            use_cols<-braw.env$plotColours$metaMultiple
+          },
+          "metaBias"={
+            ylim<-c(-0.05,1.05)
+            ytick<-seq(0,0.1,1)
+            ymins<-seq(0,0.1,1)
+            ylabel<-"bias[m]"
+            use_cols<-braw.env$plotColours$metaMultiple
+          },
+          "metaK"={
             ylim<-c(-0.01,1.01)
             ytick<-seq(0,1,0.2)
             ymins<-seq(0,1,0.1)
             ylabel<-braw.env$Llabel
-            use_cols<-braw.env$plotColours$metaAnalysis
+            use_cols<-braw.env$plotColours$metaMultiple
+          },
+          "Lambda"={
+            ylim<-c(-0.01,1.01)
+            ytick<-seq(0,1,0.2)
+            ymins<-seq(0,1,0.1)
+            ylabel<-braw.env$Llabel
+            use_cols<-braw.env$plotColours$metaMultiple
           },
           "pNull"={
             ylim<-c(-0.01,1.01)
             ytick<-seq(0,1,0.2)
             ymins<-seq(0,1,0.1)
             ylabel<-braw.env$Plabel
-            use_cols<-braw.env$plotColours$metaAnalysis
+            use_cols<-braw.env$plotColours$metaMultiple
           },
           "PDF"={
             ylim<-c(0,1)
@@ -454,11 +515,11 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ymins<-seq(0,1,0.1)
             ylabel<-"p(PDF)"
           },
-          "S"={
+          "metaS"={
             ylim<-c(min(result$Ss),max(result$Ss))
-            ylabel<-"S"
+            ylabel<-"llk"
             ytick<-seq(ceil(min(result$Ss)),ceil(max(result$Ss)),1)
-            use_cols<-braw.env$plotColours$metaAnalysis
+            use_cols<-braw.env$plotColours$metaMultiple
           },
           "iv.mn"={
             var<-hypothesis$IV
@@ -544,7 +605,7 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ymins<-seq(-l3,l3,0.1)
             ylabel<-"kurtosis"
           },
-          "rd.mn"={
+          "er.mn"={
             var<-hypothesis$DV
             if (fixedAxis) gain<-1/6.5 else gain<- 1/sqrt(design$sN)
             l1<-5*var$sd*gain
@@ -555,7 +616,7 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ymins<-seq(-l3,l3,0.1)+0
             ylabel<-"mean"
           },
-          "rd.sd"={
+          "er.sd"={
             var<-hypothesis$DV
             if (fixedAxis) gain<-1/6.5 else gain<- 1/sqrt(design$sN)
             l1<-5*var$sd*gain
@@ -566,7 +627,7 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ymins<-seq(-l2,l3,0.1)+var$sd
             ylabel<-"sd"
           },
-          "rd.sk"={
+          "er.sk"={
             if (fixedAxis) gain<-1/6.5 else gain<- 1/sqrt(design$sN)
             l1<-2*5*gain
             l2<-floor(l1/0.5)*0.5
@@ -576,7 +637,7 @@ plotAxis<-function(showType,hypothesis,design=NULL) {
             ymins<-seq(-l3,l3,0.1)
             ylabel<-"skew"
           },
-          "rd.kt"={
+          "er.kt"={
             if (fixedAxis) gain<-1/6.5 else gain<- 1/sqrt(design$sN)
             l1<-3*5*gain
             l2<-floor(l1/0.5)*0.5

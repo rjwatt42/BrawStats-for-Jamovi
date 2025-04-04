@@ -3,11 +3,11 @@
 #' 
 #' @return ggplot2 object - and printed
 #' @examples
-#' showDescription(analysis=doAnalysis())
+#' showSingle(analysis=doAnalysis(),show="describe",showType="Basic",dimension="1D")
 #' @export
-showResult<-function(result=braw.res$result,show="describe",showType="Basic",dimension="1D") {
+showSingle<-function(result=braw.res$result,show="describe",showType="Basic",dimension="1D") {
   
-  if (is.null(result)) result<-doResult()
+  if (is.null(result)) result<-doSingle()
   
   switch(tolower(show),
          "data"=showSample(result),

@@ -22,6 +22,10 @@ options:
       type: Action
       title: '?'
       
+    - name: demo4Help
+      type: Action
+      title: '?'
+      
     - name: simHelp
       type: Action
       title: '?'
@@ -190,10 +194,12 @@ options:
       title: 'Presets:'
       type: List
       options:
-      - name: psych
-        title: psychology
       - name: simple
         title: simple
+      - name: uniform
+        title: uniform
+      - name: psych
+        title: psychology
       default: simple
       
     - name: DVname
@@ -490,7 +496,7 @@ options:
       default: 42
       
     - name: SampleSizeM
-      title: Median n 
+      title: Mean n 
       type: Number
       default: 42
     
@@ -499,10 +505,10 @@ options:
       type: Bool
       default: false
     
-    - name: SampleGamma
+    - name: SampleSD
       title: "spread" 
       type: Number
-      default: 1.56
+      default: 33.3
       
     - name: SampleMethod
       title: 'Method'
@@ -646,6 +652,8 @@ options:
         title: SmallP
       - name: LargeN
         title: LargeN
+      - name: metaAnalysis
+        title: metaAnalysis
       default: Cautious
       
     - name: ReplicationAlpha
@@ -815,7 +823,7 @@ options:
       default: false
 
     - name: MetaAnalysisType
-      title: ' '
+      title: ''
       type: List
       options:
       - name: fixed
@@ -826,8 +834,30 @@ options:
         title: world
       default: random
 
+    - name: MetaAnalysisRandVar
+      title: ''
+      type: List
+      options:
+      - name: sd
+        title: sd
+      - name: var
+        title: var
+      default: sd
+
+    - name: MetaAnalysisPrior
+      title: ''
+      type: List
+      options:
+      - name: none
+        title: 'no prior'
+      - name: uniform
+        title: uniform
+      - name: world
+        title: world
+      default: none
+      
     - name: MetaAnalysisNulls
-      title: 'nulls'
+      title: 'nulls:'
       type: List
       options:
       - name: yes
@@ -837,7 +867,7 @@ options:
       default: no
 
     - name: MetaAnalysisBias
-      title: 'bias'
+      title: 'bias:'
       type: List
       options:
       - name: yes
@@ -847,33 +877,53 @@ options:
       default: no
 
     - name: MetaAnalysisNStudies
-      title: 'no of studies'
+      title: ''
       type: Number
       default: 20
 
+    - name: MetaAnalysisMethod
+      title: ''
+      type: List
+      options: 
+       - name: MLE
+         title: MLE
+       - name: TF
+         title: 'T&F'
+      default: MLE
+      
     - name: MetaAnalysisStudiesSig
-      title: ' '
+      title: 'bias:'
+      type: Number
+      default: 0
+      
+    - name: metaVar1
+      title: ''
       type: List
       options:
-      - name: all
-        title: all
-      - name: sigOnly
-        title: sigOnly
-      default: all
+        - name: metaRiv
+          title: 'rₘ'
+        - name: metaRsd
+          title: 'σ(r)ₘ'
+        - name: metaBias
+          title: bias
+        - name: metaS
+          title: llk
+      default: metaRiv
       
-    - name: showHypothesisBtn
-      title: 'show'
-      type: Action
-# 
-#     - name: whichMake
-#       title: ' '
-#       type: List
-#       options:
-#         - name: Single
-#           title: Single
-#         - name: Multiple
-#           title: Multiple
-          
+    - name: metaVar2
+      title: ''
+      type: List
+      options:
+        - name: metaRiv
+          title: 'rₘ'
+        - name: metaRsd
+          title: 'σ(r)ₘ'
+        - name: metaBias
+          title: bias
+        - name: metaS
+          title: llk
+      default: metaRsd
+      
     - name: makeSampleBtn
       type: Action
       title: single
@@ -972,8 +1022,8 @@ options:
       title: ' show:'
       type: List
       options:
-        - name: Compact
-          title: Compact
+        - name: Basic
+          title: Basic
         - name: Variables
           title: Variables
         - name: Sample
@@ -984,7 +1034,7 @@ options:
           title: Infer
         - name: Likelihood
           title: Likelihood
-      default: Compact
+      default: Basic
       
     - name: showInferDimension
       title: ''
@@ -1010,6 +1060,8 @@ options:
       title: ' show as:'
       type: List
       options:
+        - name: Single
+          title: Single
         - name: Basic
           title: Basic
         - name: blank1
@@ -1222,6 +1274,10 @@ options:
           title: CheatMethod
         - name: CheatingAmount
           title: CheatAmount
+        - name: blank1f
+          title: '-'
+        - name: SampleSD
+          title: SampleSpread
 
     - name: analysisExploreList
       title: 'explore:'
@@ -1283,90 +1339,16 @@ options:
           title: Residuals
       default: Basic
 
-    # - name: exploreVar1
-    #   title: ' show:'
-    #   type: List
-    #   options:
-    #     - name: rs
-    #       title: rs
-    #     - name: rp
-    #       title: rp
-    #     - name: re
-    #       title: re
-    #     - name: p
-    #       title: p
-    #     - name: n
-    #       title: n
-    #     - name: blank1
-    #       title: " "
-    #     - name: ws
-    #       title: ws
-    #     - name: wp
-    #       title: wp
-    #     - name: nw
-    #       title: nw
-    #     - name: blank2
-    #       title: " "
-    #     - name: ro
-    #       title: ro
-    #     - name: po
-    #       title: po
-    #     - name: no
-    #       title: no
-    #   default: rs
-    # 
-    # - name: exploreVar2
-    #   title: ' &'
-    #   type: List
-    #   options:
-    #     - name: rs
-    #       title: rs
-    #     - name: rp
-    #       title: rp
-    #     - name: re
-    #       title: re
-    #     - name: p
-    #       title: p
-    #     - name: n
-    #       title: n
-    #     - name: blank1
-    #       title: " "
-    #     - name: ws
-    #       title: ws
-    #     - name: wp
-    #       title: wp
-    #     - name: nw
-    #       title: nw
-    #     - name: blank2
-    #       title: " "
-    #     - name: ro
-    #       title: ro
-    #     - name: po
-    #       title: po
-    #     - name: no
-    #       title: no
-    #   default: p
-
-    - name: showExploreDimension
+    - name: showExploreStyle
       title: ''
       type: List
       options:
-        - name: 1D
-          title: 1D
-        - name: 2D
-          title: 2D
-      default: 1D
-    # 
-    # - name: reportExploreStats
-    #   title: ' '
-    #   type: List
-    #   options:
-    #   - name: Means
-    #     title: (Means)
-    #   - name: Medians
-    #     title: (Medians)
-    #   default: Medians
-      
+        - name: stats
+          title: stats
+        - name: hist
+          title: hist
+      default: stats
+
     - name: whichShowMultiple
       title: " "
       type: List
@@ -1407,22 +1389,39 @@ options:
       default: false
 
     - name: fixedAxes
-      title: fixed Axes
+      title: Fixed axes
       type: Bool
       default: false
 
     - name: shorthandCalculations
-      title: shorthand Calculations
+      title: Shorthand calculations
       type: Bool
       default: false
 
-    - name: autoShowHypothesis
-      title: auto hypothesis
-      type: Bool
-      default: false
-
+    - name: showHypothesisLst
+      title: 'plan display:'
+      type: List
+      options:
+      - name: Default
+        title: default
+      - name: Hypothesis
+        title: hypothesis
+      - name: Design
+        title: design
+      default: Default
+      
+    - name: dispRZ
+      title: 'display:'
+      type: List
+      options:
+      - name: r
+        title: r
+      - name: z
+        title: z
+      default: r
+      
     - name: systemMag
-      title: zoom
+      title: Zoom
       type: Number
       default: 0.5
       
@@ -1446,15 +1445,6 @@ options:
       title: 'do'
       type: Action
 
-    #   
-    # - name: doProject1AsBtn
-    #   title: 'sample'
-    #   type: Action
-    #   
-    # - name: doProject1sBtn
-    #   title: 'show'
-    #   type: Action
-      
     - name: doProject1sLst
       title: ''
       type: List
@@ -1508,15 +1498,15 @@ options:
       title: ''
       type: List
       options:
-      - name: Compact
-        title: 'Compact'
+      - name: Basic
+        title: 'Basic'
       - name: Variables
         title: Variables
       - name: Sample
         title: Sample
       - name: Describe
         title: Describe
-      default: Compact
+      default: Basic
 
     - name: doProject1sLstD
       title: ''
@@ -1689,8 +1679,8 @@ options:
       title: ''
       type: List
       options:
-      - name: Compact
-        title: 'Compact'
+      - name: Basic
+        title: 'Basic'
       - name: Variables
         title: Variables
       - name: Sample
@@ -1744,23 +1734,6 @@ options:
         title: '0 & 0.3'
       default: off
 
-    #   
-    # - name: doProject3sBtn
-    #   title: 'show'
-    #   type: Action
-    #   
-    # - name: doProject3AsBtn
-    #   title: 'sample'
-    #   type: Action
-    #   
-    # - name: doProject3BsBtn
-    #   title: 'multiple'
-    #   type: Action
-    # 
-    # - name: doProject3CsBtn
-    #   title: 'explore'
-    #   type: Action
-      
     - name: doProject3sLst
       title: ''
       type: List
@@ -1792,8 +1765,8 @@ options:
       title: ''
       type: List
       options:
-      - name: Compact
-        title: 'Compact'
+      - name: Basic
+        title: 'Basic'
       - name: Variables
         title: Variables
       - name: Sample
@@ -1910,253 +1883,208 @@ options:
     - name: doProject3C3Btn
       title: do
       type: Action
-    #   
-    # - name: doProject3B2Btn
-    #   title: do
-    #   type: Action
+
+    - name: doProject4sLstA1
+      title: ''
+      type: List
+      options:
+      - name: IQ
+        title: IQ
+      - name: Diligence
+        title: Diligence
+      - name: Perfectionism
+        title: Perfectionism
+      - name: Anxiety
+        title: Anxiety
+      - name: Happiness
+        title: Happiness
+      - name: SelfConfidence
+        title: SelfConfidence
+      - name: RiskTaking
+        title: RiskTaking
+      - name: Interesting
+        title: Interesting
+      - name: Musician
+        title: Musician?
+      - name: Smoker
+        title: Smoker?
+      - name: RiskTaker
+        title: RiskTaker?
+      - name: StudySubject
+        title: StudySubject
+      - name: BirthOrder
+        title: BirthOrder
+      default: RiskTaker
 
 
-    # - name: doProject4AhBtn
-    #   title: '?'
-    #   type: Action
-    # 
-    # - name: doProject4AsBtn
-    #   title: 'set'
-    #   type: Action
-    # 
-    # - name: doProject4AsLst
-    #   title: "hyp:"
-    #   type: List
-    #   options:
-    #   - name: iii
-    #     title: 'i~i*i'
-    #   - name: ici
-    #     title: 'i~c*i'
-    #   - name: iic
-    #     title: 'i~i*c'
-    #   - name: icc
-    #     title: 'i~c*c'
-    #   default: iii
-    #   # title: '⏵'
-    #   # type: Action
-    # 
-    # - name: doProject4A1Btn
-    #   title: '⏵'
-    #   type: Action
-    # 
-    # - name: doProject4A1Lst
-    #   title: "rp:"
-    #   type: List
-    #   options:
-    #   - name: r00
-    #     title: '0.0'
-    #   - name: r01
-    #     title: '0.1'
-    #   - name: r02
-    #     title: '0.2'
-    #   - name: r03
-    #     title: '0.3'
-    #   - name: r05
-    #     title: '0.5'
-    #   - name: r075
-    #     title: '0.75'
-    #   default: r03
-    # 
-    # 
-    # - name: doProject4A2Btn
-    #   title: '⏵'
-    #   type: Action
-    # 
-    # - name: doProject4A2Lst
-    #   title: "rp:"
-    #   type: List
-    #   options:
-    #   - name: r00
-    #     title: '0.0'
-    #   - name: r01
-    #     title: '0.1'
-    #   - name: r02
-    #     title: '0.2'
-    #   - name: r03
-    #     title: '0.3'
-    #   - name: r05
-    #     title: '0.5'
-    #   - name: r075
-    #     title: '0.75'
-    #   default: r03
-    # 
-    # - name: doProject4A3Btn
-    #   title: '⏵'
-    #   type: Action
-    # 
-    # - name: doProject4A3Lst
-    #   title: "rp:"
-    #   type: List
-    #   options:
-    #   - name: r00
-    #     title: '0.0'
-    #   - name: r01
-    #     title: '0.1'
-    #   - name: r02
-    #     title: '0.2'
-    #   - name: r03
-    #     title: '0.3'
-    #   - name: r05
-    #     title: '0.5'
-    #   - name: r075
-    #     title: '0.75'
-    #   default: r03
-    # 
-    # - name: doProject4A4Btn
-    #   title: '⏵'
-    #   type: Action
-    # 
-# 
-#     - name: doProject4BhBtn
-#       title: '?'
-#       type: Action
-# 
-#     - name: doProject4BsBtn
-#       title: 'set'
-#       type: Action
-# 
-#     - name: doProject4BsLst
-#       title: "hyp:"
-#       type: List
-#       options:
-#       - name: iii
-#         title: 'i~i*i'
-#       - name: ici
-#         title: 'i~c*i'
-#       - name: iic
-#         title: 'i~i*c'
-#       - name: icc
-#         title: 'i~c*c'
-#       default: iii
-# 
-#     - name: doProject4B1Btn
-#       title: '⏵'
-#       type: Action
-# 
-#     - name: doProject4B1Lst
-#       title: "rp:"
-#       type: List
-#       options:
-#       - name: r00
-#         title: '0.0'
-#       - name: r01
-#         title: '0.1'
-#       - name: r02
-#         title: '0.2'
-#       - name: r03
-#         title: '0.3'
-#       - name: r05
-#         title: '0.5'
-#       - name: r075
-#         title: '0.75'
-#       default: r03
-# 
-#     - name: doProject4B2Btn
-#       title: '⏵'
-#       type: Action
-# 
-#     - name: doProject4B2Lst
-#       title: "rp:"
-#       type: List
-#       options:
-#       - name: r00
-#         title: '0.0'
-#       - name: r01
-#         title: '0.1'
-#       - name: r02
-#         title: '0.2'
-#       - name: r03
-#         title: '0.3'
-#       - name: r05
-#         title: '0.5'
-#       - name: r075
-#         title: '0.75'
-#       default: r03
-# 
-#     - name: doProject4ChBtn
-#       title: '?'
-#       type: Action
-# 
-#     - name: doProject4CsBtn
-#       title: 'set'
-#       type: Action
-# 
-#     - name: doProject4C1Btn
-#       title: '⏵'
-#       type: Action
-# 
-#     - name: doProject4C2Btn
-#       title: '⏵'
-#       type: Action
-# 
-#     - name: doProject4C2Lst
-#       title: "rp:"
-#       type: List
-#       options:
-#       - name: r00
-#         title: '0.0'
-#       - name: r01
-#         title: '0.1'
-#       - name: r02
-#         title: '0.2'
-#       - name: r03
-#         title: '0.3'
-#       - name: r05
-#         title: '0.5'
-#       - name: r075
-#         title: '0.75'
-#       default: r03
-# 
-#     - name: doProject4C3Btn
-#       title: '⏵'
-#       type: Action
+    - name: doProject4sLstA2
+      title: ''
+      type: List
+      options:
+      - name: IQ
+        title: IQ
+      - name: Diligence
+        title: Diligence
+      - name: Perfectionism
+        title: Perfectionism
+      - name: Anxiety
+        title: Anxiety
+      - name: Happiness
+        title: Happiness
+      - name: SelfConfidence
+        title: SelfConfidence
+      - name: RiskTaking
+        title: RiskTaking
+      - name: Interesting
+        title: Interesting
+      - name: Musician
+        title: Musician?
+      - name: Smoker
+        title: Smoker?
+      - name: RiskTaker
+        title: RiskTaker?
+      - name: StudySubject
+        title: StudySubject
+      - name: BirthOrder
+        title: BirthOrder
+      default: Smoker
+      
+    - name: doProject4sLst
+      title: ''
+      type: List
+      options:
+      - name: ExamGrade
+        title: ExamGrade
+      - name: ExamPass
+        title: ExamPass?
+      default: ExamGrade
 
-# 
-#     - name: doProject5AhBtn
-#       title: '?'
-#       type: Action
-# 
-#     - name: doProject5AsBtn
-#       title: 'set'
-#       type: Action
-# 
-#     - name: doProject5A1Btn
-#       title: '⏵'
-#       type: Action
-# 
-#     - name: doProject5A2Btn
-#       title: '⏵'
-#       type: Action
-# 
-#     - name: doProject5A2Lst
-#       title: "rp:"
-#       type: List
-#       options:
-#       - name: rn07
-#         title: '-0.7'
-#       - name: rn03
-#         title: '-0.3'
-#       - name: rn01
-#         title: '-0.1'
-#       - name: r00
-#         title: '0.0'
-#       - name: r01
-#         title: '0.1'
-#       - name: r03
-#         title: '0.3'
-#       - name: r07
-#         title: '0.7'
-#       default: r07
-# 
-#     - name: doProject5A3Btn
-#       title: '⏵'
-#       type: Action
+    - name: doProject4sLstB
+      title: ''
+      type: Number
+      default: 0.5
+      min: -0.95
+      max: 0.95
+      
+    - name: doProject4sLstC
+      title: ''
+      type: Number
+      default: -0.5
+      min: -0.95
+      max: 0.95
+      
+    - name: doProject4sLstD
+      title: ''
+      type: Number
+      default: 0.0
+      min: -0.95
+      max: 0.95
+      
+    - name: doProject4sLstE
+      title: ''
+      type: List
+      options:
+      - name: no
+        title: no
+      - name: yes
+        title: yes
+      default: no
+      
+    - name: doProject4sLstF
+      title: ''
+      type: Number
+      default: 0.0
+      min: -0.95
+      max: 0.95
+      
+    - name: doProject4sLstG
+      title: ''
+      type: List
+      options:
+      - name: Basic
+        title: 'Basic'
+      - name: Sample
+        title: Sample
+      - name: Describe
+        title: Describe
+      default: Basic
 
+    - name: doProject4sLstI
+      title: ''
+      type: List
+      options:
+      - name: direct
+        title: direct
+      - name: unique
+        title: unique
+      - name: total
+        title: total
+      - name: all
+        title: all
+      default: direct
+
+    - name: doProject4sLstJ
+      title: ''
+      type: List
+      options:
+      - name: EffectSize
+        title: 'rIV→DV'
+      - name: Covariation
+        title: 'rIV→IV2'
+      - name: Interaction
+        title: 'rIV*IV2→DV'
+      default: Covariation
+      
+    - name: doProject4sLstK
+      title: ''
+      type: Number
+      default: 200
+      min: 10
+      max: 5000
+
+    - name: doProject4AhBtn
+      title: '?'
+      type: Action
+
+    - name: doProject4A1Btn
+      title: 'do'
+      type: Action
+
+    - name: doProject4A2Btn
+      title: 'do'
+      type: Action
+
+    - name: doProject4BhBtn
+      title: '?'
+      type: Action
+
+    - name: doProject4B1Btn
+      title: 'do'
+      type: Action
+
+    - name: doProject4B2Btn
+      title: 'do'
+      type: Action
+
+    - name: doProject4B3Btn
+      title: 'do'
+      type: Action
+
+    - name: doProject4ChBtn
+      title: '?'
+      type: Action
+
+    - name: doProject4C1Btn
+      title: 'do'
+      type: Action
+
+    - name: doProject4C2Btn
+      title: 'do'
+      type: Action
+
+    - name: doProject4C3Btn
+      title: 'do'
+      type: Action
 
     - name: lastDemo
       title: ''
@@ -2182,6 +2110,12 @@ options:
         title: 3b
       - name: 3c
         title: 3c
+      - name: 4a
+        title: 4a
+      - name: 4b
+        title: 4b
+      - name: 4c
+        title: 4c
       default: none
 
 ...

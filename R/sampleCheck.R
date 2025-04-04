@@ -125,9 +125,9 @@ cheatSample<-function(hypothesis,design,evidence,sample,result) {
 
 replicateSample<-function(hypothesis,design,evidence,sample,res) {
 
-  oldalpha<-braw.env$alphaSig
-  on.exit(braw.env$alphaSig<-oldalpha)
-  
+  oldAlpha<-braw.env$alphaSig
+  on.exit(setBrawEnv("alphaSig",oldAlpha),add=TRUE)
+
   Replication<-design$Replication
   resOriginal<-res
   ResultHistory<-list(n=res$nval,df1=res$df1,r=res$rIV,rp=res$rpIV,p=res$pIV)
@@ -216,6 +216,12 @@ replicateSample<-function(hypothesis,design,evidence,sample,res) {
     { resPrevious<-res }
     
     
+    if (Replication$Keep=="metaAnalysis") {
+      res$nval<-sum(ResultHistory$n)
+      res$rIV<-sum(ResultHistory$r*ResultHistory$n)/res$nval
+      res$df1<-ResultHistory$df1[1]
+      res$pIV<-rn2p(res$rIV,res$nval)
+    } else {
     switch(Replication$Keep,
            "Median"={
              use<-which(ResultHistory$p==sort(ResultHistory$p)[ceil(length(ResultHistory$p)/2)])
@@ -246,6 +252,7 @@ replicateSample<-function(hypothesis,design,evidence,sample,res) {
     res$nval<-ResultHistory$n[use]
     res$df1<-ResultHistory$df1[use]
     res$pIV<-ResultHistory$p[use]
+    }
   }
   
   res$ResultHistory<-ResultHistory
@@ -253,5 +260,5 @@ replicateSample<-function(hypothesis,design,evidence,sample,res) {
   res$noval<-resOriginal$nval
   res$df1o<-resOriginal$df1
   res$poIV<-resOriginal$pIV
-  res
+  return(res)
 }

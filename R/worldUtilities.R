@@ -1,12 +1,59 @@
 
 # below we use (npops-1)/6 as an integer
 
+nDistrDens<-function(nvals,design) {
+  switch(design$sNRandDist,
+         "Gamma"={
+           return(dgamma(nvals-braw.env$minN,
+                         shape=design$sN/design$sNRandSD,
+                         scale=design$sNRandSD)
+           )
+         },
+         "Gauss"={
+           return(dnorm(nvals,braw.env$minN,design$sNRandSD))
+         },
+         "Exp"={
+           return(dexp(nvals-braw.env$minN,1/design$sNRandSD))
+         },
+         "Uniform"={
+           return(nvals>=braw.env$minN & nvals<=braw.env$maxN)
+         }
+  )
+}
+
+nDistrRand<-function(nSamples,design=braw.def$design){
+  switch(design$sNRandDist,
+         "Gamma"={
+           return(
+             round(braw.env$minN+rgamma(nSamples,
+                         shape=design$sN/design$sNRandSD,
+                         scale=design$sNRandSD)
+             )
+           )
+         },
+         "Gauss"={
+           return(round(braw.env$minN+abs(rnorm(nSamples,0,design$sNRandSD))))
+         },
+         "Exp"={
+           return(round(braw.env$minN+abs(rexp(nSamples,1/design$sNRandSD))))
+         },
+         "Uniform"={
+           return(round(runif(nSamples,braw.env$minN,braw.env$maxN)))
+         }
+  )
+  braw.env$minN+rgamma(nSamples,shape=design$sN/design$sNRandSD,scale=design$sNRandSD)
+}
+
 zdens2rdens<-function(zdens,rvals){
   zdens/(1-rvals^2)
 }
 
 rdens2zdens<-function(rdens,rvals){
   rdens*(1-rvals^2)
+}
+
+rdens2ddens<-function(rdens,dvals) {
+  rdens*(4/(dvals^2+4)/sqrt(dvals^2+4))
 }
 
 zSamplingDistr<-function(zvals,Z,n){
@@ -19,11 +66,17 @@ rSamplingDistr<-function(rvals,R,n,sigOnly=FALSE){
   zvals<-atanh(rvals)
   Z<-atanh(R)
   zdens<-zSamplingDistr(zvals,Z,n)
-  if (sigOnly) {
+  if (sigOnly>0) {
     zcrit<-atanh(p2r(braw.env$alphaSig,n,1))
-    g<-sum(zdens)
-    zdens[abs(zvals)<zcrit]<-0.1
-    zdens<-zdens/sum(zdens)*g
+    if (length(rvals)==1) {
+      gain<-pnorm(-zcrit,Z,1/sqrt(n-3))+
+        (1-pnorm(zcrit,Z,1/sqrt(n-3)))
+    } else {
+      g<-sum(zdens)
+      zdens[abs(zvals)<zcrit]<-zdens[abs(zvals)<zcrit]*(1-sigOnly)
+      gain<-sum(zdens)/g
+    }
+    zdens<-zdens/gain
   }
   zdens2rdens(zdens,rvals)
 }
@@ -70,8 +123,9 @@ rSamp2Pop<-function(r_s,n,world=NULL) {
   tanh(mlEst)
 }
   
-getRList<-function(world) {
-  npops=20*6+1 # 2*3*4*5+1
+getRList<-function(world,HQ=FALSE) {
+  if (HQ) npops=50*6+1
+  else    npops=20*6+1 # 2*3*4*5+1
 
   if (is.null(world)) {
     return(list(pRho=0,pRhogain=1)  )
@@ -99,7 +153,10 @@ getRList<-function(world) {
             pRhogain<-c(0.5,0.5)
           },
           {
-            pRho<-seq(-1,1,length=npops)*braw.env$r_range
+            switch(braw.env$RZ,
+                   "r"=pRho<-seq(-1,1,length=npops)*braw.env$r_range,
+                   "z"=pRho<-tanh(seq(-1,1,length=npops)*braw.env$z_range)
+            )
             pRhogain<-rPopulationDist(pRho,world)
           }
   )
@@ -116,7 +173,7 @@ getRList<-function(world) {
 }
 
 getNDist<-function(design,world=NULL,logScale=FALSE,sigOnly=FALSE,HQ=FALSE) {
-  if (HQ) npt<-101 else npt=21
+  if (HQ) npt<-1001 else npt=21
   nmax<-5
   if (logScale) {
     nvals<-10^seq(log10(braw.env$minN),log10(nmax*design$sN),length.out=npt)
@@ -126,19 +183,19 @@ getNDist<-function(design,world=NULL,logScale=FALSE,sigOnly=FALSE,HQ=FALSE) {
   
   n<-design$sN
   if (design$sNRand) {
-    ng<-dgamma(nvals-5,shape=design$sNRandK,scale=(design$sN-5)/design$sNRandK)
+    ng<-nDistrDens(nvals,design)
   } else {
     ng<-nvals*0
     use<-which.min(abs(nvals-design$sN))
     ng[use]<-1
   }
-  if (sigOnly) {
-    nsig<-ng
-    pR<-getRList(world)
+  if (sigOnly>0) {
+    nsig<-ng 
+    pR<-getRList(world,HQ)
     pR$pRhogain<-pR$pRhogain/sum(pR$pRhogain)
     for (ni in 1:length(nvals)) {
       psig<-sum(rn2w(pR$pRho,nvals[ni])*pR$pRhogain)
-      nsig[ni]<-nsig[ni]*psig
+      nsig[ni]<-nsig[ni]*psig+(1-psig)*(1-sigOnly)
     }
   } else {
     nsig<-NA
@@ -152,7 +209,7 @@ getNDist<-function(design,world=NULL,logScale=FALSE,sigOnly=FALSE,HQ=FALSE) {
 
 getNList<-function(design,world,HQ=FALSE) {
   if (design$Replication$On) {
-    if (HQ) npt<-101 else npt=21
+    if (HQ) npt<-201 else npt=21
     nmax<-5
     nvals<-braw.env$minN+seq(0,nmax*design$sN,length.out=npt)
     design$Replication$On<-FALSE
@@ -168,6 +225,11 @@ getNList<-function(design,world,HQ=FALSE) {
 
 rPopulationDist<-function(rvals,world) {
   k<-world$populationPDFk
+  mu<-world$populationPDFmu
+  if (world$populationPDF=="sample") {
+    rdens<-rSamplingDistr(mu,rvals,(1/k)^2+3,world$sigOnly)
+    return(rdens)
+  }
   switch (paste0(world$populationPDF,"_",world$populationRZ),
           "Single_r"={
             rdens<-rvals*0
@@ -205,11 +267,11 @@ rPopulationDist<-function(rvals,world) {
             rdens<-zdens2rdens(zdens,rvals)
           },
           "Gauss_r"={
-            rdens<-exp(-0.5*(abs(rvals)/k)^2)/k/sqrt(2*pi)
+            rdens<-exp(-0.5*(abs(rvals-mu)/k)^2)/k/sqrt(2*pi)
           },
           "Gauss_z"={
             zvals<-atanh(rvals)
-            zdens<-exp(-0.5*(abs(zvals)/k)^2)/k/sqrt(2*pi)
+            zdens<-exp(-0.5*(abs(zvals-mu)/k)^2)/k/sqrt(2*pi)
             rdens<-zdens2rdens(zdens,rvals)
           }
   )
@@ -255,7 +317,7 @@ fullRSamplingDist<-function(vals,world,design,doStat="rs",logScale=FALSE,sigOnly
     vals<-seq(-1,1,length=braw.env$worldNPoints)*braw.env$r_range
 
   # distribution of population effect sizes
-  pR<-getRList(world)
+  pR<-getRList(world,HQ)
   rvals<-pR$pRho
   rdens<-pR$pRhogain
   if (length(rvals)>1) rdens<-rdens*diff(rvals[1:2])
@@ -330,7 +392,7 @@ fullRSamplingDist<-function(vals,world,design,doStat="rs",logScale=FALSE,sigOnly
                   addition<-addition*dznw*(1-rp^2)
                 },
                 "wp"={
-                  rp<-seq(0,1,length.out=101)
+                  rp<-seq(0,1,length.out=1001)
                   zp<-atanh(rp)
                   wp<-pnorm(qnorm(braw.env$alphaSig/2)+zp*sqrt(nvals[ni]-3)) + pnorm(qnorm(braw.env$alphaSig/2)-zp*sqrt(nvals[ni]-3))
                   addition<-rPopulationDist(rp,world)
@@ -348,9 +410,9 @@ fullRSamplingDist<-function(vals,world,design,doStat="rs",logScale=FALSE,sigOnly
         if (logScale) addition<-addition*vals
         addition<-addition*ndens[ni]
         d1<-d1+addition
-        if (sigOnly) {
+        if (sigOnly>0) {
           critR<-tanh(qnorm(1-braw.env$alphaSig/2,0,1/sqrt(nvals[ni]-3)))
-          addition[abs(rp)<critR]<-0
+          addition[abs(rp)<critR]<-addition[abs(rp)<critR]*(1-sigOnly)
           if (sigOnlyCompensate) addition<-addition/sum(addition)
         }
         d<-d+addition
@@ -364,11 +426,10 @@ fullRSamplingDist<-function(vals,world,design,doStat="rs",logScale=FALSE,sigOnly
     rn<-nrow(r)
     use<-which(rvals==0)
     if (rn==2) 
-      return(list(vals=rvals[1:(rn-1)],dens=colSums(sourceSampDens_r,na.rm=TRUE),
+      return(list(vals=rvals[1:(rn-1)],dens=colSums(r,na.rm=TRUE),
                   densPlus=rbind(r[1:(rn-1),]),densNull=r[rn,]))
     else 
-      
-      return(list(vals=rvals[1:(rn-1)],dens=colSums(sourceSampDens_r,na.rm=TRUE),
+      return(list(vals=rvals[1:(rn-1)],dens=colSums(r,na.rm=TRUE),
                   densPlus=r[1:(rn-1),],densNull=r[rn,]))
   } else {
     r<-colSums(sourceSampDens_r,na.rm=TRUE)

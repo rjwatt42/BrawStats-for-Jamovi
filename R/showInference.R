@@ -63,7 +63,7 @@ getNulls<-function(analysis,useSig=FALSE,useNSig=FALSE) {
 showInference<-function(analysis=braw.res$result,showType="Basic",dimension="1D",orientation="vert",
                         whichEffect="All",effectType="all",showTheory=braw.env$showTheory
 ) {
-  if (is.null(analysis)) analysis<-doResult(autoShow=FALSE)
+  if (is.null(analysis)) analysis<-doSingle(autoShow=FALSE)
   
   if (showType[1]=="2D") {
     showType<-"Basic"
@@ -77,12 +77,13 @@ showInference<-function(analysis=braw.res$result,showType="Basic",dimension="1D"
   other2<-NULL
   if (length(showType)==1) {
     switch(showType,
-           "Basic"=     {showType<-c("rs","p")},
-           "p(sig)"=    {showType<-"ps"},
+           "Single"=     {showType<-c("rs");dimension<-"1D"},
+           "Basic"=     {showType<-c("rs","p");dimension<-"1D"},
+           "p(sig)"=    {showType<-"ps";dimension<-"1D"},
            "Power"=     {showType<-c("ws","wp")},
            "CILimits"=  {showType<-c("ci1","ci2")},
            "NHST"={
-             showType<-c("rse","ps1")
+             showType<-c("rse","ps1");dimension<-"1D"
              # r<-getNulls(analysis)
              # analysis1<-r$analysis
              # analysis2<-r$nullanalysis
@@ -90,7 +91,7 @@ showInference<-function(analysis=braw.res$result,showType="Basic",dimension="1D"
              # other2<-analysis1
              },
            "Hits"=       {
-             showType<-c("e2r","e1r")
+             showType<-c("e2+","e1+");dimension<-"1D"
              r<-getNulls(analysis,useSig=TRUE)
              analysis1<-r$analysis
              analysis2<-r$nullanalysis
@@ -98,7 +99,7 @@ showInference<-function(analysis=braw.res$result,showType="Basic",dimension="1D"
              other2<-analysis1
            },
            "Misses"=       {
-             showType<-c("e2r","e1r")
+             showType<-c("e2-","e1-");dimension<-"1D"
              r<-getNulls(analysis,useNSig=TRUE)
              analysis1<-r$analysis
              analysis2<-r$nullanalysis
@@ -106,16 +107,16 @@ showInference<-function(analysis=braw.res$result,showType="Basic",dimension="1D"
              other2<-analysis1
            },
            "SEM"= {
-             showType<-c("rss","SEM")
+             showType<-c("rss","SEM");dimension<-"1D"
            },
            "DV"= {
-             showType=c("dv.mn","dv.sd","dv.sk","dv.kt")
+             showType=c("dv.mn","dv.sd","dv.sk","dv.kt");dimension<-"1D"
            },
            "Residuals"= {
-             showType=c("rd.mn","rd.sd","rd.sk","rd.kt")
+             showType=c("er.mn","er.sd","er.sk","er.kt");dimension<-"1D"
            },
            { showType<-strsplit(showType,";")[[1]]
-             if (length(showType)==1) showType<-c(showType,NA)
+             # if (length(showType)==1) showType<-c(showType,NA)
              }
     )
   } 
@@ -123,22 +124,22 @@ showInference<-function(analysis=braw.res$result,showType="Basic",dimension="1D"
   if (length(showType)==2 && dimension=="2D") {
     g1<-plot2Inference(analysis,showType[1],showType[2])
   } else {
-    area.off<-0
+    area.x<-0
     area.y<-1
     if (!is.null(analysis$hypothesis$IV2)) {
       if (whichEffect=="All" && !analysis$evidence$rInteractionOn) whichEffect<-"Mains"
       if (whichEffect=="All") {
         whichEffect<-c("Main 1","Main 2","Interaction")
         area.y<-c(1,1,1)*0.32
-        area.off<-c(0.666,0.333,0)
+        area.x<-c(0,0.333,0.666)
       } else
       if (whichEffect=="Mains") {
         whichEffect<-c("Main 1","Main 2")
         area.y<-c(1,1,1)*0.47
-        area.off<-c(0.5,0)
+        area.x<-c(0,0.5)
       } 
     } else whichEffect<-"Main 1"
-
+  
     g1<-nullPlot()
     
     nplots<-sum(!is.na(showType))
@@ -164,23 +165,38 @@ showInference<-function(analysis=braw.res$result,showType="Basic",dimension="1D"
                             orientation=orientation,showTheory=showTheory,g=g1)
         }
       }
-    } else {
-      if (orientation=="vert") nplots<-2
+    } 
+    if (nplots==2 && length(whichEffect)>1) {
       for (fi in 1:length(whichEffect)) {
-        braw.env$plotArea<-c(0.0,area.off[fi],0.45,area.y[fi])
+        braw.env$plotArea<-c(0.0,area.x[fi],0.45,area.y[fi])
         g1<-plotInference(analysis1,otheranalysis=other1,disp=showType[1],
                           whichEffect=whichEffect[fi],effectType=effectType,
                           orientation=orientation,showTheory=showTheory,g=g1)
-        if (!is.na(showType[2])) {
+        if (length(showType)==2 && !is.na(showType[2])) {
           if (showType[2]=="SEM") braw.env$plotArea<-c(0.55,0,0.45,1)
-          else braw.env$plotArea<-c(0.55,area.off[fi],0.45,area.y[fi])
+          else braw.env$plotArea<-c(0.55,area.x[fi],0.45,area.y[fi])
           g1<-plotInference(analysis2,otheranalysis=other2,disp=showType[2],
                             whichEffect=whichEffect[fi],effectType=effectType,
                             orientation=orientation,showTheory=showTheory,g=g1)
         } 
       }
     }
-    # braw.env$plotLimits<-NULL
+    if (nplots==1 && length(whichEffect)>1) {
+      for (fi in 1:length(whichEffect)) {
+        braw.env$plotArea<-c(area.x[fi],0.0,0.45,0.9)
+        g1<-plotInference(analysis1,otheranalysis=other1,disp=showType[1],
+                          whichEffect=whichEffect[fi],effectType=effectType,
+                          orientation=orientation,showTheory=showTheory,g=g1)
+      }
+    }
+    if (nplots==1 && length(whichEffect)==1) {
+        if (orientation=="vert") braw.env$plotArea<-c(0.05,0.0,0.7,1)
+        else braw.env$plotArea<-c(0.05,0.0,0.9,1)
+        g1<-plotInference(analysis1,otheranalysis=other1,disp=showType[1],
+                          whichEffect=whichEffect[fi],effectType=effectType,
+                          orientation=orientation,showTheory=showTheory,g=g1)
+    }
+      # braw.env$plotLimits<-NULL
   }
 
   if (braw.env$graphHTML && braw.env$autoShow) {
