@@ -193,7 +193,7 @@ showInference<-function(analysis=braw.res$result,showType="Basic",dimension="1D"
         if (orientation=="vert") braw.env$plotArea<-c(0.05,0.0,0.7,1)
         else braw.env$plotArea<-c(0.05,0.0,0.9,1)
         g1<-plotInference(analysis1,otheranalysis=other1,disp=showType[1],
-                          whichEffect=whichEffect[fi],effectType=effectType,
+                          whichEffect=whichEffect,effectType=effectType,
                           orientation=orientation,showTheory=showTheory,g=g1)
     }
       # braw.env$plotLimits<-NULL

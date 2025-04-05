@@ -1265,7 +1265,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 doProject1sLstE,
                 default=42,
                 min=10,
-                max=5000)
+                max=50000)
             private$..doProject1BhBtn <- jmvcore::OptionAction$new(
                 "doProject1BhBtn",
                 doProject1BhBtn)
@@ -1360,7 +1360,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 doProject2sLstE,
                 default=42,
                 min=10,
-                max=5000)
+                max=50000)
             private$..doProject2sLstF <- jmvcore::OptionList$new(
                 "doProject2sLstF",
                 doProject2sLstF,
@@ -1420,7 +1420,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 doProject3sLstE,
                 default=42,
                 min=10,
-                max=5000)
+                max=50000)
             private$..doProject3sLstF <- jmvcore::OptionList$new(
                 "doProject3sLstF",
                 doProject3sLstF,
@@ -1448,7 +1448,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 doProject3sLstK,
                 default=20,
                 min=10,
-                max=5000)
+                max=50000)
             private$..doProject3sLstI <- jmvcore::OptionList$new(
                 "doProject3sLstI",
                 doProject3sLstI,
@@ -1592,13 +1592,13 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 doProject4sLstL,
                 default=20,
                 min=10,
-                max=5000)
+                max=50000)
             private$..doProject4sLstK <- jmvcore::OptionNumber$new(
                 "doProject4sLstK",
                 doProject4sLstK,
                 default=200,
                 min=10,
-                max=5000)
+                max=50000)
             private$..doProject4AhBtn <- jmvcore::OptionAction$new(
                 "doProject4AhBtn",
                 doProject4AhBtn)

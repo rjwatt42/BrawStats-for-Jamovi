@@ -1527,7 +1527,7 @@ options:
       type: Number
       default: 42
       min: 10
-      max: 5000
+      max: 50000
 
     - name: doProject1BhBtn
       title: '?'
@@ -1710,7 +1710,7 @@ options:
       type: Number
       default: 42
       min: 10
-      max: 5000
+      max: 50000
 
     - name: doProject2sLstF
       title: ''
@@ -1796,7 +1796,7 @@ options:
       type: Number
       default: 42
       min: 10
-      max: 5000
+      max: 50000
 
     - name: doProject3sLstF
       title: ''
@@ -1835,7 +1835,7 @@ options:
       type: Number
       default: 20
       min: 10
-      max: 5000
+      max: 50000
       
     - name: doProject3sLstI
       title: ''
@@ -2047,14 +2047,14 @@ options:
       type: Number
       default: 20
       min: 10
-      max: 5000
+      max: 50000
       
     - name: doProject4sLstK
       title: ''
       type: Number
       default: 200
       min: 10
-      max: 5000
+      max: 50000
 
     - name: doProject4AhBtn
       title: '?'

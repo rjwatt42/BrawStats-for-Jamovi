@@ -457,8 +457,38 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
       
       # make the interaction term
       if (!is.null(IV2)){
+        ivUse<-ivr
+        if (IV$type=="Categorical") {
+          ng<-IV$ncats
+          pp<-IV$proportions
+          # pp<-as.numeric(unlist(strsplit(IV$proportions,",")))
+          if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
+          proportions<-c(0,pp)
+          breaks<-qnorm(cumsum(proportions)/sum(proportions))
+          # not sure we should do this.
+          while (all(ivr<breaks[2])) breaks[2]<-breaks[2]-0.1
+          while (all(ivr>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
+          ivUse=ivr*0
+          for (i in 1:IV$ncats) {ivUse=ivUse+(ivr>breaks[i])}
+          ivUse<-(ivUse-mean(1:IV$ncats))*IV$ncats
+        }
+        iv2Use<-iv2r
+        if (IV2$type=="Categorical") {
+          ng<-IV2$ncats
+          pp<-IV2$proportions
+          # pp<-as.numeric(unlist(strsplit(IV$proportions,",")))
+          if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
+          proportions<-c(0,pp)
+          breaks<-qnorm(cumsum(proportions)/sum(proportions))
+          # not sure we should do this.
+          while (all(iv2r<breaks[2])) breaks[2]<-breaks[2]-0.1
+          while (all(iv2r>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
+          iv2Use=iv2r*0
+          for (i in 1:IV2$ncats) {iv2Use=iv2Use+(iv2r>breaks[i])}
+          iv2Use<-(iv2Use-mean(1:IV2$ncats))*IV2$ncats
+        }
         rhoInter<-effect$rIVIV2DV
-        iv12r<-ivr*iv2r
+        iv12r<-ivUse*iv2Use
       } else {
         iv12r<-ivr*0
         rhoInter<-0
@@ -467,7 +497,7 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
       # make residuals
       variance_explained=rho^2+rho2^2+rhoInter^2+2*rho*rho2*rho12
       residual<-makeSampleVals(n,0,sqrt(1-variance_explained),DV,effect$ResidDistr)
-      residual<-residual*dvr_s+dvr_m
+      # residual<-residual*dvr_s+dvr_m
 
       # non-independence  
       if (design$sDependence>0) {
@@ -483,49 +513,32 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
         }
       }
       
-      switch(IV$type,
-             "Interval"={
-             },
-             "Ordinal"={
-             },
-             "Categorical"={
-               if (IV$catSource=="discrete") {
-                 ng<-IV$ncats
-                 pp<-IV$proportions
-                 # pp<-as.numeric(unlist(strsplit(IV$proportions,",")))
-                 if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-                 proportions<-c(0,pp)
-                 breaks<-qnorm(cumsum(proportions)/sum(proportions))
-                 # not sure we should do this.
-                 while (all(ivr<breaks[2])) breaks[2]<-breaks[2]-0.1
-                 while (all(ivr>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
-                 vals=ivr*0
-                 for (i in 1:IV$ncats) {vals=vals+(ivr>breaks[i])}
-                 ivr<-(vals-(IV$ncats+1)/2)/std((1:IV$ncats),1)
-               }
-             }
-      )
-      if (!is.null(IV2)){
-        switch(IV2$type,
-               "Interval"={
-               },
-               "Ordinal"={
-               },
-               "Categorical"={
-                 if (IV2$catSource=="discrete") {
-                   ng<-IV2$ncats
-                   pp<-IV2$proportions
-                   if (is.character(pp))
-                     pp<-as.numeric(unlist(strsplit(IV2$proportions,",")))
-                   if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-                   proportions<-c(0,pp)
-                   breaks<-qnorm(cumsum(proportions)/sum(proportions))
-                   vals=iv2r*0
-                   for (i in 1:IV2$ncats) {vals=vals+(iv2r>breaks[i])}
-                   iv2r<-(vals-(IV2$ncats+1)/2)/std((1:IV2$ncats),1)
-                 }
-               }
-        )
+      if (IV$type=="Categorical" && IV$catSource=="discrete") {
+        ng<-IV$ncats
+        pp<-IV$proportions
+        # pp<-as.numeric(unlist(strsplit(IV$proportions,",")))
+        if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
+        proportions<-c(0,pp)
+        breaks<-qnorm(cumsum(proportions)/sum(proportions))
+        # not sure we should do this.
+        while (all(ivr<breaks[2])) breaks[2]<-breaks[2]-0.1
+        while (all(ivr>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
+        vals=ivr*0
+        for (i in 1:IV$ncats) {vals=vals+(ivr>breaks[i])}
+        ivr<-(vals-(IV$ncats+1)/2)/std((1:IV$ncats),1)
+      }
+      
+      if (!is.null(IV2) && IV2$type=="Categorical" && IV2$catSource=="discrete") {
+        ng<-IV2$ncats
+        pp<-IV2$proportions
+        if (is.character(pp))
+          pp<-as.numeric(unlist(strsplit(IV2$proportions,",")))
+        if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
+        proportions<-c(0,pp)
+        breaks<-qnorm(cumsum(proportions)/sum(proportions))
+        vals=iv2r*0
+        for (i in 1:IV2$ncats) {vals=vals+(iv2r>breaks[i])}
+        iv2r<-(vals-(IV2$ncats+1)/2)/std((1:IV2$ncats),1)
       }
       
       # do within design
@@ -630,7 +643,6 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
                  if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
                  proportions<-c(0,pp)
                  breaks<-qnorm(cumsum(proportions)/sum(proportions))
-                 print(breaks)
                  vals=ivr*0
                  for (i in 1:IV$ncats) {vals=vals+(ivr>breaks[i])}
                  iv<-factor(vals,levels=1:IV$ncats,labels=IV$cases)
@@ -662,7 +674,7 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
                iv2<-vals
              },
              "Categorical"={
-               if (IV$catSource=="continuous") {
+               if (IV2$catSource=="continuous") {
                  ng<-IV2$ncats
                  pp<-IV2$proportions
                  # pp<-as.numeric(unlist(strsplit(IV2$proportions,",")))

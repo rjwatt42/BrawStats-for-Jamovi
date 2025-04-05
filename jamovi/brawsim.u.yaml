@@ -1955,7 +1955,7 @@ children:
                               events:
                                 change: ./brawsim.events::onChange_Project4sH
                             - type: Label
-                              label: 'rIV*IV2→DV:'
+                              label: 'rIV×IV2→DV:'
                               enable: (doProject4sLstE:yes)
                               margin: none
                               horizontalAlignment: right

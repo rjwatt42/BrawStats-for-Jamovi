@@ -772,8 +772,8 @@ let demo4Defaults = function(ui,thisDemo) {
   let variable1 = ui.lastDemo.value();
   if (variable1!=thisDemo) {
         ui.doProject4sLst.setValue("ExamGrade")
-        ui.doProject4sLstB.setValue(0.1);
-        ui.doProject4sLstC.setValue(0.2);
+        ui.doProject4sLstB.setValue(0.5);
+        ui.doProject4sLstC.setValue(-0.5);
         ui.doProject4sLstD.setValue(0.0);
         ui.doProject4sLstG.setValue("Basic")
         ui.doProject4sLstK.setValue(200);
