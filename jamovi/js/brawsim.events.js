@@ -420,7 +420,6 @@ const events =  {
       if (BtnOn==true) {
         demo4Defaults(ui,"4b")
         demo4SetUp(ui,"n")
-        ui.showSampleType.setValue("Basic")
         ui.makeSampleBtn.setValue(true)
       }
     },
@@ -587,6 +586,7 @@ let demo1SetUp = function(ui,show) {
         let variable1 = ui.doProject1sLst.value();
         variable1 = variable1.replace("?","")
         ui.presetIV.setValue(variable1)
+        ui.presetIV2.setValue("none")
         let variable2 = ui.doProject1sLstA.value();
         variable2 = variable2.replace("?","")
         ui.presetDV.setValue(variable2)
@@ -631,6 +631,7 @@ let demo2SetUp = function(ui,show) {
         let variable1 = ui.doProject2sLst.value();
         variable1 = variable1.replace("?","")
         ui.presetIV.setValue(variable1)
+        ui.presetIV2.setValue("none")
         let variable2 = ui.doProject2sLstA.value();
         variable2 = variable2.replace("?","")
         ui.presetDV.setValue(variable2)
@@ -712,6 +713,7 @@ let demo3SetUp = function(ui,show) {
             ui.DVtype.setValue("Categorical")
             break;
         }
+        ui.presetIV2.setValue("none")
         let variable3 = ui.doProject3sLstB.value();
         if (variable3>0.95) {
           variable3 = 0.95
@@ -775,7 +777,6 @@ let demo4Defaults = function(ui,thisDemo) {
         ui.doProject4sLstB.setValue(0.5);
         ui.doProject4sLstC.setValue(-0.5);
         ui.doProject4sLstD.setValue(0.0);
-        ui.doProject4sLstG.setValue("Basic")
         ui.doProject4sLstK.setValue(200);
         if (thisDemo=="4a") {
               ui.doProject4sLstA1.setValue("Perfectionism")
@@ -784,7 +785,7 @@ let demo4Defaults = function(ui,thisDemo) {
         }
         if (thisDemo=="4b") {
               ui.doProject4sLstA1.setValue("RiskTaker")
-              ui.doProject4sLstA2.setValue("Smoker")
+              ui.doProject4sLstA2.setValue("Musician")
               ui.doProject4sLstE.setValue("yes");
               ui.doProject4sLstF.setValue(0.3);
         }
@@ -834,6 +835,9 @@ let demo4SetUp = function(ui,show) {
         
         let variable7 = ui.doProject4sLstK.value();
         ui.SampleSize.setValue(variable7)
+
+        let variable7a = ui.doProject4sLstG.value()
+        ui.showSampleType.setValue(variable7a)
 
         ui.showMultipleParam.setValue("Single")
         ui.showExploreParam.setValue("Single")

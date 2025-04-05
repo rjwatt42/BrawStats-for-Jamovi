@@ -212,7 +212,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             doProject3C1Btn = NULL,
             doProject3C3Btn = NULL,
             doProject4sLstA1 = "RiskTaker",
-            doProject4sLstA2 = "Smoker",
+            doProject4sLstA2 = "Musician",
             doProject4sLst = "ExamGrade",
             doProject4sLstB = 0.5,
             doProject4sLstC = -0.5,
@@ -1523,7 +1523,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "RiskTaker",
                     "StudySubject",
                     "BirthOrder"),
-                default="Smoker")
+                default="Musician")
             private$..doProject4sLst <- jmvcore::OptionList$new(
                 "doProject4sLst",
                 doProject4sLst,
@@ -2949,7 +2949,7 @@ BrawSim <- function(
     doProject3C1Btn,
     doProject3C3Btn,
     doProject4sLstA1 = "RiskTaker",
-    doProject4sLstA2 = "Smoker",
+    doProject4sLstA2 = "Musician",
     doProject4sLst = "ExamGrade",
     doProject4sLstB = 0.5,
     doProject4sLstC = -0.5,

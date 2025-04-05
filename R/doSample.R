@@ -456,37 +456,64 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
       }
       
       # make the interaction term
+      switch(IV$type,
+             "Interval"={
+               ivUse<-ivr
+             },
+             "Categorical"={
+               ng<-IV$ncats
+               pp<-IV$proportions
+               if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
+               proportions<-c(0,pp)
+               breaks<-qnorm(cumsum(proportions)/sum(proportions))
+               # not sure we should do this.
+               while (all(ivr<breaks[2])) breaks[2]<-breaks[2]-0.1
+               while (all(ivr>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
+               ivUse=ivr*0
+               for (i in 1:IV$ncats) {ivUse=ivUse+(ivr>breaks[i])}
+               ivUse<-(ivUse-mean(1:IV$ncats))*IV$ncats
+             },
+             "Ordinal"={
+               pp<-OrdProportions(IV)
+               ng<-IV$nlevs
+               if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
+               proportions<-c(0,pp)
+               breaks<-qnorm(cumsum(proportions)/sum(proportions))
+               ivUse=ivr*0
+               for (i in 1:ng) {ivUse=ivUse+(ivr>breaks[i])}
+               ivUse<-(ivUse-mean(1:IV$nlevs))*IV$nlevs
+             })
+      
+      if (!is.null(IV2))
+        switch(IV$type,
+               "Interval"={
+                 iv2Use<-iv2r
+               },
+               "Categorical"={
+                 ng<-IV2$ncats
+                 pp<-IV2$proportions
+                 if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
+                 proportions<-c(0,pp)
+                 breaks<-qnorm(cumsum(proportions)/sum(proportions))
+                 # not sure we should do this.
+                 while (all(iv2r<breaks[2])) breaks[2]<-breaks[2]-0.1
+                 while (all(iv2r>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
+                 iv2Use=iv2r*0
+                 for (i in 1:IV2$ncats) {iv2Use=iv2Use+(iv2r>breaks[i])}
+                 iv2Use<-(iv2Use-mean(1:IV2$ncats))*IV2$ncats
+               },
+               "Ordinal"={
+                 pp<-OrdProportions(IV)
+                 ng<-IV2$nlevs
+                 if (length(pp)<ng2) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
+                 proportions<-c(0,pp)
+                 breaks<-qnorm(cumsum(proportions)/sum(proportions))
+                 iv2Use=iv2r*0
+                 for (i in 1:ng) {iv2Use=iv2Use+(iv2r>breaks[i])}
+                 iv2Use<-(iv2Use-mean(1:IV2$nlevs))*IV2$nlevs
+               })
+        
       if (!is.null(IV2)){
-        ivUse<-ivr
-        if (IV$type=="Categorical") {
-          ng<-IV$ncats
-          pp<-IV$proportions
-          # pp<-as.numeric(unlist(strsplit(IV$proportions,",")))
-          if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-          proportions<-c(0,pp)
-          breaks<-qnorm(cumsum(proportions)/sum(proportions))
-          # not sure we should do this.
-          while (all(ivr<breaks[2])) breaks[2]<-breaks[2]-0.1
-          while (all(ivr>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
-          ivUse=ivr*0
-          for (i in 1:IV$ncats) {ivUse=ivUse+(ivr>breaks[i])}
-          ivUse<-(ivUse-mean(1:IV$ncats))*IV$ncats
-        }
-        iv2Use<-iv2r
-        if (IV2$type=="Categorical") {
-          ng<-IV2$ncats
-          pp<-IV2$proportions
-          # pp<-as.numeric(unlist(strsplit(IV$proportions,",")))
-          if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-          proportions<-c(0,pp)
-          breaks<-qnorm(cumsum(proportions)/sum(proportions))
-          # not sure we should do this.
-          while (all(iv2r<breaks[2])) breaks[2]<-breaks[2]-0.1
-          while (all(iv2r>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
-          iv2Use=iv2r*0
-          for (i in 1:IV2$ncats) {iv2Use=iv2Use+(iv2r>breaks[i])}
-          iv2Use<-(iv2Use-mean(1:IV2$ncats))*IV2$ncats
-        }
         rhoInter<-effect$rIVIV2DV
         iv12r<-ivUse*iv2Use
       } else {
@@ -513,34 +540,6 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
         }
       }
       
-      if (IV$type=="Categorical" && IV$catSource=="discrete") {
-        ng<-IV$ncats
-        pp<-IV$proportions
-        # pp<-as.numeric(unlist(strsplit(IV$proportions,",")))
-        if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-        proportions<-c(0,pp)
-        breaks<-qnorm(cumsum(proportions)/sum(proportions))
-        # not sure we should do this.
-        while (all(ivr<breaks[2])) breaks[2]<-breaks[2]-0.1
-        while (all(ivr>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
-        vals=ivr*0
-        for (i in 1:IV$ncats) {vals=vals+(ivr>breaks[i])}
-        ivr<-(vals-(IV$ncats+1)/2)/std((1:IV$ncats),1)
-      }
-      
-      if (!is.null(IV2) && IV2$type=="Categorical" && IV2$catSource=="discrete") {
-        ng<-IV2$ncats
-        pp<-IV2$proportions
-        if (is.character(pp))
-          pp<-as.numeric(unlist(strsplit(IV2$proportions,",")))
-        if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-        proportions<-c(0,pp)
-        breaks<-qnorm(cumsum(proportions)/sum(proportions))
-        vals=iv2r*0
-        for (i in 1:IV2$ncats) {vals=vals+(iv2r>breaks[i])}
-        iv2r<-(vals-(IV2$ncats+1)/2)/std((1:IV2$ncats),1)
-      }
-      
       # do within design
       if (IV$type=="Categorical" && design$sIV1Use=="Within") {
         b<-drawCatPositions(IV$ncats)
@@ -548,15 +547,13 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
         rsd<-residual
 
         ivr_new<-c()
-        iv2r_new<-c()
         residual<-c()
         for (i in 1:IV$ncats) {
           ivr_new<-c(ivr_new,rep(b[i],n))
-          if (!is.null(IV2)){iv2r_new<-c(iv2r_new,iv2r)} else {iv2r_new<-0}
           residual<-c(residual,rsd*design$sWithinCor+sqrt(1-design$sWithinCor^2)*rnorm(n,0,sqrt(1-rho^2)))
         }
         ivr<-ivr_new
-        iv2r<-iv2r_new
+        ivUse<-ivr
         id<-rep(id,IV$ncats)
         
         n<-n*IV$ncats
@@ -623,36 +620,12 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
                iv<-ivr*IV$sd+IV$mu
              },
              "Ordinal"={
-                 pp<-OrdProportions(IV)
-                 ng<-IV$nlevs
-                 if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-                 proportions<-c(0,pp)
-                 breaks<-qnorm(cumsum(proportions)/sum(proportions))
-                 vals=ivr*0
-                 for (i in 1:ng) {vals=vals+(ivr>breaks[i])}
-                 if (!IV$ordSource=="discrete") {
-                   vals=vals+runif(length(vals),min=-0.5,max=0.5)
-                 }
-                 iv<-vals
+                 iv<-ivUse
              },
              "Categorical"={
-               if (IV$catSource=="continuous") {
-                 ng<-IV$ncats
-                 pp<-IV$proportions
-                 # pp<-as.numeric(unlist(strsplit(IV$proportions,",")))
-                 if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-                 proportions<-c(0,pp)
-                 breaks<-qnorm(cumsum(proportions)/sum(proportions))
-                 vals=ivr*0
-                 for (i in 1:IV$ncats) {vals=vals+(ivr>breaks[i])}
-                 iv<-factor(vals,levels=1:IV$ncats,labels=IV$cases)
-                 # iv<-factor(vals,levels=1:IV$ncats,labels=strsplit(IV$cases,",")[[1]])
-               } else {
-                 ivr<-ivr*std((1:IV$ncats),1)+(IV$ncats+1)/2
+                 ivr<-ivUse*std((1:IV$ncats),1)+mean(1:IV$ncats)
                  iv<-factor(ivr,levels=1:IV$ncats,labels=IV$cases)
-                 # iv<-factor(ivr,levels=1:IV$ncats,labels=strsplit(IV$cases,",")[[1]])
                }
-             }
       )
 
       if (!is.null(IV2)) {
@@ -661,36 +634,12 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
                iv2<-iv2r*IV2$sd+IV2$mu
              },
              "Ordinal"={
-               pp<-OrdProportions(IV2)
-               ng<-IV2$nlevs
-               if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-               proportions<-c(0,pp)
-               breaks<-qnorm(cumsum(proportions)/sum(proportions))
-               vals=iv2r*0
-               for (i in 1:ng) {vals=vals+(iv2r>breaks[i])}
-               if (!IV2$ordSource=="discrete") {
-                 vals=vals+runif(length(vals),min=-0.5,max=0.5)
-               }
-               iv2<-vals
+               iv2<-iv2Use
              },
              "Categorical"={
-               if (IV2$catSource=="continuous") {
-                 ng<-IV2$ncats
-                 pp<-IV2$proportions
-                 # pp<-as.numeric(unlist(strsplit(IV2$proportions,",")))
-                 if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-               proportions<-c(0,pp)
-               breaks<-qnorm(cumsum(proportions)/sum(proportions))
-               vals=iv2r*0
-               for (i in 1:IV2$ncats) {vals=vals+(iv2r>breaks[i])}
-               iv2<-factor(vals,levels=1:IV2$ncats,labels=IV2$cases)
-               # iv2<-factor(vals,levels=1:IV2$ncats,labels=strsplit(IV2$cases,",")[[1]])
-               } else {
-                 iv2r<-iv2r*std((1:IV2$ncats),1)+(IV2$ncats+1)/2
-                 iv2<-factor(iv2r,levels=1:IV2$ncats,labels=IV2$cases)
-                 # iv2<-factor(iv2r,levels=1:IV2$ncats,labels=strsplit(IV2$cases,",")[[1]])
+               iv2r<-iv2Use*std((1:IV2$ncats),1)+mean(1:IV2$ncats)
+               iv2<-factor(iv2r,levels=1:IV2$ncats,labels=IV2$cases)
                }
-             }
       )
       } else {
         iv2<-iv2r
