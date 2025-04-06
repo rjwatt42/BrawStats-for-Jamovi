@@ -182,6 +182,9 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
           braw.env$pPlotScale<-"log10"
           braw.env$nPlotScale<-"log10"
           
+          braw.env$CatPlotOffset<-0.0
+          braw.env$errorBarGain<-2
+          
           braw.env$useSignificanceCols<-TRUE
 
           braw.env$includeSingle<-TRUE  # in "All" meta-analysis
