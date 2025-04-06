@@ -2028,7 +2028,7 @@ options:
         title: total
       - name: all
         title: all
-      default: direct
+      default: all
 
     - name: doProject4sLstJ
       title: ''

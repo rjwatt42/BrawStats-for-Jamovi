@@ -1,3 +1,22 @@
+discreteVals<-function(ivr,ng,pp,type="continuous",cases=NULL) {
+  if (is.character(pp)) pp<-as.numeric(unlist(strsplit(pp,",")))
+  
+  if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
+  proportions<-c(0,pp)
+  breaks<-qnorm(cumsum(proportions)/sum(proportions))
+  # not sure we should do this.
+  while (all(ivr<breaks[2])) breaks[2]<-breaks[2]-0.1
+  while (all(ivr>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
+  ivDiscrete=ivr*0
+  for (i in 1:ng) {ivDiscrete=ivDiscrete+(ivr>breaks[i])}
+  if (type=="continuous") ivDiscrete<-(ivDiscrete-mean(1:ng))*ng
+  if (type=="discrete") {
+    if (length(cases)==1) cases<-strsplit(cases,",")[[1]]
+    ivDiscrete<-factor(ivDiscrete,levels=1:ng,labels=cases)
+  }
+  return(ivDiscrete)
+}
+
 sampleLK<-function(nsamp,targetS,targetN,sigOnly=FALSE) {
   
   npts<-1001
@@ -381,47 +400,23 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
 
       # any type conversions required?
         if (is.numeric(iv) && IV$type=="Categorical") {
-          ivr<-iv
-          ng<-IV$ncats
-          pp<-as.numeric(unlist(strsplit(IV$proportions,",")))
-          if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-          proportions<-c(0,pp)
-          breaks<-qnorm(cumsum(proportions)/sum(proportions))
-          vals=ivr*0
-          for (i in 1:IV$ncats) {vals=vals+(ivr>breaks[i])}
-          iv<-factor(vals,levels=1:IV$ncats,labels=strsplit(IV$cases,",")[[1]])
+          iv<-discreteVals(iv,IV$ncats,IV$proportions,"discrete",IV$cases)
         } else {
           if (!is.numeric(iv) && IV$type!="Categorical") {
             iv<-as.numeric(iv)
           }
         }
         if (!is.null(IV2)) {
-        if (is.numeric(iv2) && IV2$type=="Categorical") {
-          iv2r<-iv2
-          ng<-IV2$ncats
-          pp<-as.numeric(unlist(strsplit(IV2$proportions,",")))
-          if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-          proportions<-c(0,pp)
-          breaks<-qnorm(cumsum(proportions)/sum(proportions))
-          vals=iv2r*0
-          for (i in 1:IV2$ncats) {vals=vals+(iv2r>breaks[i])}
-          iv12<-factor(vals,levels=1:IV2$ncats,labels=strsplit(IV2$cases,",")[[1]])
-        } else {
-          if (!is.numeric(iv2) && IV2$type!="Categorical") {
-            iv2<-as.numeric(iv2)
+          if (is.numeric(iv2) && IV2$type=="Categorical") {
+            iv2<-discreteVals(iv2,IV2$ncats,IV2$proportions,"discrete",IV2$cases)
+          } else {
+            if (!is.numeric(iv2) && IV2$type!="Categorical") {
+              iv2<-as.numeric(iv2)
+            }
           }
         }
-        }
         if (is.numeric(dv) && DV$type=="Categorical") {
-          dvr<-dv
-          ng<-DV$ncats
-          pp<-as.numeric(unlist(strsplit(DV$proportions,",")))
-          if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-          proportions<-c(0,pp)
-          breaks<-qnorm(cumsum(proportions)/sum(proportions))
-          vals=dvr*0
-          for (i in 1:DV$ncats) {vals=vals+(dvr>breaks[i])}
-          dv<-factor(vals,levels=1:DV$ncats,labels=strsplit(DV$cases,","[[1]]))
+          dvr<-discreteVals(dv,DV$ncats,DV$proportions,"discrete",DV$cases)
         } else {
           if (!is.numeric(dv) && DV$type!="Categorical") {
             iv<-as.numeric(dv)
@@ -447,80 +442,45 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
       if (!is.null(IV2)){
         rho2<-effect$rIV2
         rho12<-effect$rIVIV2
+        rhoInter<-effect$rIVIV2DV
         ivr2_resid<-makeSampleVals(n,0,sqrt(1-rho12^2),IV2)
         iv2r<-ivr*rho12+ivr2_resid
       } else {
         rho2<-0
         rho12<-0
+        rhoInter<-0
         iv2r<-0
       }
+
       
       # make the interaction term
       switch(IV$type,
              "Interval"={
-               ivUse<-ivr
+               ivDiscrete<-ivr
              },
              "Categorical"={
-               ng<-IV$ncats
-               pp<-IV$proportions
-               if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-               proportions<-c(0,pp)
-               breaks<-qnorm(cumsum(proportions)/sum(proportions))
-               # not sure we should do this.
-               while (all(ivr<breaks[2])) breaks[2]<-breaks[2]-0.1
-               while (all(ivr>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
-               ivUse=ivr*0
-               for (i in 1:IV$ncats) {ivUse=ivUse+(ivr>breaks[i])}
-               ivUse<-(ivUse-mean(1:IV$ncats))*IV$ncats
+               ivDiscrete<-discreteVals(ivr,IV$ncats,IV$proportions)
              },
              "Ordinal"={
-               pp<-OrdProportions(IV)
-               ng<-IV$nlevs
-               if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-               proportions<-c(0,pp)
-               breaks<-qnorm(cumsum(proportions)/sum(proportions))
-               ivUse=ivr*0
-               for (i in 1:ng) {ivUse=ivUse+(ivr>breaks[i])}
-               ivUse<-(ivUse-mean(1:IV$nlevs))*IV$nlevs
+               ivDiscrete<-discreteVals(ivr,IV$nlevs,OrdProportions(IV))
              })
-      
-      if (!is.null(IV2))
-        switch(IV$type,
+
+      if (!is.null(IV2)) {
+        switch(IV2$type,
                "Interval"={
-                 iv2Use<-iv2r
+                 iv2Discrete<-iv2r
                },
                "Categorical"={
-                 ng<-IV2$ncats
-                 pp<-IV2$proportions
-                 if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-                 proportions<-c(0,pp)
-                 breaks<-qnorm(cumsum(proportions)/sum(proportions))
-                 # not sure we should do this.
-                 while (all(iv2r<breaks[2])) breaks[2]<-breaks[2]-0.1
-                 while (all(iv2r>breaks[ng])) breaks[ng]<-breaks[ng]+0.1
-                 iv2Use=iv2r*0
-                 for (i in 1:IV2$ncats) {iv2Use=iv2Use+(iv2r>breaks[i])}
-                 iv2Use<-(iv2Use-mean(1:IV2$ncats))*IV2$ncats
+                 iv2Discrete<-discreteVals(iv2r,IV2$ncats,IV2$proportions)
                },
                "Ordinal"={
-                 pp<-OrdProportions(IV)
-                 ng<-IV2$nlevs
-                 if (length(pp)<ng2) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-                 proportions<-c(0,pp)
-                 breaks<-qnorm(cumsum(proportions)/sum(proportions))
-                 iv2Use=iv2r*0
-                 for (i in 1:ng) {iv2Use=iv2Use+(iv2r>breaks[i])}
-                 iv2Use<-(iv2Use-mean(1:IV2$nlevs))*IV2$nlevs
+                 iv2Discrete<-discreteVals(iv2r,IV2$nlevs,OrdProportions(IV2))
                })
-        
-      if (!is.null(IV2)){
-        rhoInter<-effect$rIVIV2DV
-        iv12r<-ivUse*iv2Use
-      } else {
-        iv12r<-ivr*0
-        rhoInter<-0
       }
       
+      if (!is.null(IV2)) iv12r<-ivDiscrete*iv2Discrete
+      else               iv12r<-ivr*0
+
       # make residuals
       variance_explained=rho^2+rho2^2+rhoInter^2+2*rho*rho2*rho12
       residual<-makeSampleVals(n,0,sqrt(1-variance_explained),DV,effect$ResidDistr)
@@ -540,6 +500,31 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
         }
       }
       
+      switch(IV$type,
+             "Interval"={
+             },
+             "Ordinal"={
+             },
+             "Categorical"={
+               if (IV$catSource=="discrete") {
+                 ivr<-discreteVals(ivr,IV$ncats,IV$proportions)
+               }
+             }
+      )
+      if (!is.null(IV2)){
+        switch(IV2$type,
+               "Interval"={
+               },
+               "Ordinal"={
+               },
+               "Categorical"={
+                 if (IV2$catSource=="discrete") {
+                   iv2<-discreteVals(iv2r,IV$ncats,IV$proportions)
+                 }
+               }
+        )
+      }
+      
       # do within design
       if (IV$type=="Categorical" && design$sIV1Use=="Within") {
         b<-drawCatPositions(IV$ncats)
@@ -553,7 +538,7 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
           residual<-c(residual,rsd*design$sWithinCor+sqrt(1-design$sWithinCor^2)*rnorm(n,0,sqrt(1-rho^2)))
         }
         ivr<-ivr_new
-        ivUse<-ivr
+        ivDiscrete<-ivr
         id<-rep(id,IV$ncats)
         
         n<-n*IV$ncats
@@ -620,12 +605,11 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
                iv<-ivr*IV$sd+IV$mu
              },
              "Ordinal"={
-                 iv<-ivUse
+               iv<-discreteVals(ivr,IV$nlevs,OrdProportions(IV),"ordinal")
              },
              "Categorical"={
-                 ivr<-ivUse*std((1:IV$ncats),1)+mean(1:IV$ncats)
-                 iv<-factor(ivr,levels=1:IV$ncats,labels=IV$cases)
-               }
+               iv<-discreteVals(ivr,IV$ncats,IV$proportions,"discrete",IV$cases)
+             }
       )
 
       if (!is.null(IV2)) {
@@ -634,11 +618,10 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
                iv2<-iv2r*IV2$sd+IV2$mu
              },
              "Ordinal"={
-               iv2<-iv2Use
+               iv2<-discreteVals(iv2r,IV2$nlevs,OrdProportions(IV2),"Ordinal")
              },
              "Categorical"={
-               iv2r<-iv2Use*std((1:IV2$ncats),1)+mean(1:IV2$ncats)
-               iv2<-factor(iv2r,levels=1:IV2$ncats,labels=IV2$cases)
+               iv2<-discreteVals(iv2r,IV2$ncats,IV2$proportions,"discrete",IV2$cases)
                }
       )
       } else {
@@ -650,29 +633,10 @@ doSample<-function(hypothesis=braw.def$hypothesis,design=braw.def$design,autoSho
                dv<-dvr*DV$sd+DV$mu
              },
              "Ordinal"={
-               pp<-OrdProportions(DV)
-               ng<-DV$nlevs
-               if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-               proportions<-c(0,pp)
-               breaks<-qnorm(cumsum(proportions)/sum(proportions))
-               vals=dvr*0
-               for (i in 1:ng) {vals=vals+(dvr>breaks[i])}
-               if (!DV$ordSource=="discrete") {
-                 vals=vals+runif(length(vals),min=-0.5,max=0.5)
-               }
-               dv<-vals
+               dv<-discreteVals(dvr,DV$nlevs,OrdProportions(DV),"Ordinal")
              },
              "Categorical"={
-               pp<-DV$proportions
-               # pp<-as.numeric(unlist(strsplit(DV$proportions,",")))
-               ng<-DV$ncats
-               if (length(pp)<ng) {pp<-c(pp,rep(pp[length(pp)],ng-length(pp)))}
-               proportions<-c(0,pp)
-               breaks<-qnorm(cumsum(proportions)/sum(proportions))
-               vals=dvr*0
-               for (i in 1:ng) {vals=vals+(dvr>breaks[i])}
-               dv<-factor(vals,levels=1:ng,labels=DV$cases)
-               # dv<-factor(vals,levels=1:ng,labels=strsplit(DV$cases,",")[[1]])
+               dv<-discreteVals(dvr,DV$ncats,DV$proportions,"discrete",DV$cases)
              }
       )
       braw.env$lastSample<-list(participant=id, iv=iv, iv2=iv2, dv=dv)

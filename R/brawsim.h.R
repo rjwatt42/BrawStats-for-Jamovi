@@ -220,7 +220,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             doProject4sLstE = "no",
             doProject4sLstF = 0,
             doProject4sLstG = "Basic",
-            doProject4sLstI = "direct",
+            doProject4sLstI = "all",
             doProject4sLstJ = "Covariation",
             doProject4sLstL = 20,
             doProject4sLstK = 200,
@@ -1578,7 +1578,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "unique",
                     "total",
                     "all"),
-                default="direct")
+                default="all")
             private$..doProject4sLstJ <- jmvcore::OptionList$new(
                 "doProject4sLstJ",
                 doProject4sLstJ,
@@ -2957,7 +2957,7 @@ BrawSim <- function(
     doProject4sLstE = "no",
     doProject4sLstF = 0,
     doProject4sLstG = "Basic",
-    doProject4sLstI = "direct",
+    doProject4sLstI = "all",
     doProject4sLstJ = "Covariation",
     doProject4sLstL = 20,
     doProject4sLstK = 200,
