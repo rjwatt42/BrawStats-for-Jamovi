@@ -20,6 +20,8 @@ local/
 .~lock*
 extdata/.~lock*
 
+setJamoviVersion.R
+
 # Example code in package build process
 *-Ex.R
 
