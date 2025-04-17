@@ -196,6 +196,10 @@ options:
       options:
       - name: simple
         title: simple
+      - name: sample
+        title: sample
+      - name: biasedsample
+        title: biasedsample
       - name: uniform
         title: uniform
       - name: psych
@@ -468,6 +472,8 @@ options:
         title: Gauss
       - name: Exp
         title: Exp
+      - name: sample
+        title: sample
       default: Single
       
     - name: WorldRZ
@@ -480,12 +486,17 @@ options:
         title: z
 
     - name: WorldLambda
-      title: 'lambda'
+      title: 'λ'
       type: Number
       default: 0.3
 
+    - name: WorldMu
+      title: 'μ'
+      type: Number
+      default: 0.0
+
     - name: WorldNullP
-      title: 'p(null)'
+      title: 'φ'
       type: Number
       default: 0.5
       
@@ -680,7 +691,7 @@ options:
       - name: no
         title: no
       default: yes
-      
+
 # Analysis
     - name: alphaSig
       title: '&alpha;'
@@ -790,12 +801,12 @@ options:
       default: z
 
     - name: priorLambda
-      title: 'lambda'
+      title: 'λ'
       type: Number
       default: 0.3
 
     - name: priorNullP
-      title: 'p(null)'
+      title: 'φ'
       type: Number
       default: 0.0
       
@@ -886,9 +897,11 @@ options:
       type: List
       options: 
        - name: MLE
-         title: MLE
+         title: MaxLikelihood
        - name: TF
-         title: 'T&F'
+         title: 'Trim&Fill'
+       - name: Rep
+         title: Replication
       default: MLE
       
     - name: MetaAnalysisStudiesSig

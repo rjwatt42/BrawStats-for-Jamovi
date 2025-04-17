@@ -156,11 +156,20 @@ const events =  {
     onChange_presetWorld: function(ui) {
       let presetH = ui.presetWorld.value();
       switch(presetH) {
+        case "sample":
+          ui.WorldOn.setValue(true);
+          ui.WorldPDF.setValue("sample");
+          break;
+        case "biasedsample":
+          ui.WorldOn.setValue(true);
+          ui.WorldPDF.setValue("SampleB");
+          break;
         case "psych":
           ui.WorldOn.setValue(true);
           ui.WorldPDF.setValue("Exp");
           ui.WorldRZ.setValue("z");
           ui.WorldLambda.setValue(0.3);
+          ui.WorldMu.setValue(0.0);
           ui.WorldNullP.setValue(0.75);
           ui.SampleSpreadOn.setValue(true);
           ui.SampleSizeM.setValue(52);
@@ -171,6 +180,7 @@ const events =  {
           ui.WorldPDF.setValue("Uniform");
           ui.WorldRZ.setValue("r");
           ui.WorldLambda.setValue(0.3);
+          ui.WorldMu.setValue(0.0);
           ui.WorldNullP.setValue(0.0);
           break;
         case "simple":
@@ -178,6 +188,7 @@ const events =  {
           ui.WorldPDF.setValue("Single");
           ui.WorldRZ.setValue("r");
           ui.WorldLambda.setValue(0.3);
+          ui.WorldMu.setValue(0.0);
           ui.WorldNullP.setValue(0.5);
           ui.SampleSpreadOn.setValue(false);
           break;

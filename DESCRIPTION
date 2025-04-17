@@ -1,7 +1,7 @@
 Package: BrawStats
 Type: Package
 Title: Some BrawStats functions
-Version: 1.4.0
+Version: 1.5.0
 Author: Roger Watt
 Maintainer: Roger Watt <r.j.watt@stir.ac.uk>
 Description: This is designed to teach the basic principles of statistics.

@@ -17,6 +17,7 @@
 makeWorld<-function(worldOn=FALSE,populationPDF="Single",populationRZ="r",
                     populationPDFk=0.0,populationPDFmu=0.0,populationNullp=0,
                     sigOnly=FALSE,worldAbs=FALSE) {
+  if (populationPDF=="sample") populationPDFk<-1/sqrt(populationPDFk-3)
  world<-list(worldOn=worldOn,
              populationPDF=populationPDF,populationPDFk=populationPDFk,populationPDFmu=populationPDFmu,populationRZ=populationRZ,
              populationNullp=populationNullp,sigOnly=sigOnly,worldAbs=worldAbs)
@@ -150,7 +151,8 @@ makeSampling<-function(type="Random") {
 makeReplication<-function(On=FALSE,Repeats=1,Keep="Cautious",RepAlpha=0.05,
                           PowerOn=TRUE,Power=0.8,Tails=2,PowerPrior="None",
                           forceSigOriginal=FALSE,forceSign=TRUE,
-                          BudgetType="Unlimited",Budget=1000
+                          BudgetType="Unlimited",Budget=1000,
+                          RepNoStudies=1
                           ) {
   
   replication<-list(On=On,Repeats=Repeats,Keep=Keep,RepAlpha=RepAlpha,

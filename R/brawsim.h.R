@@ -66,6 +66,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             WorldPDF = "Single",
             WorldRZ = NULL,
             WorldLambda = 0.3,
+            WorldMu = 0,
             WorldNullP = 0.5,
             SampleSize = 42,
             SampleSizeM = 42,
@@ -357,6 +358,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 presetWorld,
                 options=list(
                     "simple",
+                    "sample",
+                    "biasedsample",
                     "uniform",
                     "psych"),
                 default="simple")
@@ -558,7 +561,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "Double",
                     "Uniform",
                     "Gauss",
-                    "Exp"),
+                    "Exp",
+                    "sample"),
                 default="Single")
             private$..WorldRZ <- jmvcore::OptionList$new(
                 "WorldRZ",
@@ -570,6 +574,10 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "WorldLambda",
                 WorldLambda,
                 default=0.3)
+            private$..WorldMu <- jmvcore::OptionNumber$new(
+                "WorldMu",
+                WorldMu,
+                default=0)
             private$..WorldNullP <- jmvcore::OptionNumber$new(
                 "WorldNullP",
                 WorldNullP,
@@ -853,7 +861,8 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 MetaAnalysisMethod,
                 options=list(
                     "MLE",
-                    "TF"),
+                    "TF",
+                    "Rep"),
                 default="MLE")
             private$..MetaAnalysisStudiesSig <- jmvcore::OptionNumber$new(
                 "MetaAnalysisStudiesSig",
@@ -1711,6 +1720,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..WorldPDF)
             self$.addOption(private$..WorldRZ)
             self$.addOption(private$..WorldLambda)
+            self$.addOption(private$..WorldMu)
             self$.addOption(private$..WorldNullP)
             self$.addOption(private$..SampleSize)
             self$.addOption(private$..SampleSizeM)
@@ -1946,6 +1956,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         WorldPDF = function() private$..WorldPDF$value,
         WorldRZ = function() private$..WorldRZ$value,
         WorldLambda = function() private$..WorldLambda$value,
+        WorldMu = function() private$..WorldMu$value,
         WorldNullP = function() private$..WorldNullP$value,
         SampleSize = function() private$..SampleSize$value,
         SampleSizeM = function() private$..SampleSizeM$value,
@@ -2180,6 +2191,7 @@ BrawSimOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..WorldPDF = NA,
         ..WorldRZ = NA,
         ..WorldLambda = NA,
+        ..WorldMu = NA,
         ..WorldNullP = NA,
         ..SampleSize = NA,
         ..SampleSizeM = NA,
@@ -2558,6 +2570,7 @@ BrawSimBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param WorldPDF .
 #' @param WorldRZ .
 #' @param WorldLambda .
+#' @param WorldMu .
 #' @param WorldNullP .
 #' @param SampleSize .
 #' @param SampleSizeM .
@@ -2803,6 +2816,7 @@ BrawSim <- function(
     WorldPDF = "Single",
     WorldRZ,
     WorldLambda = 0.3,
+    WorldMu = 0,
     WorldNullP = 0.5,
     SampleSize = 42,
     SampleSizeM = 42,
@@ -3039,6 +3053,7 @@ BrawSim <- function(
         WorldPDF = WorldPDF,
         WorldRZ = WorldRZ,
         WorldLambda = WorldLambda,
+        WorldMu = WorldMu,
         WorldNullP = WorldNullP,
         SampleSize = SampleSize,
         SampleSizeM = SampleSizeM,

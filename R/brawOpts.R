@@ -221,9 +221,9 @@ BrawOpts<-function(BW=FALSE,graphC="transparent",fontScale=1.5,graphicsSize=c(16
           
           useLabels<-list(hypLabel="H",psig="psig",UD="D",P="0")
           
-          Pchar<-"P"
+          Pchar<-"\u03c6"
           Zchar<-useLabels$hypLabel
-          Lchar<-'\u03BB'
+          Lchar<-'\u03bb'
           
           switch(useLabels$psig,
                  "psig"={pSigLabel<-"p[sig]"},

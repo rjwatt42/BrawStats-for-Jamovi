@@ -180,9 +180,33 @@ BrawSimClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                          populationPDF=self$options$WorldPDF,
                                          populationRZ = self$options$WorldRZ,
                                          populationPDFk = self$options$WorldLambda,
+                                         populationPDFmu = self$options$WorldMu,
                                          populationNullp = self$options$WorldNullP
                          )
       )
+      # self$results$debug$setContent(c(effect$world$populationPDF,oldH$effect$world$populationPDF))
+      # self$results$debug$setVisible(TRUE)
+      # # return()
+      # 
+      # if (effect$world$populationPDF=="Sample") {
+      #   if (oldH$effect$world$populationPDF=="Sample") effect<-oldH$effect
+      #   if (oldH$effect$world$populationPDF=="SampleB") {
+      #     effect<-oldH$effect
+      #     effect$world$populationNullp<-1-effect$world$populationNullp
+      #   }
+      #   if (!is.element(oldH$effect$world$populationPDF,c("Sample","SampleB")))
+      #     effect$world<-getWorld("Sample")
+      # }
+      # if (effect$world$populationPDF=="SampleB") {
+      #   if (oldH$effect$world$populationPDF=="SampleB") effect<-oldH$effect
+      #   if (oldH$effect$world$populationPDF=="Sample") {
+      #     effect<-oldH$effect
+      #     effect$world$populationNullp<-1-effect$world$populationNullp
+      #   }
+      #   if (!is.element(oldH$effect$world$populationPDF,c("Sample","SampleB")))
+      #     effect$world<-getWorld("SampleB")
+      # }
+
       
       hypothesis<-makeHypothesis(IV,IV2,DV,effect,layout=self$options$EffectConfig)
       changedH<- !identical(oldH,hypothesis)
