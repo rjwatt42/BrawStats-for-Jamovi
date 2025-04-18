@@ -1523,10 +1523,10 @@ ps_plot<-function(analysis,disp,showTheory=TRUE,g=NULL){
       col2<-braw.env$plotColours$infer_sigNonNull
       col3<-braw.env$plotColours$infer_sigNull
       col5<-braw.env$plotColours$infer_nsigNull
-      lb0<-braw.env$nonNullNS
-      lb2<-braw.env$nonNullSig
-      lb3<-braw.env$nullSig
-      lb5<-braw.env$nullNS
+      lb0<-paste0(braw.env$nonNullNS," ~ ",brawFormat(mean(!nulls & !sigs)*100,digits=0),'~"%"')
+      lb2<-paste0(braw.env$nonNullSig," ~ ",brawFormat(mean(!nulls & sigs)*100,digits=0),'~"%"')
+      lb3<-paste0(braw.env$nullSig," ~ ",brawFormat(mean(nulls & sigs)*100,digits=0),'~"%"')
+      lb5<-paste0(braw.env$nullNS," ~ ",brawFormat(mean(nulls & !sigs)*100,digits=0),'~"%"')
       
       y<-1
       y1<-y-mean(!nulls & !sigs)/2
