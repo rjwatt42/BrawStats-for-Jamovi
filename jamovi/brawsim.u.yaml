@@ -3017,9 +3017,7 @@ children:
                                             margin: none
                                             children:
                                               - type: Label
-                                                label: >-
-                                                  'Decide &alpha;, some analysis options
-                                                  and some assumptions'
+                                                label: 'Decide α, some analysis options and some assumptions'
                                               - type: Label
                                                 label: Process
                                                 children:
